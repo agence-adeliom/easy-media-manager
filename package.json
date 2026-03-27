@@ -1,0 +1,86 @@
+{
+  "name": "@adeliom/easy-media-manager",
+  "version": "4.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/agence-adeliom/easy-media-manager.git"
+  },
+  "bugs": {
+    "url": "https://github.com/agence-adeliom/easy-media-manager/issues"
+  },
+  "homepage": "https://github.com/agence-adeliom/easy-media-manager#readme",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "sideEffects": [
+    "*.css"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./plugin-sdk": {
+      "import": "./dist/plugin-sdk.js",
+      "types": "./dist/plugin-sdk.d.ts"
+    },
+    "./style.css": "./dist/style.css",
+    "./iife": "./dist/iife/easy-media.js",
+    "./iife/style.css": "./dist/iife/easy-media.css"
+  },
+  "scripts": {
+    "dev": "vite",
+    "playground:server": "tsx --watch playground/server/server.ts",
+    "playground:esm": "vite --config playground/esm/vite.config.ts",
+    "playground:iife": "vite build --watch --config vite.config.iife-playground.ts",
+    "playground": "concurrently -n iife,server,esm -c yellow,blue,green \"npm run playground:iife\" \"npm run playground:server\" \"npm run playground:esm\"",
+    "build": "vite build",
+    "build:esm": "vite build --config vite.config.esm.ts",
+    "build:iife-playground": "vite build --config vite.config.iife-playground.ts",
+    "build:all": "npm run build && npm run build:esm",
+    "prod": "tsc --noEmit && npm run build:all",
+    "prepublishOnly": "npm run prod",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
+  },
+  "dependencies": {
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@tanstack/react-query": "^5.62.0",
+    "@uppy/core": "^4.3.0",
+    "@uppy/drag-drop": "^4.1.0",
+    "@uppy/progress-bar": "^4.1.0",
+    "@uppy/xhr-upload": "^4.2.0",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.468.0",
+    "react-advanced-cropper": "^0.20.1",
+    "sonner": "^1.7.3",
+    "tailwind-merge": "^2.6.0",
+    "zustand": "^5.0.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.0.0",
+    "@tweedegolf/sab-adapter-local": "^3.0.1",
+    "@tweedegolf/storage-abstraction": "^3.0.3",
+    "@types/better-sqlite3": "^7.6.5",
+    "@types/express": "^4.17.21",
+    "@types/multer": "^1.4.11",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "archiver": "*",
+    "better-sqlite3": "*",
+    "concurrently": "*",
+    "express": "*",
+    "multer": "*",
+    "tsx": "*",
+    "typescript": "^5.7.0",
+    "vite": "^6.0.0",
+    "vite-plugin-dts": "^4.5.4"
+  }
+}

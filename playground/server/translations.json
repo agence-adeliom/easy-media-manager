@@ -1,0 +1,320 @@
+{
+  "en": {
+    "space": "Space",
+    "backspace": "BackSpace",
+    "add": {
+      "main": "Add",
+      "added": "Added",
+      "folder": "Add Folder",
+      "new_folder": "Add New Folder",
+      "url": "Url ...",
+      "more": "Add More Files",
+      "list": "Add To List"
+    },
+    "options": "Options",
+    "ajax_error": "Oh NO! Something Went Wrong",
+    "application": "Application",
+    "are_you_sure_delete": "Are You Sure You Want To Delete ?!!",
+    "cancel": "Cancel",
+    "clear": "Clear attr",
+    "close": "Close",
+    "confirm": "Confirm",
+    "create": "Create",
+    "create_success": "Successfully Created",
+    "delete": {
+      "confirm": "Yes, Delete It !",
+      "confirm_message": "Confirm deletion of %count% item(s). This action is irreversible.",
+      "folder": "Deleting A Folder Will Also Remove All Of Its Content",
+      "main": "Delete",
+      "success": "Successfully Deleted",
+      "unavailable": "Delete unavailable."
+    },
+    "destination_folder": "Destination Folder",
+    "dimension": "Dimensions",
+    "description": "Description",
+    "download": {
+      "downloaded": "Downloaded",
+      "file": "Download File",
+      "folder": "Download Folder",
+      "sep": "Folders Should Be Downloaded Separately"
+    },
+    "error": {
+      "already_exists": "A File/Folder Already Exists With That Name",
+      "cant_upload": "Sorry File Can't Be Uploaded",
+      "no_file": "No File To Upload"
+    },
+    "filter": {
+      "main": "Filter",
+      "by": "Filter By attr",
+      "all": "All",
+      "images": "Images",
+      "videos": "Videos",
+      "audio": "Audio",
+      "folders": "Folders",
+      "text_pdf": "Text / PDF",
+      "applications": "Applications / archives"
+    },
+    "find": "Find...",
+    "folder": "Folder",
+    "image": "Image",
+    "items": "Item(s)",
+    "last_modified": "Last Modified",
+    "library": "Home",
+    "loading": "Loading Files",
+    "empty": {
+      "folder_title": "Empty folder",
+      "folder_description": "This folder does not contain any items yet.",
+      "search_title": "No results",
+      "search_description": "No results for this search.",
+      "reset_filters": "Reset filters",
+      "folder_not_found_title": "Folder not found",
+      "folder_not_found_description": "The requested folder no longer exists or is not accessible.",
+      "loading_error_title": "Loading error"
+    },
+    "move": {
+      "file_folder": "Move File/Folder",
+      "main": "Move",
+      "success": "Successfully Moved",
+      "unavailable": "Move unavailable.",
+      "current_folder_hint": "Files will be moved to the currently opened folder.",
+      "clear_list": "Movable List Successfully Cleared"
+    },
+    "name": "Name",
+    "new": {
+      "create_folder": "Create New Folder",
+      "create_folder_notif": "New Folder Was Created",
+      "file_folder": "New File/Folder Name",
+      "folder_name": "New Folder Name",
+      "unavailable": "Folder creation unavailable."
+    },
+    "no_files_in_folder": "No Files In This Folder",
+    "nothing_found": "Nothing Found",
+    "open": "Open",
+    "preview": "Preview",
+    "refresh_notif": "Press The Refresh Button To View Them",
+    "rename": {
+      "file_folder": "Rename File/Folder",
+      "main": "Rename",
+      "success": "Successfully Renamed",
+      "unavailable": "Rename unavailable."
+    },
+    "edit_metas": {
+      "main": "Metadatas",
+      "modal_title": "Update metadates",
+      "unavailable": "Metadata update unavailable."
+    },
+    "seo": {
+      "title": "Title",
+      "alt": "Alt",
+      "description": "Description",
+      "edit_metas": "Metadata updated"
+    },
+    "save": {
+      "link": "Upload Image From Url",
+      "main": "Save",
+      "success": "Successfully Saved As"
+    },
+    "search": {
+      "main": "Search",
+      "placeholder": "Search..."
+    },
+    "sidebar": {
+      "no_file_title": "No file",
+      "no_file_description": "Select a file to display its metadata."
+    },
+    "select": {
+      "main": "Select",
+      "all": "Select All",
+      "bulk": "Bulk Select",
+      "non": "Select Non",
+      "nothing": "No File Or Folder Selected",
+      "selected": "Selected",
+      "file": "Choose a file"
+    },
+    "size": "Size",
+    "sort": {
+      "badge": "Sort",
+      "section": "Sort",
+      "none": "No sorting",
+      "ascending": "ascending",
+      "descending": "descending"
+    },
+    "sort_by": "Sort By",
+    "stand_by": "Please Stand By ...",
+    "text": "Text",
+    "title": "Media Manager",
+    "type": "Type",
+    "upload": {
+      "main": "Upload",
+      "choose_files": "Choose files",
+      "hint": "Drop files here or use the file picker.",
+      "progress": "Upload in progress",
+      "to_folder_hint": "Drop your files to upload them into this folder",
+      "new_uploads_notif": "New Items Were Uploaded",
+      "success": "Successfully Uploaded",
+      "text": "Drag & Drop Files<br><small>Or</small><br>Click To Upload",
+      "use_random_names": "Use Random Names ?",
+      "in_progress": "Upload Is Already In Progress"
+    },
+    "video": "Video"
+  },
+  "fr": {
+    "space": "Espace",
+    "backspace": "Retour arrière",
+    "add": {
+      "main": "Ajouter",
+      "added": "Ajouté",
+      "folder": "Ajouter le dossier",
+      "new_folder": "Ajouter un nouveau dossier",
+      "url": "URL ...",
+      "more": "Ajouter plus de fichiers",
+      "list": "Ajouter à la liste"
+    },
+    "options": "Options",
+    "ajax_error": "Oh non ! Quelque chose s'est mal passé",
+    "application": "Application",
+    "are_you_sure_delete": "Etes-vous sûr que vous voulez supprimer ?!!",
+    "cancel": "Annuler",
+    "clear": "Vider attr",
+    "close": "Fermer",
+    "confirm": "Confirmer",
+    "create": "Créer",
+    "create_success": "Créé avec succès",
+    "delete": {
+      "confirm": "Oui, je comfirme",
+      "confirm_message": "Confirmer la suppression de %count% élément(s). Cette action est irréversible.",
+      "folder": "La suppression d'un dossier supprimera également tout son contenu",
+      "main": "Supprimer",
+      "success": "Supprimé avec succès",
+      "unavailable": "Suppression impossible."
+    },
+    "destination_folder": "Dossier de destination",
+    "dimension": "Dimensions",
+    "description": "Description",
+    "download": {
+      "downloaded": "Téléchargé",
+      "file": "Télécharger un fichier",
+      "folder": "Télécharger le dossier",
+      "sep": "Les dossiers doivent être téléchargés séparément"
+    },
+    "error": {
+      "already_exists": "Un fichier/dossier existe déjà avec ce nom",
+      "cant_upload": "Désolé, le fichier ne peut pas être téléchargé",
+      "no_file": "Aucun fichier à télécharger"
+    },
+    "filter": {
+      "main": "Filtrer",
+      "by": "Filtrer par attr",
+      "all": "Tous",
+      "images": "Images",
+      "videos": "Vidéos",
+      "audio": "Audio",
+      "folders": "Dossiers",
+      "text_pdf": "Textes / PDF",
+      "applications": "Applications / archives"
+    },
+    "find": "Rechercher ...",
+    "folder": "Dossier",
+    "image": "Image",
+    "items": "Élément(s)",
+    "last_modified": "Dernière modification",
+    "library": "Racine",
+    "loading": "Chargement des fichiers",
+    "empty": {
+      "folder_title": "Dossier vide",
+      "folder_description": "Ce dossier ne contient encore aucun élément.",
+      "search_title": "Aucun résultat",
+      "search_description": "Aucun résultat pour cette recherche.",
+      "reset_filters": "Réinitialiser les filtres",
+      "folder_not_found_title": "Dossier introuvable",
+      "folder_not_found_description": "Le dossier demandé n'existe plus ou n'est plus accessible.",
+      "loading_error_title": "Erreur de chargement"
+    },
+    "move": {
+      "file_folder": "Déplacer le fichier/dossier",
+      "main": "Déplacer",
+      "success": "Déplacé avec succès",
+      "unavailable": "Déplacement impossible.",
+      "current_folder_hint": "Le déplacement cible le dossier actuellement affiché.",
+      "clear_list": "Liste effacée avec succès"
+    },
+    "name": "Nom",
+    "new": {
+      "create_folder": "Créer un nouveau dossier",
+      "create_folder_notif": "Un nouveau dossier a été créé",
+      "file_folder": "Nouveau nom de fichier/dossier",
+      "folder_name": "Nouveau nom de dossier",
+      "unavailable": "Création de dossier impossible."
+    },
+    "no_files_in_folder": "Aucun fichier dans ce dossier",
+    "nothing_found": "Rien n'a été trouvé",
+    "open": "Ouvrir",
+    "preview": "Aperçu",
+    "refresh_notif": "Appuyez sur le bouton Actualiser pour les afficher",
+    "rename": {
+      "file_folder": "Renommer le fichier/dossier",
+      "main": "Renommer",
+      "success": "Renommé avec succès",
+      "unavailable": "Renommage impossible."
+    },
+    "edit_metas": {
+      "main": "Métadonnées",
+      "modal_title": "Modifier les métadonnées",
+      "unavailable": "Modification des métadonnées impossible."
+    },
+    "seo": {
+      "title": "Titre",
+      "alt": "Texte alternatif",
+      "description": "Description",
+      "edit_metas": "Métadonnées mise à jours"
+    },
+    "save": {
+      "link": "Import à partir d'une URL",
+      "main": "Enregistrer",
+      "success": "Enregistré avec succès sous"
+    },
+    "search": {
+      "main": "Rechercher",
+      "placeholder": "Rechercher..."
+    },
+    "sidebar": {
+      "no_file_title": "Aucun fichier",
+      "no_file_description": "Sélectionnez un fichier pour afficher ses métadonnées."
+    },
+    "select": {
+      "main": "Sélectionner",
+      "all": "Tout sélectionner",
+      "bulk": "Sélection groupée",
+      "non": "Effacer la selection",
+      "nothing": "Aucun fichier ou dossier sélectionné",
+      "selected": "Sélectionné",
+      "file": "Choisir un fichier"
+    },
+    "size": "Poids",
+    "sort": {
+      "badge": "Tri",
+      "section": "Trier",
+      "none": "Aucun tri",
+      "ascending": "croissant",
+      "descending": "décroissant"
+    },
+    "sort_by": "Trier par",
+    "stand_by": "Veuillez patienter ...",
+    "text": "Texte",
+    "title": "Gestionnaire de médias",
+    "type": "Type",
+    "upload": {
+      "main": "Télécharger",
+      "choose_files": "Choisir des fichiers",
+      "hint": "Déposez des fichiers ici ou utilisez le sélecteur.",
+      "progress": "Upload en cours",
+      "to_folder_hint": "Déposez vos fichiers pour les envoyer dans ce dossier",
+      "new_uploads_notif": "De nouveaux éléments ont été téléchargés",
+      "success": "Téléchargé avec succès",
+      "text": "Glisser-déposer des fichiers<br><small>ou</small><br>Cliquez pour télécharger",
+      "use_random_names": "Utiliser des noms aléatoires ?",
+      "in_progress": "Le téléchargement est déjà en cours"
+    },
+    "video": "Vidéo"
+  }
+}

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Easy Media - Standalone Dev</title>
+  <style>
+    @tailwind base;
+    @tailwind components;
+    @tailwind utilities;
+  </style>
+</head>
+<body class="bg-slate-50">
+  <div id="easy-media-app" class="w-full h-screen"></div>
+
+  <script id="easy-media-config-template" type="text/template">
+  {
+    "config": {
+      "baseUrl": "/api",
+      "hideFilesExt": [".php", ".env"],
+      "mimeTypes": {
+        "image": ["image/jpeg", "image/png", "image/gif", "image/webp", "image/svg+xml"],
+        "archive": ["application/zip", "application/x-rar-compressed", "application/x-7z-compressed"]
+      },
+      "generatingAlts": false
+    },
+    "routes": {
+      "files": "/get-files",
+      "upload": "/upload",
+      "fileInfos": "/get-file-info",
+      "uploadCropped": "/upload-cropped",
+      "uploadLink": "/upload-link",
+      "newFolder": "/create-new-folder",
+      "deleteFile": "/delete-file",
+      "moveFile": "/move-file",
+      "renameFile": "/rename-file",
+      "editMetas": "/edit-metas-file",
+      "generateAlt": "/generate-alt-file",
+      "generateAltGroup": "/generate-alt-group",
+      "generateAllAlt": "/generate-all-alt",
+      "globalSearch": "/global-search",
+      "folderDownload": "/folder-download",
+      "filesDownload": "/files-download"
+    },
+    "translations": {},
+    "features": {
+      "enableEditor": true,
+      "enableUpload": true,
+      "enableMove": true,
+      "enableRename": true,
+      "enableMetas": true,
+      "enableDelete": true,
+      "enableBulkSelection": true,
+      "enableGeneratingAlts": false
+    }
+  }
+  </script>
+
+  <script type="module">
+    async function initializeApp() {
+      try {
+        // Load base configuration
+        const configTemplate = document.getElementById('easy-media-config-template');
+        const config = JSON.parse(configTemplate.textContent);
+
+        // Load translations
+        console.log('📚 Loading translations...');
+        let allTranslations = {};
+        try {
+          const translationsRes = await fetch('/dev-server/translations.json');
+          console.log('📥 Translations fetch response:', translationsRes.status);
+          if (!translationsRes.ok) {
+            throw new Error(`HTTP ${translationsRes.status}`);
+          }
+          allTranslations = await translationsRes.json();
+          console.log('✅ Translations loaded:', Object.keys(allTranslations));
+        } catch (error) {
+          console.error('❌ Failed to load translations:', error);
+        }
+
+        // Use English by default, can be switched to 'fr' for French
+        const language = 'en';
+        const rawTranslations = allTranslations[language] || {};
+
+        // Flatten nested translations to snake_case for component compatibility
+        function flattenTranslations(obj, prefix = '') {
+          const result = {};
+          for (const [key, value] of Object.entries(obj)) {
+            const fullKey = prefix ? `${prefix}_${key}` : key;
+            if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+              Object.assign(result, flattenTranslations(value, fullKey));
+            } else {
+              result[fullKey] = value;
+            }
+          }
+          return result;
+        }
+
+        config.translations = flattenTranslations(rawTranslations);
+
+        console.log('📋 Config loaded');
+        console.log('🌐 Sample translations:', {
+          title: config.translations.title,
+          upload_main: config.translations.upload_main,
+          select_bulk: config.translations.select_bulk,
+          total_keys: Object.keys(config.translations).length
+        });
+
+        const pluginUrl = new URLSearchParams(window.location.search).get('plugin_url') || '/dev-server/external-plugin.tsx';
+
+        console.log('🔌 Loading external plugin:', pluginUrl);
+        try {
+          await import(/* @vite-ignore */ pluginUrl);
+          console.log('✅ External plugin loaded');
+        } catch (error) {
+          console.warn('⚠️ External plugin failed to load:', error);
+        }
+
+        // Import the module
+        console.log('📦 Importing EasyMedia module...');
+        await import('/src/index.ts');
+
+        console.log('✅ Module imported');
+        console.log('🔍 window.EasyMedia available:', !!window.EasyMedia);
+
+        // Check if EasyMedia is available
+        if (window.EasyMedia) {
+          console.log('🚀 Initializing EasyMedia...');
+
+          // Use mount() to render into the #easy-media-app div
+          window.EasyMedia.mount({
+            ...config,
+            target: '#easy-media-app'
+          });
+
+          console.log('✅ EasyMedia mounted!');
+        } else {
+          throw new Error('window.EasyMedia is not defined after import');
+        }
+      } catch (error) {
+        console.error('❌ Initialization failed:', error);
+        document.body.innerHTML = `
+          <div class="min-h-screen flex items-center justify-center bg-slate-50 p-4">
+            <div class="bg-white rounded-lg shadow-lg p-8 max-w-md w-full">
+              <h2 class="text-2xl font-bold text-red-600 mb-4">Error Initializing EasyMedia</h2>
+              <pre class="bg-slate-100 p-4 rounded text-sm overflow-auto mb-4 text-red-700">
+${error instanceof Error ? error.message : String(error)}
+              </pre>
+              <p class="text-slate-600 text-sm">Check browser console for details</p>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    // Initialize when DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initializeApp);
+    } else {
+      initializeApp();
+    }
+  </script>
+</body>
+</html>

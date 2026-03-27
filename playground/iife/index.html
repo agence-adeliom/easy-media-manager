@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EasyMedia – IIFE test</title>
+  <link rel="stylesheet" href="/dist/easy-media.css" />
+</head>
+<body style="margin:0">
+  <div id="app" style="height:100vh"></div>
+
+  <script src="/dist/easy-media.js"></script>
+  <script>
+    EasyMedia.use(GenerateAltPlugin);
+    EasyMedia.mount({
+      target: '#app',
+      locale: 'en',
+      translations: EasyMedia.translations?.en ?? {},
+      config: {
+        baseUrl: '/api',
+        generatingAlts: true,
+      },
+      features: {
+        enableEditor: true,
+        enableUpload: true,
+        enableMove: true,
+        enableRename: true,
+        enableMetas: true,
+        enableDelete: true,
+        enableBulkSelection: true,
+        enableGeneratingAlts: true,
+      },
+      routes: {
+        files: '/get-files',
+        upload: '/upload',
+        fileInfos: '/get-file-info',
+        uploadCropped: '/upload-cropped',
+        uploadLink: '/upload-link',
+        newFolder: '/create-new-folder',
+        deleteFile: '/delete-file',
+        moveFile: '/move-file',
+        renameFile: '/rename-file',
+        editMetas: '/edit-metas-file',
+        generateAlt: '/generate-alt-file',
+        generateAltGroup: '/generate-alt-group',
+        generateAllAlt: '/generate-all-alt',
+        globalSearch: '/global-search',
+        folderDownload: '/folder-download',
+        filesDownload: '/files-download',
+      },
+    });
+  </script>
+</body>
+</html>

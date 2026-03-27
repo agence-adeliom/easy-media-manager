@@ -1,0 +1,15 @@
+@import "tailwindcss";
+@source "../";
+
+/*
+ * Scope all easy-media styles under .easy-media to avoid
+ * polluting EasyAdmin global styles.
+ */
+
+.easy-media {
+  font-family: ui-sans-serif, system-ui, sans-serif;
+}
+
+.easy-media * {
+  box-sizing: border-box;
+}
