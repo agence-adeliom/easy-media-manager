@@ -6,7 +6,10 @@ Full reference for all `@adeliom/easy-media-manager` configuration options.
 
 ## Table of Contents
 
-- [EasyMediaInitConfig](#easymediainitconfig) — root object passed to `EasyMedia.init()` / `EasyMedia.mount()`
+- [Quick start: configure once, use everywhere](#quick-start-configure-once-use-everywhere)
+- [EasyMediaInitConfig](#easymediainitconfig) — full config object passed to `EasyMedia.configure()` / `EasyMedia.init()`
+- [EasyMediaConfigOverride](#easymediaconfigoverride) — partial overrides for `EasyMedia.mount()`
+- [EasyMediaMountOptions](#easymediamountoptions) — options for `EasyMedia.mount()`
 - [EasyMediaConfig](#easymediaconfig) — general settings
 - [EasyMediaRoutes](#easymediaroutes) — API endpoint mapping
 - [EasyMediaFeatureFlags](#easymediafeatureflags) — enable/disable capabilities
@@ -17,9 +20,59 @@ Full reference for all `@adeliom/easy-media-manager` configuration options.
 
 ---
 
+## Quick start: configure once, use everywhere
+
+Call `EasyMedia.configure()` once at startup (before any `mount()` or `pick()` calls). Both methods will then reuse the stored configuration automatically.
+
+```typescript
+// 1. Register plugins (optional)
+EasyMedia.use(myPlugin);
+
+// 2. Set the configuration once
+EasyMedia.configure({
+  locale: 'fr',
+  translations: frTranslations,
+  config: { baseUrl: '/api', generatingAlts: true },
+  features: {
+    enableEditor: true,
+    enableUpload: true,
+    enableMove: true,
+    enableRename: true,
+    enableMetas: true,
+    enableDelete: true,
+    enableBulkSelection: true,
+    enableGeneratingAlts: true,
+  },
+  routes: {
+    files: '/get-files',
+    // ... all routes
+  },
+});
+
+// 3. Mount a full-page manager (no config needed)
+EasyMedia.mount({ target: '#app' });
+
+// 4. Open a picker anywhere (auto-initializes from stored config)
+const file = await EasyMedia.pick();
+
+// Per-call overrides are still supported
+const image = await EasyMedia.pick({
+  restrictions: { path: '/images', uploadTypes: ['image/*'] },
+  features: { enableDelete: false },
+});
+```
+
+You can also still pass the full config inline to `mount()` if you prefer — backwards compatibility is preserved:
+
+```typescript
+EasyMedia.mount({ target: '#app', config: { ... }, routes: { ... }, features: { ... }, translations: { ... } });
+```
+
+---
+
 ## EasyMediaInitConfig
 
-Root configuration object. Passed to `EasyMedia.init(config)` or spread into `EasyMedia.mount({ target, ...config })`.
+Full configuration object. Passed to `EasyMedia.configure(config)` or `EasyMedia.init(config)`, or provided inline to `EasyMedia.mount()`.
 
 ```typescript
 interface EasyMediaInitConfig {
@@ -27,10 +80,40 @@ interface EasyMediaInitConfig {
   routes: EasyMediaRoutes;
   translations: EasyMediaTranslations;
   features: EasyMediaFeatureFlags;
+  locale?: string;
 }
 ```
 
-All four keys are required.
+All four keys (`config`, `routes`, `translations`, `features`) are required.
+
+---
+
+## EasyMediaConfigOverride
+
+A partial version of `EasyMediaInitConfig` used for per-call overrides in `EasyMedia.mount()`. Every key is optional; omitted keys fall back to the value set by `EasyMedia.configure()`.
+
+```typescript
+type EasyMediaConfigOverride = Partial<EasyMediaInitConfig>;
+```
+
+Merge rules when a global config exists and an override is provided:
+- `config` — replaced whole if provided
+- `routes` — replaced whole if provided
+- `features` — replaced whole if provided
+- `translations` — shallow-merged (`{ ...globalTranslations, ...override.translations }`)
+- `locale` — last-write-wins
+
+---
+
+## EasyMediaMountOptions
+
+Options for `EasyMedia.mount()`. The `target` is always required; all config keys are optional when a global config has been set via `EasyMedia.configure()`.
+
+```typescript
+type EasyMediaMountOptions = EasyMediaConfigOverride & {
+  target: string | HTMLElement;
+};
+```
 
 ---
 
@@ -180,7 +263,7 @@ Flags can also be overridden per `pick()` call via `PickOptions.features`.
 
 ## PickOptions
 
-Options passed to `EasyMedia.pick()` to open the file picker modal.
+Options passed to `EasyMedia.pick()` to open the file picker modal. If `EasyMedia.configure()` was called and the library has not yet been initialized, `pick()` will auto-initialize using the stored configuration before opening the modal.
 
 ```typescript
 interface PickOptions {

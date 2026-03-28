@@ -66,3 +66,9 @@ export interface EasyMediaInitConfig {
   features: EasyMediaFeatureFlags;
   locale?: string;
 }
+
+export type EasyMediaConfigOverride = Partial<EasyMediaInitConfig>;
+
+export type EasyMediaMountOptions = EasyMediaConfigOverride & {
+  target: string | HTMLElement;
+};

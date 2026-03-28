@@ -12,8 +12,7 @@
   <script src="/dist/easy-media.js"></script>
   <script>
     EasyMedia.use(GenerateAltPlugin);
-    EasyMedia.mount({
-      target: '#app',
+    EasyMedia.configure({
       locale: 'en',
       translations: EasyMedia.translations?.en ?? {},
       config: {
@@ -49,6 +48,7 @@
         filesDownload: '/files-download',
       },
     });
+    EasyMedia.mount({ target: '#app' });
   </script>
 </body>
 </html>

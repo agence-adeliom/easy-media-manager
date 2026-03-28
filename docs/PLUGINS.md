@@ -22,11 +22,17 @@
 
 ## How plugins work
 
-When `EasyMedia.init()` runs:
+The recommended startup order is:
+
+1. Register plugins with `EasyMedia.use()` (or via the `window.EasyMediaPlugins` queue).
+2. Call `EasyMedia.configure(config)` to store the configuration.
+3. Call `EasyMedia.mount()` or `EasyMedia.pick()` — both trigger initialization automatically.
+
+When initialization runs (on the first `mount()` or `pick()` call):
 
 1. It drains the `window.EasyMediaPlugins` queue (plugins registered before init).
 2. It locks the registry — no more plugins can be added after this point.
-3. Plugin translations are merged in, then overridden by the translations you passed in the init config.
+3. Plugin translations are merged in, then overridden by the translations you passed in the config.
 
 Each plugin can contribute:
 - **Toolbar actions** — buttons that appear in the top toolbar. Their visibility and disabled state are evaluated on each render via callbacks that receive the current context.
@@ -341,21 +347,23 @@ Always use this helper in `onClick` when opening a modal — never construct the
 
 ## Registering plugins
 
-### Before `EasyMedia.init()` (recommended)
+### Before initialization (recommended)
 
 Use `registerEasyMediaPlugin()`. It is queue-safe: if init has not run yet the plugin is pushed onto `window.EasyMediaPlugins`; if `EasyMedia` is already on the window it calls `EasyMedia.use()` directly.
 
 ```typescript
-// ESM — register before init
+// ESM — register plugin, configure once, then mount
 import { generateAltPlugin } from './generate-alt';
 import { EasyMedia } from '@adeliom/easy-media-manager';
 
 EasyMedia.use(generateAltPlugin);
-EasyMedia.mount({ ... });
+EasyMedia.configure({ /* full config */ });
+EasyMedia.mount({ target: '#app' });
 
 // IIFE — GenerateAltPlugin is exposed on window by the bundle
 EasyMedia.use(GenerateAltPlugin);
-EasyMedia.mount({ ... });
+EasyMedia.configure({ /* full config */ });
+EasyMedia.mount({ target: '#app' });
 ```
 
 Or, for plain scripts without module bundlers, push to the queue manually:
@@ -408,10 +416,10 @@ No manual spreading of plugin translation objects is needed — the library reso
 
 ### Overriding plugin translations
 
-Plugin translations are merged at a lower priority than `EasyMediaInitConfig.translations`. To override a specific key, include it in the `translations` object:
+Plugin translations are merged at a lower priority than `EasyMediaInitConfig.translations`. To override a specific key, include it in the `translations` object passed to `configure()`:
 
 ```typescript
-EasyMedia.init({
+EasyMedia.configure({
   locale: 'en',
   translations: {
     ...enTranslations,

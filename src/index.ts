@@ -7,7 +7,7 @@ import { getPluginTranslations, lockPluginRegistry, registerPlugin, registerPlug
 import type { EasyMediaPlugin } from "@/plugins/types";
 import { mediaStore } from "@/store/media-store";
 import { pickStore } from "@/store/pick-store";
-import type { EasyMediaInitConfig, EasyMediaTranslations, PickOptions } from "@/types/config";
+import type { EasyMediaConfigOverride, EasyMediaInitConfig, EasyMediaMountOptions, EasyMediaTranslations, PickOptions } from "@/types/config";
 import type { MediaItem } from "@/types/media";
 import { enTranslations } from "@/translations/en";
 import { frTranslations } from "@/translations/fr";
@@ -19,17 +19,48 @@ export { enTranslations, frTranslations };
 interface EasyMediaWindowApi {
   use: (plugin: EasyMediaPlugin) => void;
   useMany: (plugins: EasyMediaPlugin[]) => void;
+  configure: (config: EasyMediaInitConfig) => void;
   init: (config: EasyMediaInitConfig) => void;
   pick: (options?: PickOptions) => Promise<MediaItem | null>;
   isReady: () => boolean;
   __mountFullPage: (elementId: string) => void;
-  mount?: (options: EasyMediaInitConfig & { target: string | HTMLElement }) => void;
+  mount?: (options: EasyMediaMountOptions) => void;
   translations?: Partial<Record<'en' | 'fr', EasyMediaTranslations>>;
 }
 
 let root: Root | null = null;
 let rootElement: HTMLElement | null = null;
 let initialized = false;
+let globalConfig: EasyMediaInitConfig | null = null;
+
+function configure(config: EasyMediaInitConfig): void {
+  globalConfig = config;
+}
+
+function resolveConfig(override: EasyMediaConfigOverride): EasyMediaInitConfig {
+  const base = globalConfig;
+
+  if (!base && (!override.config || !override.routes || !override.translations || !override.features)) {
+    throw new Error(
+      "EasyMedia: no configuration found. Call EasyMedia.configure(config) before using mount() or pick(), or pass the full config inline.",
+    );
+  }
+
+  if (!base) {
+    return override as EasyMediaInitConfig;
+  }
+
+  return {
+    config: override.config ?? base.config,
+    routes: override.routes ?? base.routes,
+    features: override.features ?? base.features,
+    translations:
+      override.translations != null
+        ? { ...base.translations, ...override.translations }
+        : base.translations,
+    locale: override.locale ?? base.locale,
+  };
+}
 
 function ensureRoot(): Root {
   if (root === null) {
@@ -68,7 +99,7 @@ function init(config: EasyMediaInitConfig) {
 
 function pick(options: PickOptions = {}) {
   if (!initialized) {
-    throw new Error("EasyMedia not initialized. Call EasyMedia.init(config) first.");
+    init(resolveConfig({}));
   }
 
   return pickStore.getState().startPick(options);
@@ -96,15 +127,16 @@ function mountFullPage(elementId: string) {
 const api: EasyMediaWindowApi = {
   use: registerPlugin,
   useMany: registerPlugins,
+  configure,
   init,
   pick,
   isReady: () => initialized,
   __mountFullPage: mountFullPage,
   translations: { en: enTranslations, fr: frTranslations },
   mount(options) {
-    const { target, ...config } = options;
+    const { target, ...override } = options;
 
-    init(config);
+    init(resolveConfig(override));
 
     const resolvedTarget =
       typeof target === "string" ? document.querySelector<HTMLElement>(target) : target;

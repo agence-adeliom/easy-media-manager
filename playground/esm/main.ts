@@ -5,8 +5,7 @@ import { EasyMedia, frTranslations } from '@adeliom/easy-media-manager';
 import { generateAltPlugin } from '../../examples/plugins/generate-alt/index';
 
 EasyMedia.use(generateAltPlugin);
-EasyMedia.mount({
-  target: '#app',
+EasyMedia.configure({
   locale: 'fr',
   translations: frTranslations,
   config: {
@@ -42,3 +41,4 @@ EasyMedia.mount({
     filesDownload: '/files-download',
   },
 });
+EasyMedia.mount({ target: '#app' });
