@@ -274,10 +274,10 @@ app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok' });
 });
 
-app.post('/api/get-files', (req: Request, res: Response) => {
+app.get('/api/get-files', (req: Request, res: Response) => {
   try {
-    const { folder, search } = req.body;
-    const requestedPage = parseNullableInt(req.query.page) ?? parseNullableInt(req.body.page) ?? 1;
+    const { folder, search } = req.query;
+    const requestedPage = parseNullableInt(req.query.page) ?? 1;
     const perPage = 50;
     const page = Math.max(requestedPage, 1);
     const offset = (page - 1) * perPage;
@@ -348,9 +348,12 @@ app.post('/api/get-files', (req: Request, res: Response) => {
   }
 });
 
-app.post('/api/get-file-info', (req: Request, res: Response) => {
+app.get('/api/get-file-info', (req: Request, res: Response) => {
   try {
-    const { item } = req.body;
+    const item = parseNullableInt(req.query.item);
+    if (item === null) {
+      return res.status(400).json({ error: 'Missing item id' });
+    }
     const media = getMediaById(item);
 
     if (!media) {

@@ -47,8 +47,23 @@ export async function postVoid<TResponse>(route: string): Promise<TResponse> {
   return parseJson<TResponse>(response);
 }
 
-export async function getJson<TResponse>(route: string): Promise<TResponse> {
-  const response = await fetch(route, {
+type SearchParams = Record<string, string | number | boolean | null | undefined>;
+
+function buildUrl(route: string, params?: SearchParams): string {
+  if (!params) return route;
+  const [base, existing] = route.split("?");
+  const sp = new URLSearchParams(existing);
+  for (const [key, value] of Object.entries(params)) {
+    if (value !== null && value !== undefined) {
+      sp.set(key, String(value));
+    }
+  }
+  const query = sp.toString();
+  return query ? `${base}?${query}` : base;
+}
+
+export async function getJson<TResponse>(route: string, params?: SearchParams): Promise<TResponse> {
+  const response = await fetch(buildUrl(route, params), {
     method: "GET",
     headers: {
       "X-Requested-With": "XMLHttpRequest",

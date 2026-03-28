@@ -24,11 +24,11 @@ import type { GlobalSearchItem, MediaFileItem } from "@/types/media";
 
 export const easyMediaClient = {
   getFiles(route: string, body: GetFilesRequest): Promise<GetFilesResponse> {
-    return postJson<GetFilesResponse, GetFilesRequest>(route, body);
+    return getJson<GetFilesResponse>(route, { folder: body.folder, search: body.search, path: body.path });
   },
 
   async getFileInfo(route: string, body: GetFileInfoRequest): Promise<MediaFileItem> {
-    const data = await postJson<GetFileInfoResponse, GetFileInfoRequest>(route, body);
+    const data = await getJson<GetFileInfoResponse>(route, { item: body.item });
 
     if (hasErrorMessage(data)) {
       throw new EasyMediaApiError(data.error);

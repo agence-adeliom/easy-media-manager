@@ -1,12 +1,12 @@
 # API Routes Documentation
 
-All routes are `POST` unless otherwise specified. Request bodies are JSON except for file uploads (multipart/form-data).
+Fetch routes use `GET` with query parameters. Mutation routes use `POST` with JSON bodies, except file uploads (multipart/form-data).
 
 ---
 
-## POST /api/get-files
+## GET /api/get-files
 
-**Body:**
+**Query params:**
 | Param | Type | Required | Description |
 |-------|------|----------|-------------|
 | `folder` | integer | no | Folder ID to list (null = root) |
@@ -59,9 +59,9 @@ All routes are `POST` unless otherwise specified. Request bodies are JSON except
 
 ---
 
-## POST /api/get-file-info
+## GET /api/get-file-info
 
-**Body:**
+**Query params:**
 | Param | Type | Required | Description |
 |-------|------|----------|-------------|
 | `item` | integer | yes | Media ID |
@@ -80,6 +80,11 @@ All routes are `POST` unless otherwise specified. Request bodies are JSON except
   "last_modified_formated": "14/11/2023",
   "metas": {}
 }
+```
+
+**Response (400):**
+```json
+{ "error": "Missing item id" }
 ```
 
 **Response (404):**
