@@ -64,6 +64,7 @@ export const frTranslations: EasyMediaTranslations = {
   empty_folder_not_found_title: 'Dossier introuvable',
   empty_folder_not_found_description: "Le dossier demandé n'existe plus ou n'est plus accessible.",
   empty_loading_error_title: 'Erreur de chargement',
+  loading_error_title: 'Erreur de chargement',
   move_file_folder: 'Déplacer le fichier/dossier',
   move_main: 'Déplacer',
   move_success: 'Déplacé avec succès',

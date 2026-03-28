@@ -64,6 +64,7 @@ export const enTranslations: EasyMediaTranslations = {
   empty_folder_not_found_title: 'Folder not found',
   empty_folder_not_found_description: 'The requested folder no longer exists or is not accessible.',
   empty_loading_error_title: 'Loading error',
+  loading_error_title: 'Loading error',
   move_file_folder: 'Move File/Folder',
   move_main: 'Move',
   move_success: 'Successfully Moved',
