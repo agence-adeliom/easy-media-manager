@@ -45,8 +45,7 @@ Download the built assets from the `dist/iife/` directory of the npm package:
 import { EasyMedia, enTranslations } from '@adeliom/easy-media-manager';
 import '@adeliom/easy-media-manager/style.css';
 
-EasyMedia.mount({
-  target: '#app',
+EasyMedia.configure({
   translations: enTranslations,
   config: {
     baseUrl: '/api',
@@ -70,6 +69,8 @@ EasyMedia.mount({
     filesDownload: '/files-download',
   },
 });
+
+EasyMedia.mount({ target: '#app' });
 ```
 
 ### IIFE (script tag)
@@ -79,8 +80,7 @@ EasyMedia.mount({
 <div id="app" style="height:100vh"></div>
 <script src="/easy-media.js"></script>
 <script>
-  EasyMedia.mount({
-    target: '#app',
+  EasyMedia.configure({
     translations: EasyMedia.translations?.en ?? {},
     config: {
       baseUrl: '/api',
@@ -104,6 +104,8 @@ EasyMedia.mount({
       filesDownload: '/files-download',
     },
   });
+
+  EasyMedia.mount({ target: '#app' });
 </script>
 ```
 
@@ -256,7 +258,8 @@ npm publish        # runs prod automatically via prepublishOnly
 
 | Method | Signature | Description |
 |--------|-----------|-------------|
-| `mount` | `(options: EasyMediaInitConfig & { target }) => void` | Initialize and render full-page manager |
+| `configure` | `(config: EasyMediaInitConfig) => void` | Set shared config used by `mount` and `pick` |
+| `mount` | `(options: { target } & EasyMediaConfigOverride) => void` | Initialize and render full-page manager |
 | `init` | `(config: EasyMediaInitConfig) => void` | Initialize without mounting |
 | `pick` | `(options?: PickOptions) => Promise<MediaItem \| null>` | Open picker modal |
 | `use` | `(plugin: EasyMediaPlugin) => void` | Register a plugin |

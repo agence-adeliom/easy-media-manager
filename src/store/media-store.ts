@@ -220,7 +220,7 @@ const initialState: MediaStoreState = {
 export function createMediaStore() {
   return createStore<MediaStore>()((set, get) => ({
     ...initialState,
-    init({ config, routes, translations, features }) {
+    init({ config = {}, routes, translations, features }) {
       const resolvedFeatures = { ...DEFAULT_FEATURES, ...features };
       const currentFolderId = readFolderIdFromUrl();
 

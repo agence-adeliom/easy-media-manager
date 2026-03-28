@@ -59,7 +59,7 @@ export interface PickOptions {
 }
 
 export interface EasyMediaInitConfig {
-  config: EasyMediaConfig;
+  config?: EasyMediaConfig;
   routes: EasyMediaRoutes;
   translations: EasyMediaTranslations;
   features: EasyMediaFeatureFlags;
