@@ -34,12 +34,6 @@ export interface GetFilesResponse {
   error?: string;
 }
 
-export interface GetFileInfoRequest {
-  item: number;
-}
-
-export type GetFileInfoResponse = MediaFileItem | ApiErrorResponse;
-
 export interface UploadResponseItem {
   success: boolean;
   file_name?: string;

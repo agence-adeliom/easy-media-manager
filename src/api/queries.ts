@@ -1,7 +1,7 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 
 import type { GetFilesResponse } from "@/types/api";
-import type { GlobalSearchItem, MediaFileItem } from "@/types/media";
+import type { GlobalSearchItem } from "@/types/media";
 
 import { EasyMediaApiError, easyMediaClient } from "./client";
 
@@ -23,20 +23,6 @@ export function useFiles(route: string, folderId: number | null, search?: string
       return response;
     },
     getNextPageParam: (lastPage) => lastPage.files.items.next_page_url ?? undefined,
-  });
-}
-
-export function useFileInfo(route: string, mediaId: number | null, enabled = true) {
-  return useQuery<MediaFileItem, Error>({
-    queryKey: ["easy-media", "file-info", route, mediaId],
-    queryFn: () => {
-      if (mediaId === null) {
-        throw new EasyMediaApiError("A media id is required to fetch file info.");
-      }
-
-      return easyMediaClient.getFileInfo(route, { item: mediaId });
-    },
-    enabled: enabled && mediaId !== null,
   });
 }
 

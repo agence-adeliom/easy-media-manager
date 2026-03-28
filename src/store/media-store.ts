@@ -61,7 +61,6 @@ export interface MediaStoreState {
   bulkList: MediaItem[];
   mode: MediaMode;
   isOpen: boolean;
-  infoSidebarOpen: boolean;
   uploadPanelOpen: boolean;
   activeModal: string | null;
   isLoading: boolean;
@@ -95,7 +94,6 @@ export interface MediaStoreActions {
   closeManager(): void;
   openModal(name: string): void;
   closeModal(): void;
-  toggleInfoSidebar(): void;
   toggleUploadPanel(): void;
   setSearch(query: string): void;
   setFilter(name: string | null): void;
@@ -204,7 +202,6 @@ const initialState: MediaStoreState = {
   bulkList: [],
   mode: "fullpage",
   isOpen: false,
-  infoSidebarOpen: false,
   uploadPanelOpen: false,
   activeModal: null,
   isLoading: false,
@@ -400,7 +397,6 @@ export function createMediaStore() {
         isOpen: false,
         activeModal: null,
         uploadPanelOpen: false,
-        infoSidebarOpen: false,
       });
     },
     openModal(name) {
@@ -408,9 +404,6 @@ export function createMediaStore() {
     },
     closeModal() {
       set({ activeModal: null });
-    },
-    toggleInfoSidebar() {
-      set((state) => ({ infoSidebarOpen: !state.infoSidebarOpen }));
     },
     toggleUploadPanel() {
       set((state) => ({ uploadPanelOpen: !state.uploadPanelOpen }));

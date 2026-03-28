@@ -59,41 +59,6 @@ Fetch routes use `GET` with query parameters. Mutation routes use `POST` with JS
 
 ---
 
-## GET /api/get-file-info
-
-**Query params:**
-| Param | Type | Required | Description |
-|-------|------|----------|-------------|
-| `item` | integer | yes | Media ID |
-
-**Response (200):**
-```json
-{
-  "id": 2,
-  "name": "photo.jpg",
-  "type": "image",
-  "size": 102400,
-  "path": "/api/uploads/photo-slug-2.jpg",
-  "download_url": "/api/uploads/photo-slug-2.jpg",
-  "storage_path": "uploads/photo-slug-2.jpg",
-  "last_modified": 1700000000,
-  "last_modified_formated": "14/11/2023",
-  "metas": {}
-}
-```
-
-**Response (400):**
-```json
-{ "error": "Missing item id" }
-```
-
-**Response (404):**
-```json
-{ "error": "File not found" }
-```
-
----
-
 ## POST /api/upload
 
 **Content-Type:** `multipart/form-data`

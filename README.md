@@ -58,7 +58,6 @@ EasyMedia.mount({
   routes: {
     files: '/get-files',
     upload: '/upload',
-    fileInfos: '/get-file-info',
     uploadCropped: '/upload-cropped',
     uploadLink: '/upload-link',
     newFolder: '/create-new-folder',
@@ -93,7 +92,6 @@ EasyMedia.mount({
     routes: {
       files: '/get-files',
       upload: '/upload',
-      fileInfos: '/get-file-info',
       uploadCropped: '/upload-cropped',
       uploadLink: '/upload-link',
       newFolder: '/create-new-folder',

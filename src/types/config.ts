@@ -14,7 +14,6 @@ export interface EasyMediaConfig {
 export interface EasyMediaRoutes {
   files: string;
   upload: string;
-  fileInfos: string;
   uploadCropped: string;
   uploadLink: string;
   newFolder: string;

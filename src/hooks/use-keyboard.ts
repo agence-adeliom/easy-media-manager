@@ -21,7 +21,6 @@ interface UseKeyboardOptions {
   onDelete: () => void;
   onAddToMovable: () => void;
   onOpenMoveModal: () => void;
-  onToggleSidebar: () => void;
   onEscape: () => void;
   canGoToParent: boolean;
   canPreview: boolean;
@@ -33,7 +32,6 @@ interface UseKeyboardOptions {
   isBulk: boolean;
   canDelete: boolean;
   canMove: boolean;
-  canToggleSidebar: boolean;
   selectedIndex: number | null;
 }
 
@@ -86,7 +84,6 @@ export function useKeyboard({
   onDelete,
   onAddToMovable,
   onOpenMoveModal,
-  onToggleSidebar,
   onEscape,
   canGoToParent,
   canPreview,
@@ -98,7 +95,6 @@ export function useKeyboard({
   isBulk,
   canDelete,
   canMove,
-  canToggleSidebar,
   selectedIndex,
 }: UseKeyboardOptions) {
   useEffect(() => {
@@ -186,10 +182,6 @@ export function useKeyboard({
         onOpenMoveModal();
       }
 
-      if ((event.key === "t" || event.key === "T") && canToggleSidebar) {
-        onToggleSidebar();
-      }
-
       if (event.key === "Escape") {
         onEscape();
       }
@@ -209,7 +201,6 @@ export function useKeyboard({
     canMove,
     canPreview,
     canRefresh,
-    canToggleSidebar,
     canUpload,
     disabled,
     hasInputFocus,
@@ -229,7 +220,6 @@ export function useKeyboard({
     onRefresh,
     onToggleBulk,
     onToggleSelectAll,
-    onToggleSidebar,
     onToggleUpload,
     selectedIndex,
   ]);

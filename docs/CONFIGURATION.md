@@ -155,7 +155,6 @@ Maps each manager action to a backend endpoint. Every property is required. All 
 interface EasyMediaRoutes {
   files: string;
   upload: string;
-  fileInfos: string;
   uploadCropped: string;
   uploadLink: string;
   newFolder: string;
@@ -176,7 +175,6 @@ interface EasyMediaRoutes {
 |----------|-------------|-------------|
 | `files` | `POST` | List files and folders in a given folder. |
 | `upload` | `POST` (multipart) | Upload one or more files. |
-| `fileInfos` | `POST` | Fetch detailed metadata for a single file. |
 | `uploadCropped` | `POST` (multipart) | Upload a cropped version of an image. |
 | `uploadLink` | `POST` | Import a file from a remote URL. |
 | `newFolder` | `POST` | Create a new folder. |
@@ -198,7 +196,6 @@ interface EasyMediaRoutes {
 routes: {
   files: '/get-files',
   upload: '/upload',
-  fileInfos: '/get-file-info',
   uploadCropped: '/upload-cropped',
   uploadLink: '/upload-link',
   newFolder: '/create-new-folder',

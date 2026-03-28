@@ -5,8 +5,6 @@ import type {
   DeleteFileResponseItem,
   EditMetasRequest,
   EditMetasResponse,
-  GetFileInfoRequest,
-  GetFileInfoResponse,
   GetFilesRequest,
   GetFilesResponse,
   MoveFileRequest,
@@ -19,22 +17,12 @@ import type {
   UploadLinkResponse,
   UploadResponseItem,
 } from "@/types/api";
-import { EasyMediaApiError, getJson, hasErrorMessage, parseJson, postJson } from "@/api/http";
-import type { GlobalSearchItem, MediaFileItem } from "@/types/media";
+import { EasyMediaApiError, getJson, parseJson, postJson } from "@/api/http";
+import type { GlobalSearchItem } from "@/types/media";
 
 export const easyMediaClient = {
   getFiles(route: string, body: GetFilesRequest): Promise<GetFilesResponse> {
     return getJson<GetFilesResponse>(route, { folder: body.folder, search: body.search, path: body.path });
-  },
-
-  async getFileInfo(route: string, body: GetFileInfoRequest): Promise<MediaFileItem> {
-    const data = await getJson<GetFileInfoResponse>(route, { item: body.item });
-
-    if (hasErrorMessage(data)) {
-      throw new EasyMediaApiError(data.error);
-    }
-
-    return data;
   },
 
   async uploadFile(route: string, formData: FormData): Promise<UploadResponseItem[]> {

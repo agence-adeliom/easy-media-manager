@@ -14,7 +14,6 @@ import { RenameModal } from "@/components/modals/RenameModal";
 import { UploadLinkModal } from "@/components/modals/UploadLinkModal";
 import { PickerOverlay } from "@/components/picker/PickerOverlay";
 import { PreviewModal } from "@/components/preview/PreviewModal";
-import { InfoSidebar } from "@/components/sidebar/InfoSidebar";
 import { Toolbar } from "@/components/toolbar/Toolbar";
 import { UploadProgress } from "@/components/upload/UploadProgress";
 import { UploadZone } from "@/components/upload/UploadZone";
@@ -41,7 +40,6 @@ function MediaManagerBody() {
   const selectedFile = useMediaStore((state) => state.selectedFile);
   const selectedIndex = useMediaStore((state) => state.selectedIndex);
   const features = useMediaStore((state) => state.features);
-  const infoSidebarOpen = useMediaStore((state) => state.infoSidebarOpen);
   const bulkMode = useMediaStore((state) => state.bulkMode);
   const bulkList = useMediaStore((state) => state.bulkList);
   const isSmallScreen = useMediaStore((state) => state.isSmallScreen);
@@ -53,7 +51,6 @@ function MediaManagerBody() {
   const openModal = useMediaStore((state) => state.openModal);
   const closeModal = useMediaStore((state) => state.closeModal);
   const toggleUploadPanel = useMediaStore((state) => state.toggleUploadPanel);
-  const toggleInfoSidebar = useMediaStore((state) => state.toggleInfoSidebar);
   const toggleBulkMode = useMediaStore((state) => state.toggleBulkMode);
   const selectAll = useMediaStore((state) => state.selectAll);
   const deselectAll = useMediaStore((state) => state.deselectAll);
@@ -211,7 +208,6 @@ function MediaManagerBody() {
         openModal(CORE_MODAL_IDS.move);
       }
     },
-    onToggleSidebar: toggleInfoSidebar,
     onEscape: () => {
       if (activeModal !== null) {
         closeModal();
@@ -243,7 +239,6 @@ function MediaManagerBody() {
     isBulk: bulkMode,
     canDelete: selectedFile !== null,
     canMove: (bulkMode && bulkList.length > 0) || selectedFile !== null,
-    canToggleSidebar: !isSmallScreen && !bulkMode,
     selectedIndex,
   });
 
@@ -314,7 +309,6 @@ function MediaManagerBody() {
           <main className="min-w-0 flex-1">
             <FileGrid onItemsChange={setItems} />
           </main>
-          {infoSidebarOpen && !isSmallScreen ? <InfoSidebar /> : null}
           {features.enableUpload && isDraggingFiles ? (
             <div className="pointer-events-none absolute inset-4 z-20 flex items-center justify-center rounded-2xl border-2 border-dashed border-sky-500 bg-sky-100/90 p-6">
               <div className="flex items-center gap-3 rounded-full bg-white/95 px-5 py-3 text-sm font-medium text-sky-900 shadow-lg">
