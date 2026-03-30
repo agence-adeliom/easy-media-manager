@@ -9,7 +9,13 @@
 <body style="margin:0">
   <div id="app" style="height:100vh"></div>
 
+  <!-- 1. Main library — sets window.EasyMedia, window.EasyMediaPluginSDK, window.React, etc. -->
   <script src="/dist/easy-media.js"></script>
+
+  <!-- 2. Plugin — self-registers via the EasyMedia queue, no manual EasyMedia.use() needed -->
+  <script src="/dist/easy-media-plugin-generate-alt.js"></script>
+
+  <!-- 3. App bootstrap -->
   <script>
     EasyMedia.use(GenerateAltPlugin);
     EasyMedia.configure({
