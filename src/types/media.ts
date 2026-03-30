@@ -26,6 +26,7 @@ export interface MediaMetas {
   title?: string;
   description?: string;
   icon?: string;
+  image?: string;
   code?: MediaCodeMeta;
   provider?: MediaNamedLinkMeta;
   author?: MediaNamedLinkMeta;

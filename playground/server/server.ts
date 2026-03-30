@@ -198,6 +198,7 @@ function getFileType(mime: string | null, filename: string): string {
   if (mime.startsWith('video/')) return 'video';
   if (mime.startsWith('audio/')) return 'audio';
   if (mime === 'application/pdf') return 'pdf';
+  if (mime.includes('oembed')) return mime;
   if (mime.startsWith('text/')) return 'text';
   if (mime.includes('zip') || mime.includes('rar') || mime.includes('7z')) return 'compressed';
   if (categoryFromExtension) return categoryFromExtension;
@@ -426,6 +427,58 @@ app.post('/api/upload-cropped', async (req: Request, res: Response) => {
   }
 });
 
+const KNOWN_OEMBED_PROVIDERS: Array<{ pattern: RegExp; endpoint: string }> = [
+  { pattern: /youtube\.com|youtu\.be/, endpoint: 'https://www.youtube.com/oembed' },
+  { pattern: /vimeo\.com/, endpoint: 'https://vimeo.com/api/oembed.json' },
+  { pattern: /twitter\.com|x\.com/, endpoint: 'https://publish.twitter.com/oembed' },
+  { pattern: /soundcloud\.com/, endpoint: 'https://soundcloud.com/oembed' },
+  { pattern: /dailymotion\.com/, endpoint: 'https://www.dailymotion.com/services/oembed' },
+  { pattern: /flickr\.com/, endpoint: 'https://www.flickr.com/services/oembed' },
+  { pattern: /ted\.com/, endpoint: 'https://www.ted.com/services/v1/oembed.json' },
+];
+
+async function tryFetchOembed(url: string): Promise<Record<string, unknown> | null> {
+  // First try known providers directly (no page fetch needed)
+  for (const { pattern, endpoint } of KNOWN_OEMBED_PROVIDERS) {
+    if (pattern.test(url)) {
+      try {
+        const oembedUrl = `${endpoint}?url=${encodeURIComponent(url)}&format=json`;
+        const response = await fetch(oembedUrl, { signal: AbortSignal.timeout(8000) });
+        if (response.ok) return await response.json() as Record<string, unknown>;
+      } catch (_e) {
+        // try next or fall through to HTML discovery
+      }
+    }
+  }
+
+  // Fallback: HTML discovery for unknown providers
+  try {
+    const pageResponse = await fetch(url, {
+      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; EasyMediaManager/1.0)' },
+      signal: AbortSignal.timeout(8000),
+    });
+    if (!pageResponse.ok) return null;
+
+    const contentType = pageResponse.headers.get('content-type') || '';
+    if (!contentType.includes('text/html')) return null;
+
+    const html = await pageResponse.text();
+
+    const linkMatch = html.match(/<link[^>]+type=["'](?:application|text)\/json\+oembed["'][^>]*href=["']([^"']+)["'][^>]*>/i)
+      || html.match(/<link[^>]+href=["']([^"']+)["'][^>]+type=["'](?:application|text)\/json\+oembed["'][^>]*>/i);
+
+    if (!linkMatch?.[1]) return null;
+
+    const oembedUrl = linkMatch[1].replace(/&amp;/g, '&');
+    const oembedResponse = await fetch(oembedUrl, { signal: AbortSignal.timeout(8000) });
+    if (!oembedResponse.ok) return null;
+
+    return await oembedResponse.json() as Record<string, unknown>;
+  } catch (_e) {
+    return null;
+  }
+}
+
 app.post('/api/upload-link', async (req: Request, res: Response) => {
   try {
     const { url, folder, random_names } = req.body;
@@ -434,6 +487,31 @@ app.post('/api/upload-link', async (req: Request, res: Response) => {
       return res.status(400).json({ success: false, message: 'Missing URL' });
     }
 
+    const folderId = folder ? parseInt(folder, 10) : null;
+
+    // Try oEmbed discovery first
+    const oembedData = await tryFetchOembed(url);
+    if (oembedData) {
+      const name = String(oembedData.title || new URL(url).hostname);
+      const media = createMedia(name, 'application/json+oembed', 0, folderId);
+
+      const metas: Record<string, unknown> = { url, type: oembedData.type };
+      if (oembedData.title) { metas.title = oembedData.title; metas.alt = oembedData.title; }
+      if (oembedData.thumbnail_url) metas.image = oembedData.thumbnail_url;
+      if (oembedData.html) {
+        const width = Number(oembedData.width) || 200;
+        const height = Number(oembedData.height) || 113;
+        metas.code = { html: oembedData.html, ratio: (height / width) * 100 };
+      }
+      if (oembedData.provider_name) metas.provider = { name: oembedData.provider_name, url: oembedData.provider_url };
+      if (oembedData.author_name) metas.author = { name: oembedData.author_name, url: oembedData.author_url };
+
+      updateMedia(media.id, { metas: JSON.stringify(metas) });
+
+      return res.json({ success: true, message: 'oEmbed imported successfully' });
+    }
+
+    // Fallback: download as regular file
     const response = await fetch(url);
     if (!response.ok) {
       return res.status(400).json({ success: false, message: 'Failed to fetch URL' });
@@ -444,10 +522,10 @@ app.post('/api/upload-link', async (req: Request, res: Response) => {
     const urlPath = new URL(url).pathname;
     const filename = random_names ? `image-${Date.now()}.jpg` : path.basename(urlPath);
 
-    const media = createMedia(filename, contentType, buffer.byteLength, folder ? parseInt(folder, 10) : null);
+    const media = createMedia(filename, contentType, buffer.byteLength, folderId);
     await storeMediaFromBuffer(buildMediaStoragePath(media), Buffer.from(buffer));
 
-    return res.json({ success: true, message: 'Image uploaded successfully' });
+    return res.json({ success: true, message: 'File uploaded successfully' });
   } catch (error) {
     console.error('Error in upload-link:', error);
     return res.status(500).json({ success: false, message: 'Upload failed' });

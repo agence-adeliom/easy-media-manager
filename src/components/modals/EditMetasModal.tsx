@@ -42,7 +42,7 @@ export function EditMetasModal() {
       });
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["easy-media", "files"] });
+      await queryClient.invalidateQueries({ queryKey: ["files"] });
       closeModal();
       toast.success(t("edit_metas_success"));
     },

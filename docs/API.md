@@ -55,7 +55,31 @@ Fetch routes use `GET` with query parameters. Mutation routes use `POST` with JS
 }
 ```
 
-**Possible file types:** `image`, `video`, `audio`, `pdf`, `compressed`, `text`, `application`, `file`, `folder`
+**Possible file types:** `image`, `video`, `audio`, `pdf`, `compressed`, `text`, `application`, `application/json+oembed`, `file`, `folder`
+
+oEmbed items carry a rich `metas` object:
+```json
+{
+  "id": 42,
+  "name": "My YouTube Video",
+  "type": "application/json+oembed",
+  "size": 0,
+  "path": "/api/uploads/my-youtube-video-42",
+  "metas": {
+    "url": "https://www.youtube.com/watch?v=...",
+    "title": "My YouTube Video",
+    "alt": "My YouTube Video",
+    "image": "https://i.ytimg.com/vi/.../hqdefault.jpg",
+    "code": {
+      "html": "<iframe ...></iframe>",
+      "ratio": 56.25
+    },
+    "provider": { "name": "YouTube", "url": "https://www.youtube.com/" },
+    "author": { "name": "Channel Name", "url": "https://www.youtube.com/@..." },
+    "type": "video"
+  }
+}
+```
 
 ---
 
@@ -111,16 +135,23 @@ The `dz*` parameters are used for chunked uploads (Dropzone.js). Chunks are asse
 
 ## POST /api/upload-link
 
+Imports a remote URL. The endpoint automatically detects oEmbed-capable URLs (YouTube, Vimeo, SoundCloud, Dailymotion, Flickr, TED, Twitter/X) and stores them as `application/json+oembed` items with full metadata (title, thumbnail, embed code, provider, author). For all other URLs the raw file is downloaded and stored normally.
+
 **Body:**
 | Param | Type | Required | Description |
 |-------|------|----------|-------------|
-| `url` | string | yes | Remote URL to download and import |
+| `url` | string | yes | Remote URL to import |
 | `folder` | integer | no | Target folder ID |
-| `random_names` | boolean | no | Generate a random filename instead of using the original |
+| `random_names` | boolean | no | Generate a random filename (only applies to non-oEmbed downloads) |
 
-**Response (200):**
+**Response (200) — oEmbed:**
 ```json
-{ "success": true, "message": "Image uploaded successfully" }
+{ "success": true, "message": "oEmbed imported successfully" }
+```
+
+**Response (200) — regular file:**
+```json
+{ "success": true, "message": "File uploaded successfully" }
 ```
 
 **Response (error):**

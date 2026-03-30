@@ -32,7 +32,7 @@ export function UploadLinkModal() {
       });
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["easy-media", "files"] });
+      await queryClient.invalidateQueries({ queryKey: ["files"] });
       setUrl("");
       closeModal();
       toast.success(t("upload_link_success"));

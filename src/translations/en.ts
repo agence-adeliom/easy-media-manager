@@ -133,5 +133,7 @@ export const enTranslations: EasyMediaTranslations = {
   upload_use_random_names: 'Use Random Names ?',
   upload_in_progress: 'Upload Is Already In Progress',
   upload_via_url: 'Upload via URL',
+  upload_link_success: 'Successfully imported',
+  upload_link_unavailable: 'URL import unavailable.',
   video: 'Video',
 };

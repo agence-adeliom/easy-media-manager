@@ -8,7 +8,7 @@ import { useTranslations } from "@/hooks/use-translations";
 import { Tooltip } from "@/components/ui/Tooltip";
 import { cn } from "@/lib/cn";
 import type { MediaItem } from "@/types/media";
-import { isFolder } from "@/types/media";
+import { isFolder, isMediaFile } from "@/types/media";
 
 export interface FileCardProps {
   item: MediaItem;
@@ -55,6 +55,8 @@ export function FileCard({
     ? `translate3d(${draggable.transform.x}px, ${draggable.transform.y}px, 0)`
     : undefined;
   const showImagePreview = !isFolder(item) && fileType.isImage(item) && imagePreviewAvailable;
+  const oembedThumbnailUrl = isMediaFile(item) && fileType.isOembed(item) ? (item.metas.image ?? null) : null;
+  const showOembedThumbnail = oembedThumbnailUrl !== null && imagePreviewAvailable;
 
   useEffect(() => {
     setImagePreviewAvailable(true);
@@ -98,6 +100,14 @@ export function FileCard({
             loading="lazy"
             onError={() => setImagePreviewAvailable(false)}
             src={item.path}
+          />
+        ) : showOembedThumbnail ? (
+          <img
+            alt={item.name}
+            className="h-10 w-10 rounded object-cover"
+            loading="lazy"
+            onError={() => setImagePreviewAvailable(false)}
+            src={oembedThumbnailUrl}
           />
         ) : (
           <FileIcon item={item} />

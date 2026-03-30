@@ -513,9 +513,10 @@ interface MediaMetas {
   title?: string;
   description?: string;
   icon?: string;
-  code?: { html: string; ratio?: number };           // oEmbed embed code
-  provider?: { name: string; url?: string };          // oEmbed provider
-  author?: { name: string; url?: string };            // oEmbed author
+  image?: string;                                      // oEmbed thumbnail URL
+  code?: { html: string; ratio?: number };             // oEmbed embed code (ratio = height/width * 100)
+  provider?: { name: string; url?: string };           // oEmbed provider
+  author?: { name: string; url?: string };             // oEmbed author
   type?: string;
   url?: string;
   duration?: number;                                  // Audio/video duration in seconds
