@@ -83,7 +83,7 @@
     "multer": "*",
     "tsx": "*",
     "typescript": "^5.7.0",
-    "vite": "^6.0.0",
+    "vite": "^6.4.2",
     "vite-plugin-dts": "^4.5.4"
   }
 }
