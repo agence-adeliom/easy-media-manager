@@ -116,7 +116,6 @@ Open a modal and wait for the user to select a file:
 ```typescript
 const file = await EasyMedia.pick({
   restrictions: {
-    path: '/images',           // restrict navigation to this folder
     types: 'images',           // only show image files, while keeping folders navigable
     uploadSize: 5_000_000,     // 5 MB max
   },

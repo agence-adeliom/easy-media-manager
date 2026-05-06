@@ -57,7 +57,7 @@ const file = await EasyMedia.pick();
 
 // Per-call overrides are still supported
 const image = await EasyMedia.pick({
-  restrictions: { path: '/images', types: 'images' },
+  restrictions: { types: 'images' },
   features: { enableDelete: false },
 });
 ```
@@ -269,7 +269,6 @@ interface PickOptions {
 }
 
 interface PickRestrictions {
-  path?: string | null;
   types?: PickFileType | PickFileType[] | null;
   uploadSize?: number | null;
 }
@@ -286,7 +285,6 @@ interface PickRestrictions {
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `path` | `string \| null` | Restrict the picker to a specific folder path. The user cannot navigate above it. |
 | `types` | `PickFileType \| PickFileType[] \| null` | Allowed media categories in this picker session. Defaults to `all`. Folders remain visible for navigation unless the only type is `folder` / `folders`. |
 | `uploadSize` | `number \| null` | Maximum upload file size in bytes. |
 
@@ -334,7 +332,6 @@ In picker sessions, the toolbar type filter is limited to the categories allowed
 ```typescript
 const image = await EasyMedia.pick({
   restrictions: {
-    path: '/uploads/images',
     types: 'images',
     uploadSize: 10_000_000, // 10 MB
   },

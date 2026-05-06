@@ -66,7 +66,6 @@ export type PickFileType =
   | "oembed";
 
 export interface PickRestrictions {
-  path?: string | null;
   types?: PickFileType | PickFileType[] | null;
   uploadSize?: number | null;
 }

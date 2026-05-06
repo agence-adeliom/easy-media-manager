@@ -60,12 +60,11 @@ export function FileGrid({ onItemsChange }: FileGridProps) {
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
 
   const query = useInfiniteQuery({
-    queryKey: ["files", currentFolderId, searchQuery, currentPath, restrictions.path ?? "", restrictions.types ?? "all", refreshIndex],
+    queryKey: ["files", currentFolderId, searchQuery, currentPath, restrictions.types ?? "all", refreshIndex],
     queryFn: async ({ pageParam }) => {
       const response = await easyMediaClient.getFiles(String(pageParam || routes?.files), {
         folder: currentFolderId,
         search: searchQuery || undefined,
-        path: restrictions.path ?? undefined,
       });
 
       if (response.error) {
