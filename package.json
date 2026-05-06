@@ -83,6 +83,7 @@
     "concurrently": "*",
     "express": "*",
     "multer": "*",
+    "postcss-prefix-selector": "^2.1.1",
     "tsx": "*",
     "typescript": "^5.7.0",
     "vite": "^6.0.0",
