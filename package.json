@@ -18,14 +18,14 @@
   ],
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "import": "./dist/esm/index.js",
+      "types": "./dist/esm/index.d.ts"
     },
     "./plugin-sdk": {
-      "import": "./dist/plugin-sdk.js",
-      "types": "./dist/plugin-sdk.d.ts"
+      "import": "./dist/esm/plugin-sdk.js",
+      "types": "./dist/esm/plugin-sdk.d.ts"
     },
-    "./style.css": "./dist/style.css",
+    "./style.css": "./dist/esm/style.css",
     "./iife": "./dist/iife/easy-media.js",
     "./iife/style.css": "./dist/iife/easy-media.css"
   },

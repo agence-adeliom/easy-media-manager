@@ -24,7 +24,7 @@ export default defineConfig({
     dts({
       include: ['src/index.ts', 'src/plugin-sdk.ts'],
       rollupTypes: true,
-      outDir: 'dist',
+      outDir: 'dist/esm',
     }),
   ],
   css: {
@@ -37,7 +37,7 @@ export default defineConfig({
     process: { env: {} },
   },
   build: {
-    outDir: resolve(__dirname, 'dist'),
+    outDir: resolve(__dirname, 'dist/esm'),
     emptyOutDir: true,
     lib: {
       entry: {
