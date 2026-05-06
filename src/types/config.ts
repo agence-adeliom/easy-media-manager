@@ -47,9 +47,27 @@ export interface EasyMediaFeatureFlags {
   enableSort: boolean;
 }
 
+export type PickFileType =
+  | "all"
+  | "image"
+  | "images"
+  | "video"
+  | "videos"
+  | "audio"
+  | "folder"
+  | "folders"
+  | "text"
+  | "pdf"
+  | "application"
+  | "applications"
+  | "archive"
+  | "archives"
+  | "compressed"
+  | "oembed";
+
 export interface PickRestrictions {
   path?: string | null;
-  uploadTypes?: string[] | null;
+  types?: PickFileType | PickFileType[] | null;
   uploadSize?: number | null;
 }
 

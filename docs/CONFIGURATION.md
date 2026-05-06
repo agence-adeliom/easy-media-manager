@@ -57,7 +57,7 @@ const file = await EasyMedia.pick();
 
 // Per-call overrides are still supported
 const image = await EasyMedia.pick({
-  restrictions: { path: '/images', uploadTypes: ['image/*'] },
+  restrictions: { path: '/images', types: 'images' },
   features: { enableDelete: false },
 });
 ```
@@ -270,7 +270,7 @@ interface PickOptions {
 
 interface PickRestrictions {
   path?: string | null;
-  uploadTypes?: string[] | null;
+  types?: PickFileType | PickFileType[] | null;
   uploadSize?: number | null;
 }
 ```
@@ -287,8 +287,47 @@ interface PickRestrictions {
 | Property | Type | Description |
 |----------|------|-------------|
 | `path` | `string \| null` | Restrict the picker to a specific folder path. The user cannot navigate above it. |
-| `uploadTypes` | `string[] \| null` | Allowed MIME types for uploads in this session (e.g. `["image/*", "application/pdf"]`). |
+| `types` | `PickFileType \| PickFileType[] \| null` | Allowed media categories in this picker session. Defaults to `all`. Folders remain visible for navigation unless the only type is `folder` / `folders`. |
 | `uploadSize` | `number \| null` | Maximum upload file size in bytes. |
+
+```typescript
+type PickFileType =
+  | 'all'
+  | 'image'
+  | 'images'
+  | 'video'
+  | 'videos'
+  | 'audio'
+  | 'folder'
+  | 'folders'
+  | 'text'
+  | 'pdf'
+  | 'application'
+  | 'applications'
+  | 'archive'
+  | 'archives'
+  | 'compressed'
+  | 'oembed';
+```
+
+`PickFileType` uses the same logical categories as the media browser filter and backend `type` field. Plural aliases are provided for caller-facing readability.
+
+| Value | Matches |
+|-------|---------|
+| `all` | All files and folders. This is the default when `types` is omitted. |
+| `image` / `images` | Image files. |
+| `video` / `videos` | Video files. |
+| `audio` | Audio files. |
+| `folder` / `folders` | Folders only. |
+| `text` | Text files. |
+| `pdf` | PDF files. |
+| `application` / `applications` | Application files, excluding archives that are categorized as `compressed`. |
+| `archive` / `archives` / `compressed` | Archive files. |
+| `oembed` | oEmbed media items. |
+
+When `types` targets file categories, folders are still displayed so the user can navigate. To show only folders, use `types: 'folders'`.
+
+In picker sessions, the toolbar type filter is limited to the categories allowed by `restrictions.types`.
 
 ### Example
 
@@ -296,12 +335,22 @@ interface PickRestrictions {
 const image = await EasyMedia.pick({
   restrictions: {
     path: '/uploads/images',
-    uploadTypes: ['image/jpeg', 'image/png', 'image/webp'],
+    types: 'images',
     uploadSize: 10_000_000, // 10 MB
   },
   features: {
     enableDelete: false,   // read-only picker
     enableBulkSelection: false,
+  },
+});
+```
+
+Allow multiple categories:
+
+```typescript
+const document = await EasyMedia.pick({
+  restrictions: {
+    types: ['pdf', 'text'],
   },
 });
 ```

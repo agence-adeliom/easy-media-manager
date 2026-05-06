@@ -1,8 +1,15 @@
 import { ChevronDown, Filter } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { useTranslations } from "@/hooks/use-translations";
+import { resolvePickFilterTypes } from "@/lib/file-utils";
 import { useMediaStore } from "@/store/media-store";
+import type { FileCategory } from "@/types/media";
+
+interface FilterOption {
+  value: "" | FileCategory;
+  label: string;
+}
 
 export function FilterSort() {
   const t = useTranslations();
@@ -10,19 +17,36 @@ export function FilterSort() {
   const filterName = useMediaStore((state) => state.filterName);
   const sortField = useMediaStore((state) => state.sortField);
   const sortDirection = useMediaStore((state) => state.sortDirection);
+  const restrictions = useMediaStore((state) => state.restrictions);
   const setFilter = useMediaStore((state) => state.setFilter);
   const setSort = useMediaStore((state) => state.setSort);
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const filterOptions = [
+  const allFilterOptions = useMemo<FilterOption[]>(() => [
     { value: "", label: t("filter_all") },
     { value: "image", label: t("filter_images") },
     { value: "video", label: t("filter_videos") },
     { value: "audio", label: t("filter_audio") },
     { value: "folder", label: t("filter_folders") },
-    { value: "text", label: t("filter_text_pdf") },
+    { value: "text", label: t("filter_text") },
+    { value: "pdf", label: t("filter_pdf") },
     { value: "application", label: t("filter_applications") },
-  ];
+    { value: "compressed", label: t("filter_archives") },
+    { value: "oembed", label: t("filter_oembed") },
+  ], [t]);
+  const filterOptions = useMemo(() => {
+    const allowedTypes = resolvePickFilterTypes(restrictions.types);
+
+    if (allowedTypes === null) {
+      return allFilterOptions;
+    }
+
+    const allowedTypeSet = new Set<FileCategory>(allowedTypes);
+
+    return allFilterOptions.filter((option) => option.value === "" || allowedTypeSet.has(option.value));
+  }, [allFilterOptions, restrictions.types]);
+  const filterTypeOptionsCount = filterOptions.filter((option) => option.value !== "").length;
+  const showFilter = features.enableFilter && filterTypeOptionsCount > 1;
   const sortOptions = [
     { value: "", label: t("sort_none") },
     { value: "name", label: t("name") },
@@ -44,17 +68,28 @@ export function FilterSort() {
     };
   }, []);
 
+  useEffect(() => {
+    if (filterName && (!showFilter || !filterOptions.some((option) => option.value === filterName))) {
+      setFilter(null);
+    }
+  }, [filterName, filterOptions, setFilter, showFilter]);
+
+  if (!showFilter && !features.enableSort) {
+    return null;
+  }
+
   const activeFilterLabel = filterOptions.find((option) => option.value === (filterName ?? ""))?.label ?? t("filter_all");
   const activeSortLabel = sortOptions.find((option) => option.value === (sortField ?? ""))?.label ?? t("sort_none");
   const activeSortDirectionLabel = sortField ? (sortDirection === 1 ? t("sort_ascending") : t("sort_descending")) : "";
-  const hasActiveFilter = Boolean(filterName);
-  const hasActiveState = hasActiveFilter;
+  const hasActiveFilter = showFilter && Boolean(filterName);
+  const hasActiveSort = features.enableSort && Boolean(sortField);
+  const hasActiveState = hasActiveFilter || hasActiveSort;
 
   const buttonLabel = (() => {
-    if (features.enableFilter && features.enableSort) {
+    if (showFilter && features.enableSort) {
       return `${activeFilterLabel} · ${activeSortLabel}${activeSortDirectionLabel ? ` (${activeSortDirectionLabel})` : ""}`;
     }
-    if (features.enableFilter) {
+    if (showFilter) {
       return activeFilterLabel;
     }
     return `${activeSortLabel}${activeSortDirectionLabel ? ` (${activeSortDirectionLabel})` : ""}`;
@@ -77,7 +112,7 @@ export function FilterSort() {
       </button>
       {isOpen ? (
         <div className="absolute right-0 top-12 z-20 w-64 rounded-lg border border-slate-200 bg-white p-2 shadow-xl">
-          {features.enableFilter ? (
+          {showFilter ? (
             <div className={features.enableSort ? "border-b border-slate-100 pb-2" : ""}>
               <p className="px-2 pb-1 text-xs font-semibold uppercase tracking-wide text-slate-400">{t("filter_section")}</p>
               {filterOptions.map((option) => {
@@ -97,7 +132,7 @@ export function FilterSort() {
             </div>
           ) : null}
           {features.enableSort ? (
-            <div className={features.enableFilter ? "pt-2" : ""}>
+            <div className={showFilter ? "pt-2" : ""}>
               <p className="px-2 pb-1 text-xs font-semibold uppercase tracking-wide text-slate-400">{t("sort_section")}</p>
               {sortOptions.map((option) => {
                 const isActive = (sortField ?? "") === option.value;

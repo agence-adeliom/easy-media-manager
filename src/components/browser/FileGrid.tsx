@@ -11,7 +11,7 @@ import { InfiniteLoader } from "@/components/browser/InfiniteLoader";
 import { useClipboard } from "@/hooks/use-clipboard";
 import { useInfiniteScroll } from "@/hooks/use-infinite-scroll";
 import { useTranslations } from "@/hooks/use-translations";
-import { filterByHiddenExt, filterByType, sortFiles } from "@/lib/file-utils";
+import { filterByHiddenExt, filterByPickTypes, filterByType, sortFiles } from "@/lib/file-utils";
 import { CORE_MODAL_IDS } from "@/lib/modal-ids";
 import { useMediaStore } from "@/store/media-store";
 import { usePickStore } from "@/store/pick-store";
@@ -60,7 +60,7 @@ export function FileGrid({ onItemsChange }: FileGridProps) {
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
 
   const query = useInfiniteQuery({
-    queryKey: ["files", currentFolderId, searchQuery, currentPath, restrictions.path ?? "", refreshIndex],
+    queryKey: ["files", currentFolderId, searchQuery, currentPath, restrictions.path ?? "", restrictions.types ?? "all", refreshIndex],
     queryFn: async ({ pageParam }) => {
       const response = await easyMediaClient.getFiles(String(pageParam || routes?.files), {
         folder: currentFolderId,
@@ -130,10 +130,14 @@ export function FileGrid({ onItemsChange }: FileGridProps) {
       return pagedItems;
     }
 
-    const visible = filterByHiddenExt(pagedItems, config.hideFilesExt);
+    const visible = filterByPickTypes(
+      filterByHiddenExt(pagedItems, config.hideFilesExt),
+      restrictions.types,
+      config.mimeTypes,
+    );
 
     return sortFiles(filterByType(visible, filterName, config.mimeTypes), sortField, sortDirection);
-  }, [config, filterName, pagedItems, sortDirection, sortField]);
+  }, [config, filterName, pagedItems, restrictions.types, sortDirection, sortField]);
 
   const canResetFilterFromEmptyState = !searchQuery && Boolean(filterName) && pagedItems.length > 0 && items.length === 0;
 

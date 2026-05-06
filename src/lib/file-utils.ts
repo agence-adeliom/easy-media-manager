@@ -1,4 +1,4 @@
-import type { EasyMediaConfig } from "@/types/config";
+import type { EasyMediaConfig, PickFileType } from "@/types/config";
 import type { FileCategory, MediaItem } from "@/types/media";
 
 type MimeTypes = EasyMediaConfig["mimeTypes"];
@@ -161,6 +161,64 @@ export function filterByHiddenExt(files: MediaItem[], hideFilesExt: string[]): M
   });
 }
 
+function normalizePickFileType(type: PickFileType): FileCategory | null {
+  switch (type) {
+    case "all":
+      return null;
+    case "images":
+      return "image";
+    case "videos":
+      return "video";
+    case "folders":
+      return "folder";
+    case "applications":
+      return "application";
+    case "archive":
+    case "archives":
+      return "compressed";
+    default:
+      return type;
+  }
+}
+
+export function resolvePickFilterTypes(pickTypes: PickFileType | PickFileType[] | null | undefined): FileCategory[] | null {
+  if (!pickTypes) {
+    return null;
+  }
+
+  const normalizedTypes = (Array.isArray(pickTypes) ? pickTypes : [pickTypes])
+    .map(normalizePickFileType)
+    .filter((type): type is FileCategory => type !== null);
+
+  if (normalizedTypes.length === 0) {
+    return null;
+  }
+
+  return Array.from(new Set(normalizedTypes));
+}
+
+export function filterByPickTypes(
+  files: MediaItem[],
+  pickTypes: PickFileType | PickFileType[] | null | undefined,
+  mimeTypes: MimeTypes,
+): MediaItem[] {
+  const normalizedTypes = resolvePickFilterTypes(pickTypes);
+
+  if (normalizedTypes === null) {
+    return [...files];
+  }
+
+  const onlyFolders = normalizedTypes.length === 1 && normalizedTypes[0] === "folder";
+
+  return files.filter((item) => {
+    if (item.type === "folder" && !onlyFolders) {
+      return true;
+    }
+
+    return normalizedTypes.some((type) => fileTypeIs(item, type, mimeTypes));
+  });
+}
+
 export function sortFiles(files: MediaItem[], field: string | null, direction: 1 | -1): MediaItem[] {
   if (field === null) {
     return [...files];
@@ -181,12 +239,6 @@ export function filterByType(
   }
 
   switch (filterName) {
-    case "text":
-      return files.filter((item) => fileTypeIs(item, "text", mimeTypes) || fileTypeIs(item, "pdf", mimeTypes));
-    case "application":
-      return files.filter(
-        (item) => fileTypeIs(item, "application", mimeTypes) || fileTypeIs(item, "compressed", mimeTypes),
-      );
     default:
       return files.filter((item) => fileTypeIs(item, filterName, mimeTypes));
   }

@@ -69,7 +69,16 @@ document.getElementById('pick-any')!.addEventListener('click', async () => {
 document.getElementById('pick-image')!.addEventListener('click', async () => {
   const file = await EasyMedia.pick({
     restrictions: {
-      uploadTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml'],
+      types: 'images',
+    },
+  });
+  renderResult(file);
+});
+
+document.getElementById('pick-image-pdf')!.addEventListener('click', async () => {
+  const file = await EasyMedia.pick({
+    restrictions: {
+      types: ['images', 'pdf'],
     },
   });
   renderResult(file);

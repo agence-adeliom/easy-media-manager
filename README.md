@@ -117,7 +117,7 @@ Open a modal and wait for the user to select a file:
 const file = await EasyMedia.pick({
   restrictions: {
     path: '/images',           // restrict navigation to this folder
-    uploadTypes: ['image/*'],  // only allow image uploads
+    types: 'images',           // only show image files, while keeping folders navigable
     uploadSize: 5_000_000,     // 5 MB max
   },
 });
@@ -126,6 +126,8 @@ if (file) {
   console.log(file.path, file.metas?.alt);
 }
 ```
+
+`restrictions.types` accepts one category or an array of categories. Use `all` or omit it to show every media type. Supported values are `images`, `videos`, `audio`, `folders`, `text`, `pdf`, `applications`, `archives`, and `oembed` plus their singular internal names such as `image`, `video`, `folder`, `application`, and `compressed`.
 
 ---
 
