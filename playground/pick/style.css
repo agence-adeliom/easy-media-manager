@@ -8,23 +8,39 @@ body {
 }
 
 #demo {
-  max-width: 720px;
+  max-width: 1100px;
   margin: 48px auto;
   padding: 0 24px;
 }
 
 h1 { font-size: 1.5rem; margin-bottom: 32px; }
-h2 { font-size: 1rem; margin-bottom: 12px; color: #555; }
+h2 { font-size: 1rem; margin-bottom: 12px; }
+
+.sections-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+@media (max-width: 700px) {
+  .sections-grid { grid-template-columns: 1fr; }
+}
 
 section {
   background: #fff;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
   padding: 24px;
-  margin-bottom: 24px;
 }
 
-#preview {
+.instance-1 h2 { color: #555; }
+.instance-2 h2 { color: #15803d; }
+
+.instance-2 {
+  border-color: #bbf7d0;
+}
+
+.preview-area {
   min-height: 120px;
   border: 2px dashed #d0d0d0;
   border-radius: 6px;
@@ -37,9 +53,13 @@ section {
   overflow: hidden;
 }
 
-#preview img {
+.instance-2 .preview-area {
+  border-color: #86efac;
+}
+
+.preview-area img {
   max-width: 100%;
-  max-height: 240px;
+  max-height: 180px;
   display: block;
   border-radius: 4px;
 }
@@ -51,33 +71,42 @@ section {
 }
 
 button {
-  padding: 8px 16px;
+  padding: 8px 14px;
   border: 1px solid #ccc;
   border-radius: 6px;
   background: #fff;
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   transition: background 0.15s;
 }
 
 button:hover { background: #f0f0f0; }
 
-button#pick-any { background: #1a1a1a; color: #fff; border-color: #1a1a1a; }
-button#pick-any:hover { background: #333; }
+/* Instance 1 accents */
+.instance-1 #pick-any-1 { background: #1a1a1a; color: #fff; border-color: #1a1a1a; }
+.instance-1 #pick-any-1:hover { background: #333; }
 
-button#pick-image { background: #2563eb; color: #fff; border-color: #2563eb; }
-button#pick-image:hover { background: #1d4ed8; }
+.instance-1 #pick-image-1 { background: #2563eb; color: #fff; border-color: #2563eb; }
+.instance-1 #pick-image-1:hover { background: #1d4ed8; }
 
-#result {
+/* Instance 2 accents */
+.instance-2 #pick-docs-2 { background: #15803d; color: #fff; border-color: #15803d; }
+.instance-2 #pick-docs-2:hover { background: #166534; }
+
+.instance-2 #pick-images-2 { background: #0d9488; color: #fff; border-color: #0d9488; }
+.instance-2 #pick-images-2:hover { background: #0f766e; }
+
+.result-area {
   background: #1e1e1e;
   color: #d4d4d4;
   padding: 16px;
   border-radius: 8px;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   line-height: 1.5;
   overflow-x: auto;
   white-space: pre-wrap;
+  margin-top: 16px;
   display: none;
 }
 
-#result.visible { display: block; }
+.result-area.visible { display: block; }

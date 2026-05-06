@@ -10,18 +10,31 @@
   <div id="demo">
     <h1>EasyMedia.pick() demo</h1>
 
-    <section>
-      <h2>Featured image</h2>
-      <div id="preview">No file selected</div>
-      <div class="actions">
-        <button id="pick-any">Browse media…</button>
-        <button id="pick-image">Browse images only…</button>
-        <button id="pick-image-pdf">Browse img + pdf only…</button>
-        <button id="clear">Clear</button>
-      </div>
-    </section>
+    <div class="sections-grid">
+      <section class="instance-1">
+        <h2>Featured image</h2>
+        <div id="preview-1" class="preview-area">No file selected</div>
+        <div class="actions">
+          <button id="pick-any-1">Browse media…</button>
+          <button id="pick-image-1">Browse images only…</button>
+          <button id="pick-image-pdf-1">Browse img + pdf only…</button>
+          <button id="clear-1" class="btn-clear">Clear</button>
+        </div>
+        <pre id="result-1" class="result-area"></pre>
+      </section>
 
-    <pre id="result"></pre>
+      <section class="instance-2">
+        <h2>Attached document</h2>
+        <div id="preview-2" class="preview-area">No file selected</div>
+        <div class="actions">
+          <button id="pick-docs-2">Browse documents…</button>
+          <button id="pick-images-2">Browse images…</button>
+          <button id="pick-any-2">Browse media…</button>
+          <button id="clear-2" class="btn-clear">Clear</button>
+        </div>
+        <pre id="result-2" class="result-area"></pre>
+      </section>
+    </div>
   </div>
   <script type="module" src="./main.ts"></script>
 </body>
