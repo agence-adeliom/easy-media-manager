@@ -15,6 +15,19 @@ import { frTranslations } from "@/translations/fr";
 import "./styles/main.css";
 
 export { enTranslations, frTranslations };
+export type {
+  EasyMediaConfig,
+  EasyMediaConfigOverride,
+  EasyMediaFeatureFlags,
+  EasyMediaInitConfig,
+  EasyMediaMountOptions,
+  EasyMediaRoutes,
+  EasyMediaTranslations,
+  PickFileType,
+  PickOptions,
+  PickRestrictions,
+} from "@/types/config";
+export type { MediaFileItem, MediaItem, MediaMetas } from "@/types/media";
 
 interface EasyMediaWindowApi {
   use: (plugin: EasyMediaPlugin) => void;

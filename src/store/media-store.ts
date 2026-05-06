@@ -13,6 +13,8 @@ import { getMediaItemKey, type MediaItem } from "@/types/media";
 
 type MediaMode = "fullpage" | "modal";
 type SortDirection = 1 | -1;
+type ResolvedEasyMediaConfig = Omit<EasyMediaConfig, "hideFilesExt" | "mimeTypes"> &
+  Required<Pick<EasyMediaConfig, "hideFilesExt" | "mimeTypes">>;
 
 interface FolderStackItem {
   id: number;
@@ -47,7 +49,7 @@ const DEFAULT_FEATURES: EasyMediaFeatureFlags = {
 const DEFAULT_RESTRICTIONS: PickRestrictions = {};
 
 export interface MediaStoreState {
-  config: EasyMediaConfig | null;
+  config: ResolvedEasyMediaConfig | null;
   routes: EasyMediaRoutes | null;
   translations: EasyMediaTranslations;
   baseFeatures: EasyMediaFeatureFlags;
@@ -166,10 +168,13 @@ function applyBaseUrl(routes: EasyMediaRoutes, baseUrl: string | undefined): Eas
   }
 
   const base = baseUrl.replace(/\/$/, "");
+  const prefixedRoutes: EasyMediaRoutes = { ...routes };
 
-  return Object.fromEntries(
-    Object.entries(routes).map(([key, value]) => [key, `${base}${value}`]),
-  ) as EasyMediaRoutes;
+  for (const key of Object.keys(routes) as Array<keyof EasyMediaRoutes>) {
+    prefixedRoutes[key] = `${base}${routes[key]}`;
+  }
+
+  return prefixedRoutes;
 }
 
 function dedupeMediaItems(items: MediaItem[]): MediaItem[] {
@@ -227,6 +232,7 @@ export function createMediaStore() {
       set({
         config: {
           ...config,
+          generatingAlts: config.generatingAlts ?? false,
           hideFilesExt: config.hideFilesExt ?? [],
           mimeTypes: { ...DEFAULT_MIME_TYPES, ...config.mimeTypes },
         },
