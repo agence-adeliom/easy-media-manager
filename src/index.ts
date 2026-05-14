@@ -80,6 +80,7 @@ function ensureRoot(): Root {
     rootElement = document.createElement("div");
     rootElement.id = "easy-media-react-root";
     rootElement.style.display = "contents";
+    rootElement.classList.add('easy-media');
     document.body.appendChild(rootElement);
     root = createRoot(rootElement);
   }
