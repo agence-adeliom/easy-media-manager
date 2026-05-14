@@ -1,4 +1,5 @@
 import { getPluginModalId } from "@/lib/modal-ids";
+import { getLocaleFallbacks } from "@/lib/locale";
 import type { EasyMediaModalDefinition, EasyMediaPlugin, EasyMediaToolbarAction } from "@/plugins/types";
 
 let registryLocked = false;
@@ -74,12 +75,18 @@ export function getRegisteredPlugins(): EasyMediaPlugin[] {
 }
 
 export function getPluginTranslations(locale: string = 'en'): Record<string, string> {
+  const localeCandidates = getLocaleFallbacks(locale);
+
   return registeredPlugins.reduce<Record<string, string>>((translations, plugin) => {
     if (!plugin.translations) {
       return translations;
     }
 
-    const localeTranslations = plugin.translations[locale] ?? plugin.translations['en'] ?? {};
+    const localeTranslations =
+      localeCandidates
+        .map((candidateLocale) => plugin.translations?.[candidateLocale])
+        .find((candidateTranslations) => candidateTranslations != null) ??
+      {};
 
     return {
       ...translations,

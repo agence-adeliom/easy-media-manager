@@ -402,7 +402,13 @@ const myPlugin: EasyMediaPlugin = {
 
 ## Plugin translations and locale
 
-Plugins define their translations as a locale-keyed object. The library automatically picks the right locale based on the `locale` field passed to `EasyMedia.init()` (defaults to `'en'`, falls back to `'en'` if the requested locale is not defined by the plugin):
+Plugins define their translations as a locale-keyed object. The library automatically picks the right locale based on the `locale` field passed to `EasyMedia.init()`:
+
+- exact match first: `fr_FR` uses `fr_FR` if available
+- language fallback next: `fr_BE` falls back to `fr`
+- final fallback: `en`
+
+The locale is normalized, so `fr-FR` and `fr_FR` are treated the same.
 
 ```typescript
 EasyMedia.init({
