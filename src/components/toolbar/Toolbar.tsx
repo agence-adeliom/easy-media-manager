@@ -49,7 +49,7 @@ export function Toolbar() {
     <div className="flex flex-wrap items-start gap-2 bg-neutral-700 px-3 py-2 md:flex-nowrap md:items-center md:justify-between">
       <div className="flex items-center gap-1">
         {features.enableUpload ? (
-          <Tooltip content={t("upload")}>
+          <Tooltip content={t("upload_main")}>
             <Button
               aria-pressed={uploadPanelOpen}
               className={`px-2 ${uploadButtonClassName}`}
@@ -62,7 +62,7 @@ export function Toolbar() {
           </Tooltip>
         ) : null}
         {features.enableUpload ? (
-          <Tooltip content={t("new_folder")}>
+          <Tooltip content={t("add_new_folder")}>
             <Button className={`px-2 ${toolbarButtonClassName}`} onClick={() => openModal(CORE_MODAL_IDS.newFolder)} type="button" variant="ghost">
               <FolderPlus className="h-4 w-4" />
             </Button>

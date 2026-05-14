@@ -61,6 +61,7 @@
     "last_modified": "Last Modified",
     "library": "Home",
     "loading": "Loading Files",
+    "editor": "Editor",
     "empty": {
       "folder_title": "Empty folder",
       "folder_description": "This folder does not contain any items yet.",
@@ -92,6 +93,7 @@
     "open": "Open",
     "preview": "Preview",
     "refresh_notif": "Press The Refresh Button To View Them",
+    "refresh": "Refresh",
     "rename": {
       "file_folder": "Rename File/Folder",
       "main": "Rename",
@@ -220,6 +222,7 @@
     "last_modified": "Dernière modification",
     "library": "Racine",
     "loading": "Chargement des fichiers",
+    "editor": "Éditeur",
     "empty": {
       "folder_title": "Dossier vide",
       "folder_description": "Ce dossier ne contient encore aucun élément.",
@@ -251,6 +254,7 @@
     "open": "Ouvrir",
     "preview": "Aperçu",
     "refresh_notif": "Appuyez sur le bouton Actualiser pour les afficher",
+    "refresh": "Actualiser",
     "rename": {
       "file_folder": "Renommer le fichier/dossier",
       "main": "Renommer",
