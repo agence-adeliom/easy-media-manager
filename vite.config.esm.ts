@@ -33,6 +33,10 @@ export default defineConfig({
     },
   },
   define: {
+    // Keep NODE_ENV resolvable so bundled deps (and React's runtime) pick the
+    // production branch. A blanket `process.env: {}` makes NODE_ENV undefined,
+    // which forces the React development jsx-runtime to be bundled.
+    "process.env.NODE_ENV": JSON.stringify("production"),
     "process.env": {},
     process: { env: {} },
   },
@@ -47,7 +51,13 @@ export default defineConfig({
       formats: ['es'],
     },
     rollupOptions: {
-      external: ['react', 'react-dom', 'react-dom/client'],
+      external: [
+        'react',
+        'react-dom',
+        'react-dom/client',
+        'react/jsx-runtime',
+        'react/jsx-dev-runtime',
+      ],
       output: {
         chunkFileNames: 'chunks/[name].js',
         assetFileNames: (assetInfo) => {
