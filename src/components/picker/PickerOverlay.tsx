@@ -15,7 +15,7 @@ export function PickerOverlay({ children, selectedItem }: PropsWithChildren<Pick
   const cancelPick = usePickStore((state) => state.cancelPick);
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-slate-950/70 p-4">
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-slate-950/70 p-4" data-easy-media-overlay="overlay">
       <button aria-label={t("close")} className="absolute inset-0" onClick={() => cancelPick()} type="button" />
       <div className="relative z-10 flex min-h-0 w-full max-w-[80vw] h-full max-h-[80vh] flex-col overflow-hidden rounded-xl bg-slate-50 shadow-2xl">
         {children}

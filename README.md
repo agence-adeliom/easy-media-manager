@@ -142,6 +142,34 @@ The IIFE bundle embeds React and all dependencies. The ESM build externalises `r
 
 ---
 
+## Customizing styles (CSS overrides)
+
+All of the library's CSS is scoped under the `.easy-media` class to avoid leaking into the
+host application. There is no theming/CSS-variable layer — instead, you can override specific
+styles from your own project's stylesheet.
+
+To make targeting reliable, overlay/modal roots expose a stable hook attribute:
+`data-easy-media-overlay="overlay"`. Use it instead of overriding raw Tailwind utility
+classes (e.g. `.z-40`), which are not part of the public contract and would affect every
+element using that utility.
+
+Load your own stylesheet **after** the library's `style.css`, then target the hook. Example —
+raising the picker/modal overlay above a host element on a Sylius project:
+
+```css
+/* my-project — easy-media overrides */
+.easy-media [data-easy-media-overlay="overlay"] {
+  z-index: 1000;
+}
+```
+
+Specificity note: `.easy-media [data-easy-media-overlay="overlay"]` (0,2,0) ties with the
+library's utility class `.easy-media .z-40` (0,2,0), so it only wins if your stylesheet is
+loaded **after** the library CSS. If load order isn't guaranteed, use `!important` or bump
+specificity (e.g. repeat the scope: `.easy-media.easy-media [data-easy-media-overlay="overlay"]`).
+
+---
+
 ## Plugin system
 
 Plugins add toolbar actions and custom modals without modifying the core library.
