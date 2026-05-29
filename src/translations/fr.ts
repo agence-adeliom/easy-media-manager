@@ -88,6 +88,7 @@ export const frTranslations: EasyMediaTranslations = {
   no_files_in_folder: 'Aucun fichier dans ce dossier',
   nothing_found: "Rien n'a été trouvé",
   open: 'Ouvrir',
+  path_copied: 'Chemin copié',
   preview: 'Aperçu',
   refresh_notif: 'Appuyez sur le bouton Actualiser pour les afficher',
   refresh: 'Actualiser',
