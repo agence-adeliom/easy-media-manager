@@ -2,6 +2,7 @@ import { createElement } from "react";
 import { createRoot, type Root } from "react-dom/client";
 
 import { MediaManager } from "@/components/MediaManager";
+import { ROOT_ELEMENT_ID, setRootElement } from "@/lib/root";
 import { takeQueuedEasyMediaPlugins } from "@/plugins/queue";
 import { getPluginTranslations, lockPluginRegistry, registerPlugin, registerPlugins } from "@/plugins/registry";
 import type { EasyMediaPlugin } from "@/plugins/types";
@@ -78,10 +79,11 @@ function resolveConfig(override: EasyMediaConfigOverride): EasyMediaInitConfig {
 function ensureRoot(): Root {
   if (root === null) {
     rootElement = document.createElement("div");
-    rootElement.id = "easy-media-react-root";
+    rootElement.id = ROOT_ELEMENT_ID;
     rootElement.style.display = "contents";
     rootElement.classList.add('easy-media');
     document.body.appendChild(rootElement);
+    setRootElement(rootElement);
     root = createRoot(rootElement);
   }
 

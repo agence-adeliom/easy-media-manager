@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 
 import { cn } from "@/lib/cn";
+import { getPortalTarget } from "@/lib/root";
 import { Button } from "@/components/ui/Button";
 import { useTranslations } from "@/hooks/use-translations";
 
@@ -76,6 +77,6 @@ export function ModalShell({
         <div className={cn("overflow-y-auto px-6 py-3", bodyClassName)}>{children}</div>
       </section>
     </div>,
-    document.body,
+    getPortalTarget(),
   );
 }
