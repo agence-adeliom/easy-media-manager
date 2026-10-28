@@ -24,7 +24,7 @@ export function PickerOverlay({ children, selectedItem }: PropsWithChildren<Pick
             {t("cancel")}
           </Button>
           <Button disabled={selectedItem === null} onClick={() => resolvePick(selectedItem)} type="button" variant="primary">
-            {t("select")}
+            {t("select_main")}
           </Button>
         </footer>
       </div>

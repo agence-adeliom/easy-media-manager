@@ -19,6 +19,7 @@ import { toast } from "sonner";
 import { easyMediaClient } from "@/api/client";
 import { ModalShell } from "@/components/modals/ModalShell";
 import { Button } from "@/components/ui/Button";
+import { useTranslations } from "@/hooks/use-translations";
 import { CORE_MODAL_IDS } from "@/lib/modal-ids";
 import { useMediaStore } from "@/store/media-store";
 import { isMediaFile } from "@/types/media";
@@ -67,6 +68,7 @@ function getSnapshot(cropper: CropperRef): EditorSnapshot {
 }
 
 export function ImageEditor() {
+  const t = useTranslations();
   const routes = useMediaStore((state) => state.routes);
   const activeModal = useMediaStore((state) => state.activeModal);
   const closeModal = useMediaStore((state) => state.closeModal);
@@ -110,7 +112,7 @@ export function ImageEditor() {
     const state = cropper.getState();
 
     if (!state) {
-      throw new Error("Impossible de recuperer l'etat de l'image.");
+      throw new Error(t("editor_state_error"));
     }
 
     cropper.setCoordinates({
@@ -124,13 +126,13 @@ export function ImageEditor() {
   const mutation = useMutation({
     mutationFn: async () => {
       if (!routes?.uploadCropped || selectedFile === null || !isMediaFile(selectedFile)) {
-        throw new Error("Edition impossible.");
+        throw new Error(t("editor_unavailable"));
       }
 
       const cropper = cropperRef.current;
 
       if (!cropper) {
-        throw new Error("Editeur indisponible.");
+        throw new Error(t("editor_unavailable"));
       }
 
       ensureSelectionForSave(cropper);
@@ -141,7 +143,7 @@ export function ImageEditor() {
       })?.toDataURL(selectedFile.type);
 
       if (!dataUrl) {
-        throw new Error("Impossible de generer l'image recadree.");
+        throw new Error(t("editor_crop_error"));
       }
 
       return easyMediaClient.uploadCropped(routes.uploadCropped, {
@@ -159,10 +161,10 @@ export function ImageEditor() {
 
       await queryClient.invalidateQueries({ queryKey: ["files"] });
       closeModal();
-      toast.success("Image enregistree.");
+      toast.success(t("editor_save_success"));
     },
     onError: (caughtError) => {
-      const message = caughtError instanceof Error ? caughtError.message : "Erreur inconnue.";
+      const message = caughtError instanceof Error ? caughtError.message : t("unknown_error");
       setError(message);
       toast.error(message);
     },
@@ -209,7 +211,7 @@ export function ImageEditor() {
   }
 
   return (
-    <ModalShell onClose={closeModal} open title={`Edition: ${selectedFile.name}`} widthClassName="max-w-6xl">
+    <ModalShell onClose={closeModal} open title={t("editor_title").replace("%name%", selectedFile.name)} widthClassName="max-w-6xl">
       <div className="flex flex-col gap-4">
         <div className="h-[60vh] overflow-hidden rounded-2xl bg-slate-950 p-3">
           <Cropper
@@ -233,47 +235,47 @@ export function ImageEditor() {
         <div className="flex flex-wrap gap-2">
           <Button onClick={() => handleModeChange("move")} type="button" variant={mode === "move" ? "primary" : "secondary"}>
             <Move className="mr-2 h-4 w-4" />
-            Deplacer
+            {t("editor_mode_move")}
           </Button>
           <Button onClick={() => handleModeChange("crop")} type="button" variant={mode === "crop" ? "primary" : "secondary"}>
             <Crop className="mr-2 h-4 w-4" />
-            Recadrer
+            {t("editor_mode_crop")}
           </Button>
           <Button onClick={() => cropperRef.current?.zoomImage(1.1)} type="button">
             <ZoomIn className="mr-2 h-4 w-4" />
-            Zoom +
+            {t("editor_zoom_in")}
           </Button>
           <Button onClick={() => cropperRef.current?.zoomImage(0.9)} type="button">
             <ZoomOut className="mr-2 h-4 w-4" />
-            Zoom -
+            {t("editor_zoom_out")}
           </Button>
           <Button onClick={() => cropperRef.current?.rotateImage(45)} type="button">
             <RotateCw className="mr-2 h-4 w-4" />
-            Rotation +
+            {t("editor_rotate_right")}
           </Button>
           <Button onClick={() => cropperRef.current?.rotateImage(-45)} type="button">
             <RotateCcw className="mr-2 h-4 w-4" />
-            Rotation -
+            {t("editor_rotate_left")}
           </Button>
           <Button onClick={() => cropperRef.current?.flipImage(true, false)} type="button">
             <FlipHorizontal className="mr-2 h-4 w-4" />
-            Flip H
+            {t("editor_flip_horizontal")}
           </Button>
           <Button onClick={() => cropperRef.current?.flipImage(false, true)} type="button">
             <FlipVertical className="mr-2 h-4 w-4" />
-            Flip V
+            {t("editor_flip_vertical")}
           </Button>
           <Button disabled={!hasCropSelection} onClick={handleClear} type="button" variant="ghost">
             <XCircle className="mr-2 h-4 w-4" />
-            Clear
+            {t("editor_clear_selection")}
           </Button>
           <Button disabled={!hasChanges} onClick={handleReset} type="button" variant="ghost">
             <Undo2 className="mr-2 h-4 w-4" />
-            Reset
+            {t("editor_reset")}
           </Button>
           <Button disabled={mutation.isPending || !hasChanges} onClick={() => mutation.mutate()} type="button" variant="primary">
             <Save className="mr-2 h-4 w-4" />
-            Sauvegarder
+            {t("save_main")}
           </Button>
         </div>
         {error ? <p className="text-sm text-red-600">{error}</p> : null}

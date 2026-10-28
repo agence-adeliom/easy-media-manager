@@ -153,7 +153,7 @@ export function FileGrid({ onItemsChange }: FileGridProps) {
   const moveMutation = useMutation({
     mutationFn: async ({ destinationId, filesToMove }: { destinationId: number; filesToMove: MediaItem[] }) => {
       if (!routes?.moveFile) {
-        throw new Error("Deplacement impossible.");
+        throw new Error(t("move_unavailable"));
       }
 
       return easyMediaClient.moveFiles(routes.moveFile, {
@@ -181,7 +181,7 @@ export function FileGrid({ onItemsChange }: FileGridProps) {
         return;
       }
 
-      toast.success("Elements deplaces.");
+      toast.success(t("move_success"));
     },
     onError: (error: Error) => {
       setMoveError(error.message);

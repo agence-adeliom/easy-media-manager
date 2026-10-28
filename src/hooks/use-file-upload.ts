@@ -1,9 +1,11 @@
 import { toast } from "sonner";
 
+import { useTranslations } from "@/hooks/use-translations";
 import { useUppy } from "@/hooks/use-uppy";
 import { useMediaStore } from "@/store/media-store";
 
 export function useFileUpload() {
+  const t = useTranslations();
   const setLoading = useMediaStore((state) => state.setLoading);
   const { uppy, uploadFiles } = useUppy();
 
@@ -30,7 +32,7 @@ export function useFileUpload() {
       const failedMessages = results.filter((item) => item.success === false && item.message).map((item) => item.message);
 
       if (successCount > 0) {
-        toast.success(`${successCount} fichier(s) envoye(s).`);
+        toast.success(t("upload_files_success").replace("%count%", String(successCount)));
       }
 
       if (failedMessages.length > 0) {
@@ -39,7 +41,7 @@ export function useFileUpload() {
 
       return results;
     } catch (caughtError) {
-      const message = caughtError instanceof Error ? caughtError.message : "Upload impossible.";
+      const message = caughtError instanceof Error ? caughtError.message : t("upload_failed");
       toast.error(message);
       throw new Error(message);
     } finally {
