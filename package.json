@@ -60,20 +60,17 @@
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/sortable": "^10.0.0",
     "@tanstack/react-query": "^5.62.0",
-    "@uppy/core": "^4.3.0",
-    "@uppy/drag-drop": "^4.1.0",
-    "@uppy/progress-bar": "^4.1.0",
-    "@uppy/xhr-upload": "^4.2.0",
+    "@uppy/core": "^6.3.0",
     "clsx": "^2.1.1",
-    "lucide-react": "^0.468.0",
+    "lucide-react": "^1.63.0",
     "react-advanced-cropper": "^0.20.1",
-    "sonner": "^1.7.3",
-    "tailwind-merge": "^2.6.0",
+    "sonner": "^2.0.8",
+    "tailwind-merge": "^3.7.0",
     "zustand": "^5.0.3"
   },
   "devDependencies": {
     "@microsoft/api-extractor": "^7.58.7",
-    "@tailwindcss/vite": "^4.0.0",
+    "@tailwindcss/vite": "^4.3.3",
     "@tweedegolf/sab-adapter-local": "^3.0.1",
     "@tweedegolf/storage-abstraction": "^3.0.3",
     "@types/better-sqlite3": "^7.6.5",
@@ -81,7 +78,7 @@
     "@types/multer": "^1.4.11",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
-    "@vitejs/plugin-react": "^4.3.4",
+    "@vitejs/plugin-react": "^6.1.2",
     "archiver": "*",
     "better-sqlite3": "*",
     "concurrently": "*",
@@ -90,7 +87,7 @@
     "postcss-prefix-selector": "^2.1.1",
     "tsx": "*",
     "typescript": "^5.7.0",
-    "vite": "^6.0.0",
+    "vite": "^8.3.5",
     "vite-plugin-dts": "^4.5.4"
   }
 }
