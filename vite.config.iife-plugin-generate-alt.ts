@@ -11,7 +11,7 @@ const SHARED_GLOBALS: Record<string, string> = {
   'react-dom/client': 'ReactDOM',
   '@tanstack/react-query': 'ReactQuery',
   'sonner': 'Sonner',
-  '@adeliom/easy-media-manager/plugin-sdk': 'EasyMediaPluginSDK',
+  '@agence-adeliom/easy-media-manager/plugin-sdk': 'EasyMediaPluginSDK',
 };
 
 // Vite plugin with enforce:'pre' so it runs before Vite's own package

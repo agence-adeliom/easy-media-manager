@@ -1,5 +1,5 @@
-import { EasyMedia, frTranslations } from '@adeliom/easy-media-manager';
-// Note: when using the published package, add: import '@adeliom/easy-media-manager/style.css'
+import { EasyMedia, frTranslations } from '@agence-adeliom/easy-media-manager';
+// Note: when using the published package, add: import '@agence-adeliom/easy-media-manager/style.css'
 // In dev mode the CSS is included automatically via the source alias.
 
 import { generateAltPlugin } from '../../examples/plugins/generate-alt/index';

@@ -1,4 +1,4 @@
-import { postJson, postVoid } from '@adeliom/easy-media-manager/plugin-sdk';
+import { postJson, postVoid } from '@agence-adeliom/easy-media-manager/plugin-sdk';
 
 export interface GenerateAltRequest {
   file: {

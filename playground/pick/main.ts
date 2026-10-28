@@ -1,5 +1,5 @@
-import { EasyMedia, enTranslations } from '@adeliom/easy-media-manager';
-import type { MediaItem } from '@adeliom/easy-media-manager';
+import { EasyMedia, enTranslations } from '@agence-adeliom/easy-media-manager';
+import type { MediaItem } from '@agence-adeliom/easy-media-manager';
 
 EasyMedia.configure({
   locale: 'en',

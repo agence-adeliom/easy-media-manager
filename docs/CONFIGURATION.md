@@ -1,6 +1,6 @@
 # Configuration Reference
 
-Full reference for all `@adeliom/easy-media-manager` configuration options.
+Full reference for all `@agence-adeliom/easy-media-manager` configuration options.
 
 ---
 
@@ -382,7 +382,7 @@ type EasyMediaTranslations = Record<string, string>;
 ### Built-in translations
 
 ```typescript
-import { enTranslations, frTranslations } from '@adeliom/easy-media-manager';
+import { enTranslations, frTranslations } from '@agence-adeliom/easy-media-manager';
 ```
 
 Pass them directly or spread and override specific keys:
@@ -417,7 +417,7 @@ Import types and helpers from the plugin SDK entry point:
 import {
   defineEasyMediaPlugin,
   registerEasyMediaPlugin,
-} from '@adeliom/easy-media-manager/plugin-sdk';
+} from '@agence-adeliom/easy-media-manager/plugin-sdk';
 ```
 
 ### EasyMediaPlugin
@@ -616,7 +616,7 @@ type FileCategory =
 ### Type guards
 
 ```typescript
-import { isFolder, isMediaFile } from '@adeliom/easy-media-manager';
+import { isFolder, isMediaFile } from '@agence-adeliom/easy-media-manager';
 
 if (isFolder(item)) {
   console.log('folder:', item.name);

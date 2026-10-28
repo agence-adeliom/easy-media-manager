@@ -25,8 +25,8 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@adeliom/easy-media-manager/plugin-sdk': resolve(__dirname, '../../src/plugin-sdk.ts'),
-      '@adeliom/easy-media-manager': resolve(__dirname, '../../src/index.ts'),
+      '@agence-adeliom/easy-media-manager/plugin-sdk': resolve(__dirname, '../../src/plugin-sdk.ts'),
+      '@agence-adeliom/easy-media-manager': resolve(__dirname, '../../src/index.ts'),
       '@': resolve(__dirname, '../../src'),
     },
   },

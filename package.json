@@ -1,6 +1,7 @@
 {
-  "name": "@adeliom/easy-media-manager",
+  "name": "@agence-adeliom/easy-media-manager",
   "version": "4.0.0",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/agence-adeliom/easy-media-manager.git"
@@ -13,6 +14,9 @@
   "files": [
     "dist"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "sideEffects": [
     "*.css"
   ],

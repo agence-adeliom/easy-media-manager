@@ -8,7 +8,7 @@ import {
   PluginModalShell,
   type EasyMediaPlugin,
   type EasyMediaPluginModalProps,
-} from '@adeliom/easy-media-manager/plugin-sdk';
+} from '@agence-adeliom/easy-media-manager/plugin-sdk';
 
 import { generateAltClient } from './api';
 

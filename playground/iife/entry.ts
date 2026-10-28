@@ -14,7 +14,7 @@ import {
   getJson,
   postJson,
   postVoid,
-} from '@adeliom/easy-media-manager/plugin-sdk';
+} from '@agence-adeliom/easy-media-manager/plugin-sdk';
 
 export * from '../../src/index';
 
