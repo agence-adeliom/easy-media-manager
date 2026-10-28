@@ -290,7 +290,13 @@ function MediaManagerBody() {
   }
 
   const shell = (
-    <div className="easy-media flex min-h-screen flex-col text-slate-900">
+    <div
+      className={cn(
+        "easy-media flex flex-col text-slate-900",
+        // Inside the picker the shell must fit the 80vh overlay, otherwise the footer is pushed off-screen.
+        mode === "modal" ? "min-h-0 flex-1 overflow-y-auto" : "min-h-screen",
+      )}
+    >
       <div className="mx-auto flex w-full flex-1 flex-col">
         <Toolbar />
         <Breadcrumb />

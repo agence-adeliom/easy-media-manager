@@ -70,7 +70,8 @@ section {
   flex-wrap: wrap;
 }
 
-button {
+/* Scoped to the demo: an unlayered global `button` rule would override the picker's Tailwind utilities. */
+#demo button {
   padding: 8px 14px;
   border: 1px solid #ccc;
   border-radius: 6px;
@@ -80,7 +81,7 @@ button {
   transition: background 0.15s;
 }
 
-button:hover { background: #f0f0f0; }
+#demo button:hover { background: #f0f0f0; }
 
 /* Instance 1 accents */
 .instance-1 #pick-any-1 { background: #1a1a1a; color: #fff; border-color: #1a1a1a; }
