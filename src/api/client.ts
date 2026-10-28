@@ -17,7 +17,7 @@ import type {
   UploadLinkResponse,
   UploadResponseItem,
 } from "@/types/api";
-import { EasyMediaApiError, getJson, parseJson, postJson } from "@/api/http";
+import { EasyMediaApiError, getJson, parseJson, postJson, requestHeaders } from "@/api/http";
 import type { GlobalSearchItem } from "@/types/media";
 
 export const easyMediaClient = {
@@ -28,9 +28,9 @@ export const easyMediaClient = {
   async uploadFile(route: string, formData: FormData): Promise<UploadResponseItem[]> {
     const response = await fetch(route, {
       method: "POST",
-      headers: {
+      headers: requestHeaders({
         "X-Requested-With": "XMLHttpRequest",
-      },
+      }),
       body: formData,
     });
 

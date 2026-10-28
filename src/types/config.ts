@@ -9,6 +9,7 @@ export interface EasyMediaConfig {
   hideFilesExt?: string[];
   mimeTypes?: EasyMediaMimeTypes;
   generatingAlts: boolean;
+  headers?: Record<string, string>;
 }
 
 export interface EasyMediaRoutes {

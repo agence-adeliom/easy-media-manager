@@ -3,6 +3,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import Uppy from "@uppy/core";
 
 import { EasyMediaApiError } from "@/api/client";
+import { requestHeaders } from "@/api/http";
 import { useMediaStore } from "@/store/media-store";
 
 const CHUNK_SIZE = 1024 * 1024;
@@ -37,9 +38,9 @@ async function postUpload(route: string, formData: FormData) {
   try {
     const response = await fetch(route, {
       method: "POST",
-      headers: {
+      headers: requestHeaders({
         "X-Requested-With": "XMLHttpRequest",
-      },
+      }),
       body: formData,
       signal: controller.signal,
     });
