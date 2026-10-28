@@ -2,7 +2,8 @@ import Database from 'better-sqlite3';
 import path from 'path';
 import fs from 'fs';
 
-const DATA_DIR = path.join(process.cwd(), 'playground/data');
+// EASY_MEDIA_DATA_DIR lets the e2e tests run against a throwaway database.
+const DATA_DIR = process.env.EASY_MEDIA_DATA_DIR ?? path.join(process.cwd(), 'playground/data');
 const DB_PATH = path.join(DATA_DIR, 'dev.sqlite');
 
 let db: Database.Database | null = null;
