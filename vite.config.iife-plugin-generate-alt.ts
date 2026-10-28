@@ -29,7 +29,13 @@ function externalizeSharedDeps(): Plugin {
 }
 
 export default defineConfig({
-  plugins: [react(), externalizeSharedDeps()],
+  plugins: [
+    // Classic runtime compiles JSX to `React.createElement`, i.e. the shared React global.
+    // The automatic runtime would bundle `react/jsx-runtime`, whose React 18 build keeps
+    // a `require("react")` that Vite 8 no longer rewrites to the global.
+    react({ jsxRuntime: 'classic' }),
+    externalizeSharedDeps(),
+  ],
   define: {
     // Vite 8 no longer resolves NODE_ENV through the blanket `process.env: {}`,
     // which leaves bare `process.env.NODE_ENV` reads in the IIFE bundle.
