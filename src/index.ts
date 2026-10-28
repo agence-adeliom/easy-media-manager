@@ -37,7 +37,7 @@ interface EasyMediaWindowApi {
   init: (config: EasyMediaInitConfig) => void;
   pick: (options?: PickOptions) => Promise<MediaItem | null>;
   isReady: () => boolean;
-  __mountFullPage: (elementId: string) => void;
+  __mountFullPage: (target: string | HTMLElement) => void;
   mount?: (options: EasyMediaMountOptions) => void;
   translations?: Partial<Record<'en' | 'fr', EasyMediaTranslations>>;
 }
@@ -121,15 +121,15 @@ function pick(options: PickOptions = {}) {
   return pickStore.getState().startPick(options);
 }
 
-function mountFullPage(elementId: string) {
+function mountFullPage(element: string | HTMLElement) {
   if (!initialized) {
     throw new Error("EasyMedia not initialized.");
   }
 
-  const target = document.getElementById(elementId);
+  const target = typeof element === "string" ? document.getElementById(element) : element;
 
   if (target === null) {
-    throw new Error(`EasyMedia target not found: #${elementId}`);
+    throw new Error(`EasyMedia target not found: #${element}`);
   }
 
   mediaStore.getState().setMode("fullpage");
@@ -161,11 +161,7 @@ const api: EasyMediaWindowApi = {
       throw new Error(`EasyMedia target not found: ${target}`);
     }
 
-    if (resolvedTarget.id === "") {
-      throw new Error("EasyMedia mount target must have an id.");
-    }
-
-    mountFullPage(resolvedTarget.id);
+    mountFullPage(resolvedTarget);
   },
 };
 
