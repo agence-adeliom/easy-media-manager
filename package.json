@@ -65,7 +65,7 @@
     "lucide-react": "^1.63.0",
     "react-advanced-cropper": "^0.20.1",
     "sonner": "^2.0.8",
-    "tailwind-merge": "^2.6.0",
+    "tailwind-merge": "^3.7.0",
     "zustand": "^5.0.3"
   },
   "devDependencies": {
