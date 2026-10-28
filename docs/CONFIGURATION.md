@@ -125,6 +125,7 @@ interface EasyMediaConfig {
   hideFilesExt?: string[];
   mimeTypes?: EasyMediaMimeTypes;
   generatingAlts: boolean;
+  headers?: Record<string, string>;
 }
 ```
 
@@ -134,6 +135,22 @@ interface EasyMediaConfig {
 | `hideFilesExt` | `string[]` | No | List of extensions or filenames to hide from the browser. Each entry should include the leading dot (e.g. `".php"`, `".DS_Store"`). Matching is case-insensitive and uses a suffix check on the filename, so it handles both standard extensions (`.php`, `.env`) and dot-files (`.DS_Store`, `.gitkeep`). Folders are never hidden. Pass `[]` to hide nothing. |
 | `mimeTypes` | `EasyMediaMimeTypes` | No | Override the MIME type categories used for filtering. See below. |
 | `generatingAlts` | `boolean` | Yes | Enable the AI alt-text generation feature globally. Also requires `features.enableGeneratingAlts`. |
+| `headers` | `Record<string, string>` | No | Headers added to every request of the manager (listing, upload, rename…), after the library ones. Typically a CSRF token or an authorization header. Plugins read them from `context.config.headers`. |
+
+### Request headers
+
+Send a CSRF token with every request, e.g. for a Symfony backend reading `X-CSRF-Token`:
+
+```typescript
+EasyMedia.configure({
+  config: {
+    baseUrl: '/api',
+    generatingAlts: false,
+    headers: { 'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ?? '' },
+  },
+  // ...
+});
+```
 
 ### EasyMediaMimeTypes
 

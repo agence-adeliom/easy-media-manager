@@ -1,3 +1,5 @@
+import { mediaStore } from "@/store/media-store";
+
 const DEFAULT_HEADERS = {
   "Content-Type": "application/json",
   "X-Requested-With": "XMLHttpRequest",
@@ -12,6 +14,11 @@ export class EasyMediaApiError extends Error {
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
+}
+
+/** Headers of a request: the library ones, then `config.headers` (e.g. a CSRF token). */
+export function requestHeaders(headers: Record<string, string>): Record<string, string> {
+  return { ...headers, ...mediaStore.getState().config?.headers };
 }
 
 export function hasErrorMessage(value: unknown): value is { error: string } {
@@ -29,7 +36,7 @@ export async function parseJson<T>(response: Response): Promise<T> {
 export async function postJson<TResponse, TBody>(route: string, body: TBody): Promise<TResponse> {
   const response = await fetch(route, {
     method: "POST",
-    headers: DEFAULT_HEADERS,
+    headers: requestHeaders(DEFAULT_HEADERS),
     body: JSON.stringify(body),
   });
 
@@ -39,9 +46,9 @@ export async function postJson<TResponse, TBody>(route: string, body: TBody): Pr
 export async function postVoid<TResponse>(route: string): Promise<TResponse> {
   const response = await fetch(route, {
     method: "POST",
-    headers: {
+    headers: requestHeaders({
       "X-Requested-With": "XMLHttpRequest",
-    },
+    }),
   });
 
   return parseJson<TResponse>(response);
@@ -65,9 +72,9 @@ function buildUrl(route: string, params?: SearchParams): string {
 export async function getJson<TResponse>(route: string, params?: SearchParams): Promise<TResponse> {
   const response = await fetch(buildUrl(route, params), {
     method: "GET",
-    headers: {
+    headers: requestHeaders({
       "X-Requested-With": "XMLHttpRequest",
-    },
+    }),
   });
 
   return parseJson<TResponse>(response);
