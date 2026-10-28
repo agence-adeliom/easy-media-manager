@@ -1,4 +1,4 @@
-# @adeliom/easy-media-manager
+# @agence-adeliom/easy-media-manager
 
 A headless, framework-agnostic media manager built with React — file browsing, upload, cropping, metadata editing, and a picker modal, all wired to your own backend API.
 
@@ -22,7 +22,7 @@ A headless, framework-agnostic media manager built with React — file browsing,
 ### ESM (React project)
 
 ```bash
-npm install @adeliom/easy-media-manager
+npm install @agence-adeliom/easy-media-manager
 # react and react-dom must already be in your project
 ```
 
@@ -42,8 +42,8 @@ Download the built assets from the `dist/iife/` directory of the npm package:
 ### ESM
 
 ```typescript
-import { EasyMedia, enTranslations } from '@adeliom/easy-media-manager';
-import '@adeliom/easy-media-manager/style.css';
+import { EasyMedia, enTranslations } from '@agence-adeliom/easy-media-manager';
+import '@agence-adeliom/easy-media-manager/style.css';
 
 EasyMedia.configure({
   translations: enTranslations,
@@ -175,7 +175,7 @@ specificity (e.g. repeat the scope: `.easy-media.easy-media [data-easy-media-ove
 Plugins add toolbar actions and custom modals without modifying the core library.
 
 ```typescript
-import { defineEasyMediaPlugin } from '@adeliom/easy-media-manager/plugin-sdk';
+import { defineEasyMediaPlugin } from '@agence-adeliom/easy-media-manager/plugin-sdk';
 import { Wand2 } from 'lucide-react';
 
 const myPlugin = defineEasyMediaPlugin({
@@ -258,7 +258,7 @@ This starts two processes concurrently:
 
 On first start the database is empty and gets seeded automatically with demo folders and files if you have sample files available. You can also upload your own files directly through the UI.
 
-**ESM playground** (`playground/esm/`) — a minimal React app that mounts `EasyMedia` against the Express API. It resolves `@adeliom/easy-media-manager` directly to `src/index.ts` so any source change triggers HMR immediately.
+**ESM playground** (`playground/esm/`) — a minimal React app that mounts `EasyMedia` against the Express API. It resolves `@agence-adeliom/easy-media-manager` directly to `src/index.ts` so any source change triggers HMR immediately.
 
 **IIFE playground** (`playground/iife/index.html`) — a plain HTML page served by the Express server that loads the compiled IIFE bundle from `dist/iife/`. Useful for testing the standalone bundle end-to-end.
 

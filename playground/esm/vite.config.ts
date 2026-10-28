@@ -47,8 +47,8 @@ export default defineConfig({
     alias: {
       // Pointe vers le source pour le dev (HMR actif)
       // Pour tester le build ESM compilé : remplacer par '../../dist/index.js'
-      '@adeliom/easy-media-manager/plugin-sdk': resolve(__dirname, '../../src/plugin-sdk.ts'),
-      '@adeliom/easy-media-manager': resolve(__dirname, '../../src/index.ts'),
+      '@agence-adeliom/easy-media-manager/plugin-sdk': resolve(__dirname, '../../src/plugin-sdk.ts'),
+      '@agence-adeliom/easy-media-manager': resolve(__dirname, '../../src/index.ts'),
       '@': resolve(__dirname, '../../src'),
     },
   },

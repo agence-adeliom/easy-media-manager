@@ -1,6 +1,6 @@
 # Plugin Guide
 
-`@adeliom/easy-media-manager` ships with a plugin system that lets you add toolbar actions and modal panels without modifying the library source. This guide walks through the concepts and builds up to the complete source of the built-in `generate-alt` plugin.
+`@agence-adeliom/easy-media-manager` ships with a plugin system that lets you add toolbar actions and modal panels without modifying the library source. This guide walks through the concepts and builds up to the complete source of the built-in `generate-alt` plugin.
 
 ---
 
@@ -43,7 +43,7 @@ Each plugin can contribute:
 ## Plugin anatomy
 
 ```typescript
-import type { EasyMediaPlugin } from '@adeliom/easy-media-manager/plugin-sdk';
+import type { EasyMediaPlugin } from '@agence-adeliom/easy-media-manager/plugin-sdk';
 
 const myPlugin: EasyMediaPlugin = {
   // Required: unique identifier for this plugin
@@ -110,7 +110,7 @@ The plugin communicates with three separate backend routes. Isolating the HTTP c
 ```typescript
 // examples/plugins/generate-alt/api.ts
 
-import { postJson, postVoid } from '@adeliom/easy-media-manager/plugin-sdk';
+import { postJson, postVoid } from '@agence-adeliom/easy-media-manager/plugin-sdk';
 
 export interface GenerateAltRequest {
   file: { id: number };
@@ -162,10 +162,10 @@ import { toast } from 'sonner';
 
 import { ModalShell } from '...';   // core UI shell (not part of the public API)
 import { Button } from '...';       // core Button component (not part of the public API)
-import { getPluginModalId } from '@adeliom/easy-media-manager/plugin-sdk';
+import { getPluginModalId } from '@agence-adeliom/easy-media-manager/plugin-sdk';
 import { generateAltClient } from './api';
-import type { EasyMediaPlugin, EasyMediaPluginModalProps } from '@adeliom/easy-media-manager/plugin-sdk';
-import { isMediaFile } from '@adeliom/easy-media-manager';
+import type { EasyMediaPlugin, EasyMediaPluginModalProps } from '@agence-adeliom/easy-media-manager/plugin-sdk';
+import { isMediaFile } from '@agence-adeliom/easy-media-manager';
 
 function GenerateAltPluginModal({ close, context }: EasyMediaPluginModalProps) {
   const { routes, selectedFile, bulkList, t } = context;
@@ -335,7 +335,7 @@ plugin:<pluginId>:<modalId>
 Use `getPluginModalId(pluginId, modalId)` from the plugin SDK to build this string safely:
 
 ```typescript
-import { getPluginModalId } from '@adeliom/easy-media-manager/plugin-sdk';
+import { getPluginModalId } from '@agence-adeliom/easy-media-manager/plugin-sdk';
 
 getPluginModalId('generate-alt', 'main')
 // → 'plugin:generate-alt:main'
@@ -354,7 +354,7 @@ Use `registerEasyMediaPlugin()`. It is queue-safe: if init has not run yet the p
 ```typescript
 // ESM — register plugin, configure once, then mount
 import { generateAltPlugin } from './generate-alt';
-import { EasyMedia } from '@adeliom/easy-media-manager';
+import { EasyMedia } from '@agence-adeliom/easy-media-manager';
 
 EasyMedia.use(generateAltPlugin);
 EasyMedia.configure({ /* full config */ });
