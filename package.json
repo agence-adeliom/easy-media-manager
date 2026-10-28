@@ -82,7 +82,7 @@
     "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "^6.1.2",
     "archiver": "*",
-    "better-sqlite3": "*",
+    "better-sqlite3": "^13.0.3",
     "concurrently": "*",
     "express": "*",
     "multer": "*",
