@@ -13,18 +13,19 @@ interface Labels {
   editor: string;
   deleteMain: string;
   close: string;
+  pluginAction: string;
 }
 
 const MANAGERS: { name: string; url: string; labels: Labels }[] = [
   {
     name: 'IIFE bundle (en)',
     url: 'http://localhost:3001/',
-    labels: { addNewFolder: 'Add New Folder', create: 'Create', uploadMain: 'Upload', editor: 'Editor', deleteMain: 'Delete', close: 'Close' },
+    labels: { addNewFolder: 'Add New Folder', create: 'Create', uploadMain: 'Upload', editor: 'Editor', deleteMain: 'Delete', close: 'Close', pluginAction: 'Generate alt' },
   },
   {
     name: 'ESM source (fr)',
     url: 'http://localhost:5174/',
-    labels: { addNewFolder: 'Ajouter un nouveau dossier', create: 'Créer', uploadMain: 'Télécharger', editor: 'Éditeur', deleteMain: 'Supprimer', close: 'Fermer' },
+    labels: { addNewFolder: 'Ajouter un nouveau dossier', create: 'Créer', uploadMain: 'Télécharger', editor: 'Éditeur', deleteMain: 'Supprimer', close: 'Fermer', pluginAction: "Générer l'alt" },
   },
 ];
 
@@ -100,8 +101,16 @@ for (const { name, url, labels } of MANAGERS) {
       await deleteItem(page, labels, bigFile);
     });
 
-    await test.step('opens the image editor', async () => {
+    await test.step('opens the generate-alt plugin modal', async () => {
       await card(page, file).click();
+      await toolbarButton(page, labels.pluginAction).click();
+      const title = page.locator('[data-easy-media-overlay] header').getByText(labels.pluginAction, { exact: true });
+      await expect(title).toBeVisible();
+      await page.getByRole('button', { name: labels.close, exact: true }).last().click();
+      await expect(title).toBeHidden();
+    });
+
+    await test.step('opens the image editor', async () => {
       await toolbarButton(page, labels.editor).click();
       await expect(page.locator('[class*="advanced-cropper"]').first()).toBeVisible();
       await page.getByRole('button', { name: labels.close, exact: true }).last().click();
@@ -131,7 +140,10 @@ test('pick(): resolves with the chosen image', async ({ page }) => {
   await expect(overlay).toBeVisible();
   await overlay.locator('article').filter({ hasText: 'Photos' }).dblclick();
   await overlay.locator('article').filter({ has: page.locator('img') }).first().click();
-  await overlay.locator('footer button:not([disabled])').last().click();
+  // The footer used to be pushed below the viewport (#13).
+  const select = overlay.locator('footer button:not([disabled])').last();
+  await expect(select).toBeInViewport();
+  await select.click();
   await expect(overlay).toBeHidden();
 
   const result = JSON.parse((await page.locator('#result-1').textContent()) ?? '{}');
