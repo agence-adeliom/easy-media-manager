@@ -21,7 +21,7 @@ export function NewFolderModal() {
   const mutation = useMutation({
     mutationFn: () => {
       if (!routes?.newFolder) {
-        throw new Error(t("new_folder_unavailable"));
+        throw new Error(t("new_unavailable"));
       }
 
       return easyMediaClient.createFolder(routes.newFolder, {
@@ -33,7 +33,7 @@ export function NewFolderModal() {
       await queryClient.invalidateQueries({ queryKey: ["files"] });
       setName("");
       closeModal();
-      toast.success(t("create_folder_notif"));
+      toast.success(t("new_create_folder_notif"));
     },
     onError: (error) => {
       toast.error(error.message);
