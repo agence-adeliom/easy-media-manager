@@ -197,6 +197,9 @@ test('pick(): restricts the files and the uploads to a MIME type', async ({ page
   await expect(cards.filter({ hasText: 'refused.png' })).toHaveCount(0);
   await expect(cards.filter({ hasText: 'too-big.pdf' })).toHaveCount(0);
 
+  expect(errors).toEqual([]);
+});
+
 test('pick(): stays inside the restrictions.path folder', async ({ page }) => {
   const errors = collectErrors(page);
   const overlay = page.locator('[data-easy-media-overlay="overlay"]');
