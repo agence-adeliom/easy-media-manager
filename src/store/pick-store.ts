@@ -4,11 +4,15 @@ import { createStore } from "zustand/vanilla";
 import type { PickOptions } from "@/types/config";
 import type { MediaItem } from "@/types/media";
 
-import { mediaStore } from "./media-store";
+import { type MediaStore, mediaStore } from "./media-store";
+
+type FolderState = Parameters<MediaStore["restoreFolderState"]>[0];
 
 export interface PickStoreState {
   pendingResolve: ((item: MediaItem | null) => void) | null;
   pickOptions: PickOptions | null;
+  /** Folder shown before a `restrictions.path` session, given back when it ends. */
+  folderBeforePick: FolderState | null;
 }
 
 export interface PickStoreActions {
@@ -22,6 +26,7 @@ export type PickStore = PickStoreState & PickStoreActions;
 const initialState: PickStoreState = {
   pendingResolve: null,
   pickOptions: null,
+  folderBeforePick: null,
 };
 
 export function createPickStore() {
@@ -31,26 +36,38 @@ export function createPickStore() {
       get().pendingResolve?.(null);
 
       return new Promise<MediaItem | null>((resolve) => {
+        const mediaState = mediaStore.getState();
+        const restrictedToPath = Boolean(options.restrictions?.path);
+
         set({
           pendingResolve: resolve,
           pickOptions: options,
+          folderBeforePick: restrictedToPath
+            ? { folderId: mediaState.currentFolderId, folderStack: mediaState.folderStack, currentPath: mediaState.currentPath }
+            : null,
         });
 
-        const mediaState = mediaStore.getState();
         mediaState.setRestrictions(options.restrictions ?? {});
+        if (restrictedToPath) {
+          // No folder id: the files route resolves `restrictions.path`.
+          mediaState.restoreFolderState({ folderId: null, folderStack: [], currentPath: "" });
+        }
         mediaState.setFeatureOverrides(options.features ?? {});
         mediaState.setMode("modal");
         mediaState.openManager();
       });
     },
     resolvePick(item) {
-      const { pendingResolve } = get();
+      const { pendingResolve, folderBeforePick } = get();
 
       pendingResolve?.(item);
       set(initialState);
 
       const mediaState = mediaStore.getState();
       mediaState.setRestrictions({});
+      if (folderBeforePick !== null) {
+        mediaState.restoreFolderState(folderBeforePick, true);
+      }
       mediaState.resetFeatureOverrides();
       mediaState.closeModal();
       mediaState.closeManager();

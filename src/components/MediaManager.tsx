@@ -27,7 +27,7 @@ import { hasDraggedFiles } from "@/lib/file-drop";
 import { CORE_MODAL_IDS } from "@/lib/modal-ids";
 import { createPluginContext } from "@/plugins/context";
 import { getPluginModalById } from "@/plugins/registry";
-import { useMediaStore } from "@/store/media-store";
+import { mediaStore, useMediaStore } from "@/store/media-store";
 import { usePickStore } from "@/store/pick-store";
 import type { MediaItem } from "@/types/media";
 import { isFolder, isMediaFile } from "@/types/media";
@@ -37,6 +37,7 @@ function MediaManagerBody() {
   const mode = useMediaStore((state) => state.mode);
   const isOpen = useMediaStore((state) => state.isOpen);
   const folderStack = useMediaStore((state) => state.folderStack);
+  const pathRootDepth = useMediaStore((state) => state.pathRootDepth);
   const selectedFile = useMediaStore((state) => state.selectedFile);
   const selectedIndex = useMediaStore((state) => state.selectedIndex);
   const features = useMediaStore((state) => state.features);
@@ -105,6 +106,11 @@ function MediaManagerBody() {
     }
 
     function handlePopState(event: PopStateEvent) {
+      // A picker restricted to a folder ignores the history of the page, which could lead out of it.
+      if (mediaStore.getState().pathRootDepth !== null) {
+        return;
+      }
+
       const historyState = event.state as { easyMedia?: { folderId: number | null; folderStack: { id: number; name: string }[]; currentPath: string } } | null;
 
       if (historyState?.easyMedia) {
@@ -229,7 +235,7 @@ function MediaManagerBody() {
         return;
       }
     },
-    canGoToParent: folderStack.length > 0,
+    canGoToParent: folderStack.length > (pathRootDepth ?? 0),
     canPreview,
     canEdit: features.enableEditor && selectedFile !== null && isMediaFile(selectedFile) && fileType.isImage(selectedFile),
     canRefresh: true,

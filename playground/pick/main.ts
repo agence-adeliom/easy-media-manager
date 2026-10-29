@@ -78,6 +78,11 @@ document.getElementById('pick-image-pdf-1')!.addEventListener('click', async () 
   renderResult1(file);
 });
 
+document.getElementById('pick-photos-1')!.addEventListener('click', async () => {
+  const file = await EasyMedia.pick({ restrictions: { path: '/Photos' } });
+  renderResult1(file);
+});
+
 document.getElementById('clear-1')!.addEventListener('click', () => {
   renderResult1(null);
 });

@@ -10,6 +10,7 @@ Fetch routes use `GET` with query parameters. Mutation routes use `POST` with JS
 | Param | Type | Required | Description |
 |-------|------|----------|-------------|
 | `folder` | integer | no | Folder ID to list (null = root) |
+| `path` | string | no | Folder to list by its path (`/images/products`), used when `folder` is absent (`pick()` with `restrictions.path`) |
 | `search` | string | no | Filter by name |
 | `page` | integer | no | Page number (default: 1) |
 
@@ -17,10 +18,9 @@ Fetch routes use `GET` with query parameters. Mutation routes use `POST` with JS
 ```json
 {
   "files": {
-    "path": "/folder/path",
+    "path": "/images",
     "breadcrumb": [
-      { "id": null, "name": "root", "path": "/" },
-      { "id": 1, "name": "images", "path": "/images" }
+      { "id": 1, "name": "images" }
     ],
     "items": {
       "current_page": 1,
@@ -54,6 +54,8 @@ Fetch routes use `GET` with query parameters. Mutation routes use `POST` with JS
   }
 }
 ```
+
+`breadcrumb` lists the folders from the library root (excluded) to the listed folder; it is empty at the root.
 
 **File type:** the MIME type of the file (`image/jpeg`, `application/pdf`, `application/json+oembed`…), or `folder`. A category (`image`, `video`, `audio`, `pdf`, `compressed`, `text`, `application`, `file`) is also understood, but `pick()` restrictions on an exact MIME type (`application/pdf`) only match a MIME type.
 

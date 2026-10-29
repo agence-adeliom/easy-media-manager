@@ -197,5 +197,35 @@ test('pick(): restricts the files and the uploads to a MIME type', async ({ page
   await expect(cards.filter({ hasText: 'refused.png' })).toHaveCount(0);
   await expect(cards.filter({ hasText: 'too-big.pdf' })).toHaveCount(0);
 
+test('pick(): stays inside the restrictions.path folder', async ({ page }) => {
+  const errors = collectErrors(page);
+  const overlay = page.locator('[data-easy-media-overlay="overlay"]');
+  const cards = overlay.locator('article');
+  const breadcrumb = overlay.locator('nav');
+
+  await page.goto('http://localhost:5175/');
+  await page.getByRole('button', { name: 'Browse the Photos folder only…' }).click();
+  await expect(cards.filter({ hasText: 'Vacations' })).toBeVisible();
+  await expect(cards.filter({ hasText: 'Documents' })).toHaveCount(0);
+  await expect(breadcrumb.getByRole('button')).toHaveText(['Photos']);
+
+  await cards.filter({ hasText: 'Vacations' }).dblclick();
+  await expect(breadcrumb.getByRole('button')).toHaveText(['Photos', 'Vacations']);
+  await breadcrumb.getByRole('button', { name: 'Photos' }).click();
+  await expect(cards.filter({ hasText: 'Vacations' })).toBeVisible();
+  // Backspace goes to the parent folder, but not above the restricted one.
+  await cards.filter({ hasText: 'Vacations' }).click();
+  await page.keyboard.press('Backspace');
+  await expect(breadcrumb.getByRole('button')).toHaveText(['Photos']);
+  await expect(cards.filter({ hasText: 'Vacations' })).toBeVisible();
+
+  await overlay.getByRole('button', { name: 'Cancel' }).click();
+  await expect(overlay).toBeHidden();
+
+  // The next, unrestricted session starts from the library again.
+  await page.getByRole('button', { name: 'Browse media…' }).first().click();
+  await expect(cards.filter({ hasText: 'Documents' })).toBeVisible();
+  await expect(breadcrumb.getByRole('button')).toHaveText(['Home']);
+
   expect(errors).toEqual([]);
 });

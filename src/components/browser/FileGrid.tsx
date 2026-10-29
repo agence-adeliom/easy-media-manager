@@ -49,6 +49,7 @@ export function FileGrid({ onItemsChange }: FileGridProps) {
   const setLoading = useMediaStore((state) => state.setLoading);
   const setFilter = useMediaStore((state) => state.setFilter);
   const restoreFolderState = useMediaStore((state) => state.restoreFolderState);
+  const setPathRootDepth = useMediaStore((state) => state.setPathRootDepth);
   const resolvePick = usePickStore((state) => state.resolvePick);
   const queryClient = useQueryClient();
   const { copy } = useClipboard();
@@ -60,11 +61,12 @@ export function FileGrid({ onItemsChange }: FileGridProps) {
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
 
   const query = useInfiniteQuery({
-    queryKey: ["files", currentFolderId, searchQuery, currentPath, restrictions.types ?? "all", refreshIndex],
+    queryKey: ["files", currentFolderId, searchQuery, currentPath, restrictions.types ?? "all", restrictions.path ?? "", refreshIndex],
     queryFn: async ({ pageParam }) => {
       const response = await easyMediaClient.getFiles(String(pageParam || routes?.files), {
         folder: currentFolderId,
         search: searchQuery || undefined,
+        path: currentFolderId === null ? restrictions.path ?? undefined : undefined,
       });
 
       if (response.error) {
@@ -91,6 +93,15 @@ export function FileGrid({ onItemsChange }: FileGridProps) {
 
     const breadcrumb = response.files.breadcrumb ?? [];
     const nextPath = breadcrumb.length > 0 ? `/${breadcrumb.map((item: FolderBreadcrumbItem) => item.name).join("/")}` : "";
+    const pathRoot = breadcrumb[breadcrumb.length - 1];
+
+    // `restrictions.path` resolved: continue from its folder id (uploads and new folders need one), never above it.
+    if (restrictions.path && currentFolderId === null && pathRoot) {
+      setPathRootDepth(breadcrumb.length);
+      restoreFolderState({ folderId: pathRoot.id, folderStack: breadcrumb, currentPath: nextPath });
+
+      return;
+    }
     const stackChanged =
       folderStack.length !== breadcrumb.length ||
       folderStack.some((item, index) => item.id !== breadcrumb[index]?.id || item.name !== breadcrumb[index]?.name);
@@ -107,7 +118,7 @@ export function FileGrid({ onItemsChange }: FileGridProps) {
       },
       true,
     );
-  }, [currentFolderId, currentPath, folderStack, query.data, restoreFolderState]);
+  }, [currentFolderId, currentPath, folderStack, query.data, restoreFolderState, restrictions.path, setPathRootDepth]);
 
   useEffect(() => {
     const onRefresh = () => {
