@@ -30,8 +30,10 @@
       "types": "./dist/esm/plugin-sdk.d.ts"
     },
     "./style.css": "./dist/esm/style.css",
+    "./style.unlayered.css": "./dist/esm/style.unlayered.css",
     "./iife": "./dist/iife/easy-media.js",
-    "./iife/style.css": "./dist/iife/easy-media.css"
+    "./iife/style.css": "./dist/iife/easy-media.css",
+    "./iife/style.unlayered.css": "./dist/iife/easy-media.unlayered.css"
   },
   "scripts": {
     "dev": "vite",
@@ -51,7 +53,7 @@
     "prepublishOnly": "npm run prod",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
-    "test:e2e": "npm run build:iife-playground && npm run build:iife-plugin-generate-alt && playwright test"
+    "test:e2e": "npm run build:esm && npm run build:iife-playground && npm run build:iife-plugin-generate-alt && playwright test"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",
@@ -80,6 +82,7 @@
     "express": "^5.2.1",
     "lucide-react": "^1.63.0",
     "multer": "^2.5.0",
+    "postcss": "^8.5.32",
     "postcss-prefix-selector": "^2.1.1",
     "react-advanced-cropper": "^0.20.1",
     "sonner": "^2.0.8",

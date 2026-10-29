@@ -3,6 +3,8 @@ import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import prefixSelector from 'postcss-prefix-selector';
 import { defineConfig } from 'vite';
+
+import { unlayeredCss } from './vite-plugin-unlayered-css.ts';
 import dts from 'vite-plugin-dts';
 
 const cssPrefixPlugin = prefixSelector({
@@ -21,6 +23,7 @@ export default defineConfig({
   plugins: [
     react(),
     tailwindcss(),
+    unlayeredCss(),
     dts({
       include: ['src/index.ts', 'src/plugin-sdk.ts'],
       rollupTypes: true,
