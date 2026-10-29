@@ -1,12 +1,31 @@
 import { resolve } from 'path';
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
+import prefixSelector from 'postcss-prefix-selector';
 import { defineConfig } from 'vite';
 
 import { unlayeredCss } from './vite-plugin-unlayered-css.ts';
 
+// Same `.easy-media` scope as the published IIFE build (vite.config.ts), so the e2e tests see its CSS.
+const cssPrefixPlugin = prefixSelector({
+  prefix: '.easy-media',
+  transform(prefix, selector, prefixedSelector) {
+    if (selector.startsWith('.easy-media')) return selector;
+    if (selector.includes('sonner') || selector.includes('data-sonner')) return selector;
+    if (selector === ':root') return prefix;
+    if (selector === 'html' || selector === 'body') return prefix;
+    if (selector === '*') return `${prefix} *`;
+    return prefixedSelector;
+  },
+});
+
 export default defineConfig({
   plugins: [react(), tailwindcss(), unlayeredCss()],
+  css: {
+    postcss: {
+      plugins: [cssPrefixPlugin],
+    },
+  },
   define: {
     // Vite 8 no longer resolves NODE_ENV through the blanket `process.env: {}`,
     // which leaves bare `process.env.NODE_ENV` reads in the IIFE bundle.
