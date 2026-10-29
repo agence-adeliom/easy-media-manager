@@ -159,10 +159,15 @@ host theme. Always repeat the default as the fallback, since the tokens are usua
 
 ### Why the host CSS can win
 
-The library's stylesheet is built with Tailwind CSS v4. All of its rules (`base`, `components`,
-`utilities`) are inside [cascade layers](https://developer.mozilla.org/en-US/docs/Web/CSS/@layer),
-and scoped under `.easy-media`.
+The library ships its CSS in two versions, with the same rules scoped under `.easy-media`:
 
+| Stylesheet | ESM import | IIFE file |
+|------------|------------|-----------|
+| Layered (default) | `@agence-adeliom/easy-media-manager/style.css` | `dist/iife/easy-media.css` |
+| Unlayered | `@agence-adeliom/easy-media-manager/style.unlayered.css` | `dist/iife/easy-media.unlayered.css` |
+
+The default stylesheet is built with Tailwind CSS v4: all of its rules (`base`, `components`,
+`utilities`) are inside [cascade layers](https://developer.mozilla.org/en-US/docs/Web/CSS/@layer).
 The cascade compares layers **before** specificity and source order: a rule outside any layer
 always beats a layered rule, whatever its specificity. The CSS of most host pages (Bootstrap,
 Tabler, a CMS admin theme) is not layered, so any of its rules that matches an element of the
@@ -174,41 +179,53 @@ manager overrides the library. A few examples:
 | `p { margin-bottom: 1rem }` (Bootstrap reboot) | `.easy-media .mb-0 { margin-bottom: 0 }` | Paragraphs get an extra margin |
 
 The theme tokens are not affected: they are custom properties read with a fallback, so they
-work the same whether the host CSS is layered or not.
+work the same with both stylesheets.
 
-### Workarounds in the host project
+### Choosing the stylesheet
 
-Until the library ships an unlayered build (see below), fix the conflicts from the host
-stylesheet, scoped under `.easy-media`:
+- **Host CSS outside layers** (Bootstrap, Tabler, a CMS admin theme): use the **unlayered**
+  stylesheet. It is the same CSS with the layer blocks removed, so the library rules compete on
+  specificity again, and their `.easy-media` scope makes them win over the usual host rules:
+  `.easy-media .grid` (0,2,0) beats `.grid` (0,1,0) and `p` (0,0,1). Overriding the manager from
+  the host CSS then takes a selector at least as specific, scoped under `.easy-media`.
 
-- **Give the library's value back** with `revert-layer`, which ignores the host rule and
-  applies the layered library rule again:
-
-  ```css
-  .easy-media .grid {
-    gap: revert-layer;
-    grid-template-columns: revert-layer;
-    grid-template-rows: revert-layer;
-  }
+  ```typescript
+  import '@agence-adeliom/easy-media-manager/style.unlayered.css';
   ```
 
-- **Set a value** through a stable hook rather than a Tailwind utility class (`.z-50`), which is
-  not part of the public contract. For example, to open the modals and the picker above a host
-  navigation bar with a high `z-index` (this one is a plain stacking issue, not a layer one):
+- **Host CSS in layers** (Tailwind, or any layered stylesheet): keep the **default** stylesheet.
+  The project keeps the upper hand from its own CSS, and can adjust the manager without fighting
+  specificity.
 
-  ```css
-  .easy-media [data-easy-media-overlay="overlay"] {
-    z-index: 2000;
-  }
-  ```
+### Overriding the manager from the host project
 
-Any host rule outside a layer beats the library, so these overrides work whatever the load
-order. If the host stylesheet is itself layered, put the overrides outside any layer.
+Target a stable hook rather than a Tailwind utility class (`.z-50`), which is not part of the
+public contract. For example, to open the modals and the picker above a host navigation bar with
+a high `z-index` (a plain stacking issue, with either stylesheet):
 
-### Planned fix
+```css
+.easy-media [data-easy-media-overlay="overlay"] {
+  z-index: 2000;
+}
+```
 
-The library will ship its CSS without cascade layers. Its rules being scoped under
-`.easy-media`, a utility such as `.easy-media .grid` (specificity 0,2,0) then beats the usual
-host rules: element selectors (`label`) and single classes (`.grid`, `.btn`). The workarounds
-above will then have to be removed: outside a layer, `revert-layer` behaves like `revert` and
-falls back to the browser defaults.
+With the default stylesheet, any host rule outside a layer beats the library, whatever the load
+order. With the unlayered one, the override needs a specificity at least equal to the library
+rule (`.easy-media [data-easy-media-overlay]` is 0,2,0, like `.easy-media .z-50`) and to be loaded
+after it; repeat the scope (`.easy-media.easy-media …`) if the load order is not guaranteed.
+
+### Moving from `revert-layer` workarounds
+
+Before the unlayered stylesheet existed, the conflicts were patched in the host CSS with
+`revert-layer`, which ignores the host rule and applies the layered library rule again:
+
+```css
+.easy-media .grid {
+  gap: revert-layer;
+  grid-template-columns: revert-layer;
+  grid-template-rows: revert-layer;
+}
+```
+
+Remove these rules when switching to the unlayered stylesheet: outside a layer, `revert-layer`
+behaves like `revert` and falls back to the browser defaults, which breaks the grid.
