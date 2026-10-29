@@ -6,7 +6,7 @@ const SLATE_100 = 'oklch(0.968 0.007 247.896)';
 const DARK_SURFACE = 'oklch(0.17 0.042 265)';
 
 function shell(page: Page) {
-  return page.locator('.easy-media.bg-emm-background').first();
+  return page.locator('.easy-media.emm\\:bg-emm-background').first();
 }
 
 async function openNewFolderModal(page: Page) {
