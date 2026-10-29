@@ -54,7 +54,7 @@ export function ModalShell({
   }
 
   return createPortal(
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-emm-neutral-900/35 p-4 backdrop-blur-[2px]" data-easy-media-overlay="overlay">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-emm-neutral-900/35 p-4 emm-dark:bg-black/60 backdrop-blur-[2px]" data-easy-media-overlay="overlay">
       <button aria-label={t("close")} className="absolute inset-0 cursor-default" onClick={onClose} type="button" />
       <section
         className={`relative z-10 flex max-h-[90vh] w-full flex-col overflow-hidden rounded-xl border border-emm-neutral-200/80 bg-emm-surface shadow-[0_24px_80px_rgba(15,23,42,0.18)] ${widthClassName}`}

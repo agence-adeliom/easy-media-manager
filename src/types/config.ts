@@ -20,13 +20,22 @@ export type EasyMediaThemeShade = 50 | 100 | 200 | 300 | 400 | 500 | 600 | 700 |
 export type EasyMediaThemeToken =
   | `${"neutral" | "accent" | "danger"}-${EasyMediaThemeShade}`
   | "surface"
+  | "background"
   | "inverse"
   | "toolbar"
   | "item"
   | "font";
 
+/** `auto` follows the system setting (`prefers-color-scheme`). */
+export type EasyMediaThemeMode = "light" | "dark" | "auto";
+
 export interface EasyMediaTheme {
-  /** One color for the whole accent scale: it is shade `500`, the other shades are mixed with white or black. */
+  /** Light (default), dark, or the system setting. */
+  mode?: EasyMediaThemeMode;
+  /**
+   * One color for the whole accent scale: it is shade `500`, the other shades are mixed with white or
+   * black (the other way round in dark mode, where `50` is the darkest shade).
+   */
   accent?: string;
   /** One color for the whole neutral scale (text, borders), same rule as `accent`. */
   neutral?: string;

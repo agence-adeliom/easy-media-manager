@@ -214,10 +214,10 @@ export function ImageEditor() {
   return (
     <ModalShell onClose={closeModal} open title={t("editor_title").replace("%name%", selectedFile.name)} widthClassName="max-w-6xl">
       <div className="flex flex-col gap-4">
-        <div className="h-[60vh] overflow-hidden rounded-2xl bg-emm-neutral-950 p-3">
+        <div className="h-[60vh] overflow-hidden rounded-2xl bg-emm-neutral-950 emm-dark:bg-black p-3">
           <Cropper
-            backgroundClassName="bg-emm-neutral-950"
-            boundaryClassName="bg-emm-neutral-950"
+            backgroundClassName="bg-emm-neutral-950 emm-dark:bg-black"
+            boundaryClassName="bg-emm-neutral-950 emm-dark:bg-black"
             className="h-full w-full"
             imageRestriction={ImageRestriction.stencil}
             onChange={handleCropperChange}

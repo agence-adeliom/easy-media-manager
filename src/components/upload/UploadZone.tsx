@@ -113,15 +113,20 @@ export function UploadZone({ className, forceVisible = false }: UploadZoneProps)
       <div
         className={cn(
           "flex min-h-[280px] flex-1 flex-col items-center justify-center gap-4 rounded-2xl border border-dashed text-center transition-colors",
-          isDraggingFiles ? "border-emm-accent-400 bg-emm-neutral-800" : "border-emm-neutral-400 bg-emm-neutral-700",
+          // The drop zone stays dark in dark mode: the reversed scale would turn it light.
+          isDraggingFiles
+            ? "border-emm-accent-400 bg-emm-neutral-800 emm-dark:bg-emm-neutral-100"
+            : "border-emm-neutral-400 bg-emm-neutral-700 emm-dark:bg-emm-neutral-200",
         )}
       >
-        <div className={cn("rounded-full p-4", isDraggingFiles ? "bg-emm-accent-500/15 text-emm-accent-100" : "bg-emm-inverse/10 text-emm-neutral-100")}>
+        <div className={cn("rounded-full p-4", isDraggingFiles
+              ? "bg-emm-accent-500/15 text-emm-accent-100 emm-dark:text-emm-accent-900"
+              : "bg-emm-inverse/10 text-emm-neutral-100 emm-dark:bg-emm-neutral-950/10 emm-dark:text-emm-neutral-900")}>
           <Inbox className="h-8 w-8" />
         </div>
         <div>
-          <h3 className="text-lg font-semibold text-emm-inverse">{t("upload_main")}</h3>
-          <p className={cn("max-w-md text-sm", isDraggingFiles ? "text-emm-accent-50" : "text-emm-neutral-200")}>
+          <h3 className="text-lg font-semibold text-emm-inverse emm-dark:text-emm-neutral-950">{t("upload_main")}</h3>
+          <p className={cn("max-w-md text-sm", isDraggingFiles ? "text-emm-accent-50 emm-dark:text-emm-accent-950" : "text-emm-neutral-200 emm-dark:text-emm-neutral-800")}>
             {t("upload_hint")}
           </p>
         </div>
@@ -137,7 +142,7 @@ export function UploadZone({ className, forceVisible = false }: UploadZoneProps)
           <Upload className="mr-2 h-4 w-4" />
           {t("upload_choose_files")}
         </Button>
-        {error ? <p className="text-sm text-emm-danger-200">{error}</p> : null}
+        {error ? <p className="text-sm text-emm-danger-200 emm-dark:text-emm-danger-800">{error}</p> : null}
       </div>
     </section>
   );

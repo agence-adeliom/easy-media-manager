@@ -7,10 +7,14 @@ import { generateAltPlugin } from '../../examples/plugins/generate-alt/index';
 EasyMedia.use(generateAltPlugin);
 
 // `?theme` shows the `theme` option (and lets the e2e tests check it): an indigo accent scale,
-// a serif font and a darker toolbar.
-const theme = new URLSearchParams(window.location.search).has('theme')
-  ? { accent: '#6366f1', font: 'Georgia, serif', tokens: { toolbar: '#312e81' } }
-  : undefined;
+// a serif font and a darker toolbar. `?mode=dark` or `?mode=auto` sets the color scheme.
+const params = new URLSearchParams(window.location.search);
+const mode = params.get('mode') as 'light' | 'dark' | 'auto' | null;
+const theme = params.has('theme')
+  ? { mode: mode ?? undefined, accent: '#6366f1', font: 'Georgia, serif', tokens: { toolbar: '#312e81' } }
+  : mode
+    ? { mode }
+    : undefined;
 
 EasyMedia.configure({
   locale: 'fr',

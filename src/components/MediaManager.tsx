@@ -19,11 +19,13 @@ import { UploadProgress } from "@/components/upload/UploadProgress";
 import { UploadZone } from "@/components/upload/UploadZone";
 import { useFileUpload } from "@/hooks/use-file-upload";
 import { useFileType } from "@/hooks/use-file-type";
+import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useKeyboard } from "@/hooks/use-keyboard";
 import { useResponsive } from "@/hooks/use-responsive";
 import { useTranslations } from "@/hooks/use-translations";
 import { cn } from "@/lib/cn";
 import { hasDraggedFiles } from "@/lib/file-drop";
+import { getRootElement } from "@/lib/root";
 import { themeProperties } from "@/lib/theme";
 import { CORE_MODAL_IDS } from "@/lib/modal-ids";
 import { createPluginContext } from "@/plugins/context";
@@ -33,7 +35,7 @@ import { usePickStore } from "@/store/pick-store";
 import type { MediaItem } from "@/types/media";
 import { isFolder, isMediaFile } from "@/types/media";
 
-function MediaManagerBody() {
+function MediaManagerBody({ colorScheme, themeStyle }: { colorScheme: "light" | "dark"; themeStyle: Record<string, string> }) {
   const t = useTranslations();
   const mode = useMediaStore((state) => state.mode);
   const isOpen = useMediaStore((state) => state.isOpen);
@@ -45,10 +47,6 @@ function MediaManagerBody() {
   const bulkMode = useMediaStore((state) => state.bulkMode);
   const bulkList = useMediaStore((state) => state.bulkList);
   const isSmallScreen = useMediaStore((state) => state.isSmallScreen);
-  const theme = useMediaStore((state) => state.config?.theme);
-  // Also set on the root element (index.ts) for the portals: repeated here so that a host rule on
-  // `.easy-media`, which matches this element too, does not override the configured theme.
-  const themeStyle = useMemo(() => themeProperties(theme) as CSSProperties, [theme]);
   const activeModal = useMediaStore((state) => state.activeModal);
   const searchQuery = useMediaStore((state) => state.searchQuery);
   const pushFolder = useMediaStore((state) => state.pushFolder);
@@ -303,11 +301,12 @@ function MediaManagerBody() {
   const shell = (
     <div
       className={cn(
-        "easy-media flex flex-col text-emm-neutral-900",
+        "easy-media flex flex-col bg-emm-background text-emm-neutral-900",
         // Inside the picker the shell must fit the 80vh overlay, otherwise the footer is pushed off-screen.
         mode === "modal" ? "min-h-0 flex-1 overflow-y-auto" : "min-h-screen",
       )}
-      style={themeStyle}
+      data-emm-mode={colorScheme}
+      style={themeStyle as CSSProperties}
     >
       <div className="mx-auto flex w-full flex-1 flex-col">
         <Toolbar />
@@ -377,11 +376,35 @@ function PluginModalRenderer() {
 
 export function MediaManager() {
   const queryClient = useMemo(() => new QueryClient(), []);
+  const theme = useMediaStore((state) => state.config?.theme);
+  const colorScheme = useColorScheme(theme?.mode ?? "light");
+  const themeStyle = useMemo(() => themeProperties(theme, colorScheme), [theme, colorScheme]);
+
+  // The theme goes on the root element, where the portals (modals, picker overlay) inherit it, and
+  // on the shell below: a host rule on `.easy-media` matches the shell too and would otherwise
+  // override the configured tokens.
+  useEffect(() => {
+    const root = getRootElement();
+    if (root === null) {
+      return;
+    }
+
+    root.dataset.emmMode = colorScheme;
+    for (const [property, value] of Object.entries(themeStyle)) {
+      root.style.setProperty(property, value);
+    }
+
+    return () => {
+      for (const property of Object.keys(themeStyle)) {
+        root.style.removeProperty(property);
+      }
+    };
+  }, [colorScheme, themeStyle]);
 
   return (
     <QueryClientProvider client={queryClient}>
-      <MediaManagerBody />
-      <Toaster position="top-right" richColors />
+      <MediaManagerBody colorScheme={colorScheme} themeStyle={themeStyle} />
+      <Toaster position="top-right" richColors theme={colorScheme} />
     </QueryClientProvider>
   );
 }
