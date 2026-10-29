@@ -1,4 +1,4 @@
-import type { EasyMediaConfig, PickFileType } from "@/types/config";
+import type { EasyMediaConfig, PickFileType, PickMimeType } from "@/types/config";
 import type { FileCategory, MediaItem } from "@/types/media";
 
 type MimeTypes = EasyMediaConfig["mimeTypes"];
@@ -161,7 +161,46 @@ export function filterByHiddenExt(files: MediaItem[], hideFilesExt: string[]): M
   });
 }
 
+const FILE_CATEGORIES: FileCategory[] = ["image", "video", "audio", "pdf", "text", "application", "compressed", "oembed", "folder"];
+
+function isPickMimeType(type: PickFileType): type is PickMimeType {
+  return type.includes("/");
+}
+
+/**
+ * `image/*` matches every `image/…` type, `application/pdf` only itself. A backend that returns the category as
+ * `type` (`image`) also matches the wildcard of that category.
+ */
+export function matchesMimeType(type: string, mimeType: PickMimeType): boolean {
+  const normalizedType = type.toLowerCase();
+  const normalizedMimeType = mimeType.toLowerCase();
+
+  if (normalizedMimeType.endsWith("/*")) {
+    const family = normalizedMimeType.slice(0, -2);
+
+    return normalizedType === family || normalizedType.startsWith(`${family}/`);
+  }
+
+  return normalizedType === normalizedMimeType;
+}
+
+function toPickTypeList(pickTypes: PickFileType | PickFileType[] | null | undefined): PickFileType[] {
+  if (!pickTypes) {
+    return [];
+  }
+
+  return Array.isArray(pickTypes) ? pickTypes : [pickTypes];
+}
+
+function resolvePickMimeTypes(pickTypes: PickFileType | PickFileType[] | null | undefined): PickMimeType[] {
+  return toPickTypeList(pickTypes).filter(isPickMimeType);
+}
+
 function normalizePickFileType(type: PickFileType): FileCategory | null {
+  if (isPickMimeType(type)) {
+    return null;
+  }
+
   switch (type) {
     case "all":
       return null;
@@ -181,20 +220,71 @@ function normalizePickFileType(type: PickFileType): FileCategory | null {
   }
 }
 
-export function resolvePickFilterTypes(pickTypes: PickFileType | PickFileType[] | null | undefined): FileCategory[] | null {
-  if (!pickTypes) {
-    return null;
-  }
-
-  const normalizedTypes = (Array.isArray(pickTypes) ? pickTypes : [pickTypes])
+function resolvePickCategories(pickTypes: PickFileType | PickFileType[] | null | undefined): FileCategory[] {
+  const categories = toPickTypeList(pickTypes)
     .map(normalizePickFileType)
     .filter((type): type is FileCategory => type !== null);
 
-  if (normalizedTypes.length === 0) {
-    return null;
+  return Array.from(new Set(categories));
+}
+
+/** Categories of the toolbar filter allowed by `restrictions.types`, MIME types included; `null` when all are. */
+export function resolvePickFilterTypes(
+  pickTypes: PickFileType | PickFileType[] | null | undefined,
+  mimeTypes: MimeTypes,
+): FileCategory[] | null {
+  const categories = resolvePickCategories(pickTypes);
+
+  for (const mimeType of resolvePickMimeTypes(pickTypes)) {
+    const sample = { type: mimeType } as MediaItem;
+
+    categories.push(...FILE_CATEGORIES.filter((category) => fileTypeIs(sample, category, mimeTypes)));
   }
 
-  return Array.from(new Set(normalizedTypes));
+  return categories.length === 0 ? null : Array.from(new Set(categories));
+}
+
+/** Whether `restrictions.types` allows a file of this type; `true` when there is no restriction. */
+export function isPickTypeAllowed(
+  type: string,
+  pickTypes: PickFileType | PickFileType[] | null | undefined,
+  mimeTypes: MimeTypes,
+): boolean {
+  const categories = resolvePickCategories(pickTypes);
+  const pickMimeTypes = resolvePickMimeTypes(pickTypes);
+
+  if (categories.length === 0 && pickMimeTypes.length === 0) {
+    return true;
+  }
+
+  const sample = { type } as MediaItem;
+
+  return (
+    categories.some((category) => fileTypeIs(sample, category, mimeTypes)) ||
+    pickMimeTypes.some((mimeType) => matchesMimeType(type, mimeType))
+  );
+}
+
+const ACCEPT_BY_CATEGORY: Partial<Record<FileCategory, string>> = {
+  image: "image/*",
+  video: "video/*",
+  audio: "audio/*",
+  pdf: "application/pdf",
+  text: "text/*",
+};
+
+/** `accept` attribute of the upload input for `restrictions.types`; `undefined` when a type cannot be expressed. */
+export function resolvePickAccept(pickTypes: PickFileType | PickFileType[] | null | undefined): string | undefined {
+  const categories = resolvePickCategories(pickTypes).filter((category) => category !== "folder");
+  const accepted = categories.map((category) => ACCEPT_BY_CATEGORY[category]);
+
+  if (accepted.includes(undefined)) {
+    return undefined;
+  }
+
+  const values = [...accepted, ...resolvePickMimeTypes(pickTypes)];
+
+  return values.length > 0 ? values.join(",") : undefined;
 }
 
 export function filterByPickTypes(
@@ -202,20 +292,21 @@ export function filterByPickTypes(
   pickTypes: PickFileType | PickFileType[] | null | undefined,
   mimeTypes: MimeTypes,
 ): MediaItem[] {
-  const normalizedTypes = resolvePickFilterTypes(pickTypes);
+  const categories = resolvePickCategories(pickTypes);
+  const pickMimeTypes = resolvePickMimeTypes(pickTypes);
 
-  if (normalizedTypes === null) {
+  if (categories.length === 0 && pickMimeTypes.length === 0) {
     return [...files];
   }
 
-  const onlyFolders = normalizedTypes.length === 1 && normalizedTypes[0] === "folder";
+  const onlyFolders = pickMimeTypes.length === 0 && categories.length === 1 && categories[0] === "folder";
 
   return files.filter((item) => {
     if (item.type === "folder" && !onlyFolders) {
       return true;
     }
 
-    return normalizedTypes.some((type) => fileTypeIs(item, type, mimeTypes));
+    return isPickTypeAllowed(item.type, pickTypes, mimeTypes);
   });
 }
 

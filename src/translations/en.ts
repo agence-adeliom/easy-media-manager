@@ -159,6 +159,8 @@ export const enTranslations: EasyMediaTranslations = {
   upload_success: 'Successfully Uploaded',
   upload_files_success: '%count% file(s) uploaded.',
   upload_failed: 'Upload failed.',
+  upload_rejected_size: '%name%: the file exceeds %size%.',
+  upload_rejected_type: '%name%: this file type is not allowed here.',
   upload_text: 'Drag & Drop Files<br><small>Or</small><br>Click To Upload',
   upload_use_random_names: 'Use Random Names ?',
   upload_in_progress: 'Upload Is Already In Progress',

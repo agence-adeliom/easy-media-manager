@@ -35,7 +35,7 @@ Fetch routes use `GET` with query parameters. Mutation routes use `POST` with JS
         {
           "id": 2,
           "name": "photo.jpg",
-          "type": "image",
+          "type": "image/jpeg",
           "size": 102400,
           "path": "/api/uploads/photo-slug-2.jpg",
           "download_url": "/api/uploads/photo-slug-2.jpg",
@@ -55,7 +55,7 @@ Fetch routes use `GET` with query parameters. Mutation routes use `POST` with JS
 }
 ```
 
-**Possible file types:** `image`, `video`, `audio`, `pdf`, `compressed`, `text`, `application`, `application/json+oembed`, `file`, `folder`
+**File type:** the MIME type of the file (`image/jpeg`, `application/pdf`, `application/json+oembed`…), or `folder`. A category (`image`, `video`, `audio`, `pdf`, `compressed`, `text`, `application`, `file`) is also understood, but `pick()` restrictions on an exact MIME type (`application/pdf`) only match a MIME type.
 
 oEmbed items carry a rich `metas` object:
 ```json
@@ -300,7 +300,7 @@ New metadata is **shallow-merged** with existing metadata.
 [
   {
     "name": "photo.jpg",
-    "type": "image",
+    "type": "image/jpeg",
     "path": "/api/uploads/photo-slug-2.jpg",
     "dir_path": "/images",
     "storage_path": "uploads/photo-slug-2.jpg",

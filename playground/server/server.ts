@@ -190,20 +190,11 @@ function getCategoryFromExtension(filename: string): string | null {
   return null;
 }
 
+// The MIME type, as the happy-cms backend returns it; the category of the extension when the type is unknown.
 function getFileType(mime: string | null, filename: string): string {
-  const categoryFromExtension = getCategoryFromExtension(filename);
+  if (mime && mime !== 'application/octet-stream') return mime;
 
-  if (!mime) return categoryFromExtension ?? 'file';
-  if (mime.startsWith('image/')) return 'image';
-  if (mime.startsWith('video/')) return 'video';
-  if (mime.startsWith('audio/')) return 'audio';
-  if (mime === 'application/pdf') return 'pdf';
-  if (mime.includes('oembed')) return mime;
-  if (mime.startsWith('text/')) return 'text';
-  if (mime.includes('zip') || mime.includes('rar') || mime.includes('7z')) return 'compressed';
-  if (categoryFromExtension) return categoryFromExtension;
-  if (mime.startsWith('application/')) return 'application';
-  return 'file';
+  return getCategoryFromExtension(filename) ?? 'file';
 }
 
 function formatMedia(media: Media, parentPath: string = '/') {
