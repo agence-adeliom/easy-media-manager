@@ -6,7 +6,8 @@ const DEFAULT_HEADERS = {
 } as const;
 
 export class EasyMediaApiError extends Error {
-  constructor(message: string, public readonly status?: number) {
+  /** `fromServer`: the message was written by the backend (`{ "error": "…" }`) and can be shown to the user. */
+  constructor(message: string, public readonly status?: number, public readonly fromServer = false) {
     super(message);
     this.name = "EasyMediaApiError";
   }
@@ -25,9 +26,21 @@ export function hasErrorMessage(value: unknown): value is { error: string } {
   return isRecord(value) && typeof value.error === "string" && value.error.length > 0;
 }
 
+async function readServerError(response: Response): Promise<string | null> {
+  try {
+    const body: unknown = await response.json();
+
+    return hasErrorMessage(body) ? body.error : null;
+  } catch {
+    return null;
+  }
+}
+
 export async function parseJson<T>(response: Response): Promise<T> {
   if (!response.ok) {
-    throw new EasyMediaApiError(`HTTP ${response.status}`, response.status);
+    const serverError = await readServerError(response);
+
+    throw new EasyMediaApiError(serverError ?? `HTTP ${response.status}`, response.status, serverError !== null);
   }
 
   return (await response.json()) as T;

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { useFileUpload } from "@/hooks/use-file-upload";
 import { useTranslations } from "@/hooks/use-translations";
 import { cn } from "@/lib/cn";
+import { getErrorMessage } from "@/lib/error-message";
 import { hasDraggedFiles } from "@/lib/file-drop";
 import { resolvePickAccept } from "@/lib/file-utils";
 import { useMediaStore } from "@/store/media-store";
@@ -45,7 +46,7 @@ export function UploadZone({ className, forceVisible = false }: UploadZoneProps)
     try {
       await uploadInputFiles(files);
     } catch (caughtError) {
-      const message = caughtError instanceof Error ? caughtError.message : t("upload_in_progress");
+      const message = getErrorMessage(caughtError, t);
       setError(message);
     } finally {
       if (inputRef.current) {

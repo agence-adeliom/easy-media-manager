@@ -11,7 +11,7 @@ export const enTranslations: EasyMediaTranslations = {
   add_more: 'Add More Files',
   add_list: 'Add To List',
   options: 'Options',
-  ajax_error: 'Oh NO! Something Went Wrong',
+  ajax_error: 'The request failed. Please try again.',
   unknown_error: 'Unknown error.',
   application: 'Application',
   are_you_sure_delete: 'Are You Sure You Want To Delete ?!!',

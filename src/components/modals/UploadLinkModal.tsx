@@ -6,6 +6,7 @@ import { easyMediaClient } from "@/api/client";
 import { ModalShell } from "@/components/modals/ModalShell";
 import { Button } from "@/components/ui/Button";
 import { useTranslations } from "@/hooks/use-translations";
+import { getErrorMessage } from "@/lib/error-message";
 import { CORE_MODAL_IDS } from "@/lib/modal-ids";
 import { useMediaStore } from "@/store/media-store";
 
@@ -38,7 +39,7 @@ export function UploadLinkModal() {
       toast.success(t("upload_link_success"));
     },
     onError: (error) => {
-      toast.error(error.message);
+      toast.error(getErrorMessage(error, t));
     },
   });
 
@@ -57,7 +58,7 @@ export function UploadLinkModal() {
             value={url}
           />
         </div>
-        {mutation.error ? <p className="text-sm text-emm-danger-600">{mutation.error.message}</p> : null}
+        {mutation.error ? <p className="text-sm text-emm-danger-600">{getErrorMessage(mutation.error, t)}</p> : null}
         <div className="flex justify-end gap-2 mt-3">
           <Button onClick={closeModal} type="button" variant="ghost">
             {t("cancel")}

@@ -8,6 +8,7 @@ import { ModalShell } from "@/components/modals/ModalShell";
 import { Button } from "@/components/ui/Button";
 import { useTranslations } from "@/hooks/use-translations";
 import { cn } from "@/lib/cn";
+import { getErrorMessage } from "@/lib/error-message";
 import { CORE_MODAL_IDS } from "@/lib/modal-ids";
 import { useMediaStore } from "@/store/media-store";
 import type { FolderBreadcrumbItem } from "@/types/api";
@@ -127,7 +128,7 @@ export function MoveModal() {
       toast.success(t("move_success"));
     },
     onError: (error) => {
-      toast.error(error.message);
+      toast.error(getErrorMessage(error, t));
     },
   });
 
@@ -197,7 +198,7 @@ export function MoveModal() {
 
           <div className="rounded-xl border border-emm-neutral-200">
             {destinationsQuery.isLoading ? <p className="px-3 py-4 text-sm text-emm-neutral-500">{t("loading")}</p> : null}
-            {destinationsQuery.error ? <p className="px-3 py-4 text-sm text-emm-danger-600">{destinationsQuery.error.message}</p> : null}
+            {destinationsQuery.error ? <p className="px-3 py-4 text-sm text-emm-danger-600">{getErrorMessage(destinationsQuery.error, t)}</p> : null}
             {!destinationsQuery.isLoading && !destinationsQuery.error && destinationFolders.length === 0 ? (
               <p className="px-3 py-4 text-sm text-emm-neutral-500">{t("move_empty_destination_folders")}</p>
             ) : null}
@@ -282,7 +283,7 @@ export function MoveModal() {
           </ul>
         </div>
 
-        {mutation.error ? <p className="text-sm text-emm-danger-600">{mutation.error.message}</p> : null}
+        {mutation.error ? <p className="text-sm text-emm-danger-600">{getErrorMessage(mutation.error, t)}</p> : null}
       </div>
     </ModalShell>
   );
