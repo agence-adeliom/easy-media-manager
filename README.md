@@ -131,6 +131,8 @@ if (file) {
 }
 ```
 
+`restrictions.path` (`'/products/doors'`) opens the picker in that folder and keeps the user inside it.
+
 `restrictions.types` accepts one category or an array of categories. Use `all` or omit it to show every media type. Supported values are `images`, `videos`, `audio`, `folders`, `text`, `pdf`, `applications`, `archives`, and `oembed` plus their singular internal names such as `image`, `video`, `folder`, `application`, and `compressed`. It also accepts MIME types (`application/pdf`) and wildcards (`image/*`). Uploads that do not match `types` or exceed `uploadSize` are refused.
 
 ### Reading a file by its id

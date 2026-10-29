@@ -74,6 +74,8 @@ export type PickFileType =
 
 export interface PickRestrictions {
   types?: PickFileType | PickFileType[] | null;
+  /** Folder the picker opens in and cannot leave, e.g. `/products/doors`. */
+  path?: string | null;
   uploadSize?: number | null;
 }
 

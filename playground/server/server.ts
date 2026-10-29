@@ -7,6 +7,7 @@ import {
   initDb,
   getDb,
   getFolderById,
+  getFolderByPath,
   getMediaById,
   createFolder,
   createMedia,
@@ -268,12 +269,23 @@ app.get('/api/health', (_req, res) => {
 
 app.get('/api/get-files', (req: Request, res: Response) => {
   try {
-    const { folder, search } = req.query;
+    const { folder, search, path: folderPath } = req.query;
     const requestedPage = parseNullableInt(req.query.page) ?? 1;
     const perPage = 50;
     const page = Math.max(requestedPage, 1);
     const offset = (page - 1) * perPage;
-    const folderId = parseNullableInt(folder);
+    let folderId = parseNullableInt(folder);
+
+    // Like happy-cms: without `folder`, a `path` (/Photos/Vacations) designates the folder.
+    if (folderId === null && typeof folderPath === 'string' && folderPath.replace(/\//g, '') !== '') {
+      const pathFolder = getFolderByPath(folderPath);
+
+      if (!pathFolder) {
+        return res.json({ error: `The folder ${folderPath} does not exist` });
+      }
+
+      folderId = pathFolder.id;
+    }
     const normalizedSearch = typeof search === 'string' ? search.trim() : '';
     const hasSearch = normalizedSearch !== '' && normalizedSearch !== '0';
     const searchValue = `%${normalizedSearch}%`;

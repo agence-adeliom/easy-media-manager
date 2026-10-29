@@ -124,6 +124,21 @@ export function buildBreadcrumb(folderId: number | null): Array<{ id: number; na
   return breadcrumb;
 }
 
+/** Folder of a `/Photos/Vacations` path, `undefined` when a segment does not exist. */
+export function getFolderByPath(folderPath: string): Folder | undefined {
+  let folder: Folder | undefined;
+
+  for (const name of folderPath.split('/').filter(Boolean)) {
+    folder = getDb()
+      .prepare(`SELECT * FROM folders WHERE name = ? AND parent_id ${folder ? '= ?' : 'IS NULL'}`)
+      .get(...(folder ? [name, folder.id] : [name])) as Folder | undefined;
+
+    if (!folder) return undefined;
+  }
+
+  return folder;
+}
+
 export function buildFolderPath(folderId: number | null): string {
   if (!folderId) return '/';
 

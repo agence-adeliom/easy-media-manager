@@ -76,6 +76,8 @@ export interface MediaStoreState {
   uploadProgress: number;
   isUploading: boolean;
   restrictions: PickRestrictions;
+  /** Depth of the `restrictions.path` folder in `folderStack`, once resolved: the picker cannot go above it. */
+  pathRootDepth: number | null;
 }
 
 export interface MediaStoreActions {
@@ -105,6 +107,7 @@ export interface MediaStoreActions {
   removeFromMovableList(index: number): void;
   clearMovableList(): void;
   setRestrictions(restrictions: PickRestrictions): void;
+  setPathRootDepth(depth: number | null): void;
   setFeatureOverrides(features: Partial<EasyMediaFeatureFlags>): void;
   resetFeatureOverrides(): void;
   setLoading(isLoading: boolean): void;
@@ -224,6 +227,7 @@ const initialState: MediaStoreState = {
   uploadProgress: 0,
   isUploading: false,
   restrictions: DEFAULT_RESTRICTIONS,
+  pathRootDepth: null,
 };
 
 export function createMediaStore() {
@@ -272,6 +276,10 @@ export function createMediaStore() {
     },
     popFolder() {
       set((state) => {
+        if (state.pathRootDepth !== null && state.folderStack.length <= state.pathRootDepth) {
+          return {};
+        }
+
         const folderStack = state.folderStack.slice(0, -1);
         const currentFolder = folderStack.length > 0 ? folderStack[folderStack.length - 1] : null;
         const currentPath = buildCurrentPath(folderStack);
@@ -292,8 +300,10 @@ export function createMediaStore() {
         };
       });
     },
-    goToFolder(index) {
+    goToFolder(requestedIndex) {
       set((state) => {
+        const index = state.pathRootDepth === null ? requestedIndex : Math.max(requestedIndex, state.pathRootDepth - 1);
+
         if (index < 0) {
           syncUrl(null, { folderId: null, folderStack: [], currentPath: "" });
 
@@ -465,7 +475,10 @@ export function createMediaStore() {
       set({ movableList: [] });
     },
     setRestrictions(restrictions) {
-      set({ restrictions: { ...restrictions } });
+      set({ restrictions: { ...restrictions }, pathRootDepth: null });
+    },
+    setPathRootDepth(depth) {
+      set({ pathRootDepth: depth });
     },
     setFeatureOverrides(features) {
       set((state) => ({

@@ -32,6 +32,8 @@ export function MoveModal() {
   const activeModal = useMediaStore((state) => state.activeModal);
   const closeModal = useMediaStore((state) => state.closeModal);
   const currentFolderId = useMediaStore((state) => state.currentFolderId);
+  const folderStack = useMediaStore((state) => state.folderStack);
+  const pathRootDepth = useMediaStore((state) => state.pathRootDepth);
   const movableList = useMediaStore((state) => state.movableList);
   const removeFromMovableList = useMediaStore((state) => state.removeFromMovableList);
   const clearMovableList = useMediaStore((state) => state.clearMovableList);
@@ -40,6 +42,9 @@ export function MoveModal() {
   const [browseFolderId, setBrowseFolderId] = useState<number | null>(currentFolderId);
 
   const isOpen = activeModal === CORE_MODAL_IDS.move;
+  // In a picker restricted to a folder (`restrictions.path`), destinations stay inside it.
+  const pathRoot = pathRootDepth === null ? null : (folderStack[pathRootDepth - 1] ?? null);
+  const rootFolderId = pathRoot?.id ?? null;
 
   useEffect(() => {
     if (isOpen) {
@@ -126,7 +131,7 @@ export function MoveModal() {
     },
   });
 
-  const breadcrumb = destinationsQuery.data?.breadcrumb ?? [];
+  const breadcrumb = (destinationsQuery.data?.breadcrumb ?? []).slice(pathRootDepth ?? 0);
 
   function isFolderDisabled(folder: FolderItem) {
     return movableList.some((item) => {
@@ -166,13 +171,13 @@ export function MoveModal() {
             <button
               className={cn(
                 "inline-flex cursor-pointer items-center gap-1 rounded px-1 py-0.5 transition hover:text-emm-neutral-900",
-                browseFolderId === null && "font-medium text-emm-neutral-900",
+                browseFolderId === rootFolderId && "font-medium text-emm-neutral-900",
               )}
-              onClick={() => setBrowseFolderId(null)}
+              onClick={() => setBrowseFolderId(rootFolderId)}
               type="button"
             >
               <House className="h-4 w-4" />
-              <span>{t("library")}</span>
+              <span>{pathRoot?.name ?? t("library")}</span>
             </button>
             {breadcrumb.map((item: FolderBreadcrumbItem, index) => (
               <button

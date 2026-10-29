@@ -289,6 +289,7 @@ interface PickOptions {
 
 interface PickRestrictions {
   types?: PickFileType | PickFileType[] | null;
+  path?: string | null;
   uploadSize?: number | null;
 }
 ```
@@ -305,6 +306,7 @@ interface PickRestrictions {
 | Property | Type | Description |
 |----------|------|-------------|
 | `types` | `PickFileType \| PickFileType[] \| null` | Allowed media categories or MIME types in this picker session. Defaults to `all`. Folders remain visible for navigation unless the only type is `folder` / `folders`. Uploads of another type are refused. |
+| `path` | `string \| null` | Folder the picker opens in, e.g. `/products/doors`. The breadcrumb starts at this folder and the user cannot go above it. Sent to the `files` route as the `path` query parameter. |
 | `uploadSize` | `number \| null` | Maximum upload file size in bytes. Larger uploads are refused. |
 
 ```typescript
@@ -362,6 +364,17 @@ const image = await EasyMedia.pick({
   features: {
     enableDelete: false,   // read-only picker
     enableBulkSelection: false,
+  },
+});
+```
+
+Restrict to a folder:
+
+```typescript
+const productImage = await EasyMedia.pick({
+  restrictions: {
+    types: 'images',
+    path: '/products/doors',
   },
 });
 ```
