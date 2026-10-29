@@ -83,6 +83,19 @@ oEmbed items carry a rich `metas` object:
 
 ---
 
+## GET /api/get-file-info
+
+Route `fileInfos`, read by `EasyMedia.getFile()`.
+
+**Query params:**
+| Param | Type | Required | Description |
+|-------|------|----------|-------------|
+| `item` | integer | yes | File ID |
+
+**Response:** the file, in the format of the `get-files` items. For an unknown id: `{ "error": "…" }` or a `404` status; `getFile()` resolves with `null` in both cases.
+
+---
+
 ## POST /api/upload
 
 **Content-Type:** `multipart/form-data`

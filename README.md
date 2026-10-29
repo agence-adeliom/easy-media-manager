@@ -133,6 +133,14 @@ if (file) {
 
 `restrictions.types` accepts one category or an array of categories. Use `all` or omit it to show every media type. Supported values are `images`, `videos`, `audio`, `folders`, `text`, `pdf`, `applications`, `archives`, and `oembed` plus their singular internal names such as `image`, `video`, `folder`, `application`, and `compressed`. It also accepts MIME types (`application/pdf`) and wildcards (`image/*`). Uploads that do not match `types` or exceed `uploadSize` are refused.
 
+### Reading a file by its id
+
+A form field usually stores the id of the chosen file. To show it again (name, size, preview), read it through the `fileInfos` route:
+
+```typescript
+const file = await EasyMedia.getFile(input.value); // MediaFileItem, or null if it was deleted
+```
+
 ---
 
 ## Distribution formats
@@ -336,6 +344,7 @@ npm publish        # runs prod automatically via prepublishOnly
 | `mount` | `(options: { target } & EasyMediaConfigOverride) => void` | Initialize and render full-page manager |
 | `init` | `(config: EasyMediaInitConfig) => void` | Initialize without mounting |
 | `pick` | `(options?: PickOptions) => Promise<MediaItem \| null>` | Open picker modal |
+| `getFile` | `(id: number \| string) => Promise<MediaFileItem \| null>` | Read a file by its id through the `fileInfos` route, `null` if it does not exist |
 | `use` | `(plugin: EasyMediaPlugin) => void` | Register a plugin |
 | `useMany` | `(plugins: EasyMediaPlugin[]) => void` | Register multiple plugins |
 | `isReady` | `() => boolean` | Returns true after `init` |

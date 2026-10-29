@@ -18,11 +18,15 @@ import type {
   UploadResponseItem,
 } from "@/types/api";
 import { EasyMediaApiError, getJson, parseJson, postJson, requestHeaders } from "@/api/http";
-import type { GlobalSearchItem } from "@/types/media";
+import type { GlobalSearchItem, MediaFileItem } from "@/types/media";
 
 export const easyMediaClient = {
   getFiles(route: string, body: GetFilesRequest): Promise<GetFilesResponse> {
     return getJson<GetFilesResponse>(route, { folder: body.folder, search: body.search, path: body.path });
+  },
+
+  getFileInfo(route: string, id: number | string): Promise<MediaFileItem | { error: string }> {
+    return getJson<MediaFileItem | { error: string }>(route, { item: id });
   },
 
   async uploadFile(route: string, formData: FormData): Promise<UploadResponseItem[]> {
