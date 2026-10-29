@@ -292,7 +292,7 @@ function MediaManagerBody() {
   const shell = (
     <div
       className={cn(
-        "easy-media flex flex-col text-slate-900",
+        "easy-media flex flex-col text-emm-neutral-900",
         // Inside the picker the shell must fit the 80vh overlay, otherwise the footer is pushed off-screen.
         mode === "modal" ? "min-h-0 flex-1 overflow-y-auto" : "min-h-screen",
       )}
@@ -305,7 +305,7 @@ function MediaManagerBody() {
         <div
           className={cn(
             "relative flex flex-1 gap-3 p-4",
-            features.enableUpload && isDraggingFiles && "bg-sky-50/60",
+            features.enableUpload && isDraggingFiles && "bg-emm-accent-50/60",
           )}
           onDragEnter={handleNativeDragEnter}
           onDragLeave={handleNativeDragLeave}
@@ -316,8 +316,8 @@ function MediaManagerBody() {
             <FileGrid onItemsChange={setItems} />
           </main>
           {features.enableUpload && isDraggingFiles ? (
-            <div className="pointer-events-none absolute inset-4 z-20 flex items-center justify-center rounded-2xl border-2 border-dashed border-sky-500 bg-sky-100/90 p-6">
-              <div className="flex items-center gap-3 rounded-full bg-white/95 px-5 py-3 text-sm font-medium text-sky-900 shadow-lg">
+            <div className="pointer-events-none absolute inset-4 z-20 flex items-center justify-center rounded-2xl border-2 border-dashed border-emm-accent-500 bg-emm-accent-100/90 p-6">
+              <div className="flex items-center gap-3 rounded-full bg-emm-surface/95 px-5 py-3 text-sm font-medium text-emm-accent-900 shadow-lg">
                 <FolderUp className="h-5 w-5" />
                 {t("upload_to_folder_hint")}
               </div>

@@ -31,12 +31,12 @@ export function Toolbar() {
   const canRename = !hasMultipleSelection && selectedFile !== null;
   const canEditMetas = !hasMultipleSelection && selectedFile !== null && isMediaFile(selectedFile);
   const selectedItemsToMove = bulkMode && bulkList.length > 0 ? bulkList : selectedFile ? [selectedFile] : [];
-  const toolbarButtonClassName = "border-slate-300 bg-white text-slate-900 hover:border-sky-200 hover:bg-sky-200";
+  const toolbarButtonClassName = "border-emm-neutral-300 bg-emm-surface text-emm-neutral-900 hover:border-emm-accent-200 hover:bg-emm-accent-200";
   const uploadButtonClassName = uploadPanelOpen
-    ? "border-sky-700 bg-sky-700 text-white shadow-sm hover:bg-sky-600 hover:text-white"
+    ? "border-emm-accent-700 bg-emm-accent-700 text-emm-inverse shadow-sm hover:bg-emm-accent-600 hover:text-emm-inverse"
     : toolbarButtonClassName;
   const bulkButtonClassName = bulkMode
-    ? "border-sky-700 bg-sky-700 text-white shadow-sm hover:bg-sky-600"
+    ? "border-emm-accent-700 bg-emm-accent-700 text-emm-inverse shadow-sm hover:bg-emm-accent-600"
     : toolbarButtonClassName;
   const pluginContext = createPluginContext(store);
   const pluginActions = getPluginToolbarActions();
@@ -46,7 +46,7 @@ export function Toolbar() {
   const hasSelectionToolbar = Boolean(selectedFile || canEditImage || selectionPluginActions.length > 0);
 
   return (
-    <div className="flex flex-wrap items-start gap-2 bg-neutral-700 px-3 py-2 md:flex-nowrap md:items-center md:justify-between">
+    <div className="flex flex-wrap items-start gap-2 bg-emm-toolbar px-3 py-2 md:flex-nowrap md:items-center md:justify-between">
       <div className="flex items-center gap-1">
         {features.enableUpload ? (
           <Tooltip content={t("upload_main")}>
@@ -80,7 +80,7 @@ export function Toolbar() {
         ))}
       </div>
       {hasSelectionToolbar ? (
-        <div className={`flex items-center gap-1 ${features.enableUpload ? "border-l border-slate-300 pl-2" : ""}`}>
+        <div className={`flex items-center gap-1 ${features.enableUpload ? "border-l border-emm-neutral-300 pl-2" : ""}`}>
           {features.enableEditor && canEditImage ? (
             <Tooltip content={t("editor")}>
               <Button className={`px-2 ${toolbarButtonClassName}`} onClick={() => openModal(CORE_MODAL_IDS.editor)} type="button" variant="ghost">

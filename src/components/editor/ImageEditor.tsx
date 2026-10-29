@@ -213,10 +213,10 @@ export function ImageEditor() {
   return (
     <ModalShell onClose={closeModal} open title={t("editor_title").replace("%name%", selectedFile.name)} widthClassName="max-w-6xl">
       <div className="flex flex-col gap-4">
-        <div className="h-[60vh] overflow-hidden rounded-2xl bg-slate-950 p-3">
+        <div className="h-[60vh] overflow-hidden rounded-2xl bg-emm-neutral-950 p-3">
           <Cropper
-            backgroundClassName="bg-slate-950"
-            boundaryClassName="bg-slate-950"
+            backgroundClassName="bg-emm-neutral-950"
+            boundaryClassName="bg-emm-neutral-950"
             className="h-full w-full"
             imageRestriction={ImageRestriction.stencil}
             onChange={handleCropperChange}
@@ -278,7 +278,7 @@ export function ImageEditor() {
             {t("save_main")}
           </Button>
         </div>
-        {error ? <p className="text-sm text-red-600">{error}</p> : null}
+        {error ? <p className="text-sm text-emm-danger-600">{error}</p> : null}
       </div>
     </ModalShell>
   );

@@ -329,7 +329,7 @@ export function FileGrid({ onItemsChange }: FileGridProps) {
         </div>
         <DragOverlay>
           {dragOverlayLabel ? (
-            <div className="rounded-2xl border border-sky-300 bg-sky-50 px-4 py-3 text-sm font-medium text-sky-900 shadow-xl">
+            <div className="rounded-2xl border border-emm-accent-300 bg-emm-accent-50 px-4 py-3 text-sm font-medium text-emm-accent-900 shadow-xl">
               {dragOverlayLabel}
             </div>
           ) : null}
@@ -339,7 +339,7 @@ export function FileGrid({ onItemsChange }: FileGridProps) {
 
   if (query.isLoading) {
     return (
-      <div className="rounded-2xl border border-slate-200 bg-white p-8 text-sm text-slate-500">
+      <div className="rounded-2xl border border-emm-neutral-200 bg-emm-surface p-8 text-sm text-emm-neutral-500">
         {t("loading")}
       </div>
     );
@@ -361,7 +361,7 @@ export function FileGrid({ onItemsChange }: FileGridProps) {
 
   return (
     <div className="space-y-4">
-      {moveError ? <p className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{moveError}</p> : null}
+      {moveError ? <p className="rounded-2xl border border-emm-danger-200 bg-emm-danger-50 px-4 py-3 text-sm text-emm-danger-700">{moveError}</p> : null}
       <div className="rounded-2xl">{gridContent}</div>
       <InfiniteLoader isLoading={query.isFetchingNextPage} sentinelRef={sentinelRef} />
     </div>

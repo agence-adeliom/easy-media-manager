@@ -93,7 +93,7 @@ export function PreviewModal({ items }: PreviewModalProps) {
       titlePrefix={
         <a
           aria-label={t("download_file")}
-          className="inline-flex items-center justify-center p-2 text-slate-700 transition-colors hover:text-slate-900"
+          className="inline-flex items-center justify-center p-2 text-emm-neutral-700 transition-colors hover:text-emm-neutral-900"
           download
           href={selectedFile.download_url ?? selectedFile.path}
           rel="noreferrer noopener"
@@ -109,7 +109,7 @@ export function PreviewModal({ items }: PreviewModalProps) {
           {hasNavigation ? (
             <Button
               aria-label={t("preview_previous")}
-              className="h-11 w-11 shrink-0 rounded-full border-slate-200 p-0"
+              className="h-11 w-11 shrink-0 rounded-full border-emm-neutral-200 p-0"
               onClick={() => goToItem(previousItem)}
               type="button"
               variant="ghost"
@@ -127,7 +127,7 @@ export function PreviewModal({ items }: PreviewModalProps) {
           {hasNavigation ? (
             <Button
               aria-label={t("preview_next")}
-              className="h-11 w-11 shrink-0 rounded-full border-slate-200 p-0"
+              className="h-11 w-11 shrink-0 rounded-full border-emm-neutral-200 p-0"
               onClick={() => goToItem(nextItem)}
               type="button"
               variant="ghost"

@@ -101,7 +101,7 @@ export function UploadZone({ className, forceVisible = false }: UploadZoneProps)
     <section
       className={cn(
         "flex min-h-[280px] flex-1 rounded-2xl transition-colors px-6 mt-3",
-        isDraggingFiles ? "bg-sky-50" : "bg-transparent",
+        isDraggingFiles ? "bg-emm-accent-50" : "bg-transparent",
         className,
       )}
       onDragEnter={handleDragEnter}
@@ -112,15 +112,15 @@ export function UploadZone({ className, forceVisible = false }: UploadZoneProps)
       <div
         className={cn(
           "flex min-h-[280px] flex-1 flex-col items-center justify-center gap-4 rounded-2xl border border-dashed text-center transition-colors",
-          isDraggingFiles ? "border-sky-400 bg-slate-800" : "border-slate-400 bg-slate-700",
+          isDraggingFiles ? "border-emm-accent-400 bg-emm-neutral-800" : "border-emm-neutral-400 bg-emm-neutral-700",
         )}
       >
-        <div className={cn("rounded-full p-4", isDraggingFiles ? "bg-sky-500/15 text-sky-100" : "bg-white/10 text-slate-100")}>
+        <div className={cn("rounded-full p-4", isDraggingFiles ? "bg-emm-accent-500/15 text-emm-accent-100" : "bg-emm-inverse/10 text-emm-neutral-100")}>
           <Inbox className="h-8 w-8" />
         </div>
         <div>
-          <h3 className="text-lg font-semibold text-white">{t("upload_main")}</h3>
-          <p className={cn("max-w-md text-sm", isDraggingFiles ? "text-sky-50" : "text-slate-200")}>
+          <h3 className="text-lg font-semibold text-emm-inverse">{t("upload_main")}</h3>
+          <p className={cn("max-w-md text-sm", isDraggingFiles ? "text-emm-accent-50" : "text-emm-neutral-200")}>
             {t("upload_hint")}
           </p>
         </div>
@@ -136,7 +136,7 @@ export function UploadZone({ className, forceVisible = false }: UploadZoneProps)
           <Upload className="mr-2 h-4 w-4" />
           {t("upload_choose_files")}
         </Button>
-        {error ? <p className="text-sm text-red-200">{error}</p> : null}
+        {error ? <p className="text-sm text-emm-danger-200">{error}</p> : null}
       </div>
     </section>
   );

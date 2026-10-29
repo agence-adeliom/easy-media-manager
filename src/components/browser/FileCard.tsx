@@ -73,13 +73,13 @@ export function FileCard({
     <article
       ref={setNodeRef}
       className={cn(
-        "group relative flex cursor-pointer select-none items-center gap-3 rounded-lg bg-neutral-50 px-3 py-2.5 transition hover:border-slate-400 hover:bg-sky-50 hover:shadow-sm",
+        "group relative flex cursor-pointer select-none items-center gap-3 rounded-lg bg-emm-item px-3 py-2.5 transition hover:border-emm-neutral-400 hover:bg-emm-accent-50 hover:shadow-sm",
         (!isFolder(item) || showBulkCheckbox) && "pr-20",
-        isSelected && "border-slate-900 bg-sky-100 shadow-sm",
-        isBulkSelected && "ring-2 ring-sky-400",
+        isSelected && "border-emm-neutral-900 bg-emm-accent-100 shadow-sm",
+        isBulkSelected && "ring-2 ring-emm-accent-400",
         dragEnabled && "touch-none",
         draggable.isDragging && "opacity-40",
-        isDropTarget && "border-sky-500 ring-2 ring-sky-300 shadow-lg",
+        isDropTarget && "border-emm-accent-500 ring-2 ring-emm-accent-300 shadow-lg",
       )}
       style={{ transform }}
       {...draggable.attributes}
@@ -92,7 +92,7 @@ export function FileCard({
       onClick={(event) => onSelect(item, index, event)}
       onDoubleClick={() => onDoubleClick(item)}
     >
-      <div className="shrink-0 text-slate-500">
+      <div className="shrink-0 text-emm-neutral-500">
         {showImagePreview ? (
           <img
             alt={item.name}
@@ -114,16 +114,16 @@ export function FileCard({
         )}
       </div>
       <div className="min-w-0 flex-1">
-        <p className="truncate text-sm font-medium text-slate-900 m-0">{item.name}</p>
-        {!isFolder(item) ? <p className="truncate text-xs text-slate-400">{item.size ? `${(item.size / 1024).toFixed(2)} KB` : item.type}</p> : null}
+        <p className="truncate text-sm font-medium text-emm-neutral-900 m-0">{item.name}</p>
+        {!isFolder(item) ? <p className="truncate text-xs text-emm-neutral-400">{item.size ? `${(item.size / 1024).toFixed(2)} KB` : item.type}</p> : null}
       </div>
       {showBulkCheckbox ? (
         <span
           className={cn(
             "absolute right-2 top-2 flex h-5 w-5 items-center justify-center rounded border transition",
             isBulkSelected
-              ? "border-sky-500 bg-sky-500 text-white"
-              : "border-slate-300 bg-slate-100 text-slate-300",
+              ? "border-emm-accent-500 bg-emm-accent-500 text-emm-inverse"
+              : "border-emm-neutral-300 bg-emm-neutral-100 text-emm-neutral-300",
           )}
         >
           <Check className="h-3 w-3" />
@@ -132,7 +132,7 @@ export function FileCard({
       {!isFolder(item) ? (
         <Tooltip className="absolute bottom-1.5 right-2" content={t("copy_link")}>
           <button
-            className="rounded-md p-1.5 text-slate-400 transition hover:bg-slate-100 hover:text-slate-900"
+            className="rounded-md p-1.5 text-emm-neutral-400 transition hover:bg-emm-neutral-100 hover:text-emm-neutral-900"
             onClick={(event) => {
               event.stopPropagation();
               onCopyLink(item.path);

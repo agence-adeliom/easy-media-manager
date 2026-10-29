@@ -101,27 +101,27 @@ export function FilterSort() {
       <button
         className={`flex h-10 items-center gap-2 rounded-md border px-3 text-sm transition ${
           hasActiveState
-            ? "border-sky-300 bg-sky-50 text-sky-950 hover:bg-sky-100"
-            : "border-slate-300 bg-white text-slate-900 hover:bg-slate-100"
+            ? "border-emm-accent-300 bg-emm-accent-50 text-emm-accent-950 hover:bg-emm-accent-100"
+            : "border-emm-neutral-300 bg-emm-surface text-emm-neutral-900 hover:bg-emm-neutral-100"
         }`}
         onClick={() => setIsOpen((value) => !value)}
         type="button"
       >
-        <Filter className={`h-3.5 w-3.5 ${hasActiveState ? "text-sky-600" : "text-slate-500"}`} />
+        <Filter className={`h-3.5 w-3.5 ${hasActiveState ? "text-emm-accent-600" : "text-emm-neutral-500"}`} />
         <span className="max-w-44 truncate">{buttonLabel}</span>
-        <ChevronDown className={`h-3.5 w-3.5 transition ${hasActiveState ? "text-sky-600" : "text-slate-500"} ${isOpen ? "rotate-180" : ""}`} />
+        <ChevronDown className={`h-3.5 w-3.5 transition ${hasActiveState ? "text-emm-accent-600" : "text-emm-neutral-500"} ${isOpen ? "rotate-180" : ""}`} />
       </button>
       {isOpen ? (
-        <div className="absolute right-0 top-12 z-20 w-64 rounded-lg border border-slate-200 bg-white p-2 shadow-xl">
+        <div className="absolute right-0 top-12 z-20 w-64 rounded-lg border border-emm-neutral-200 bg-emm-surface p-2 shadow-xl">
           {showFilter ? (
-            <div className={features.enableSort ? "border-b border-slate-100 pb-2" : ""}>
-              <p className="px-2 pb-1 text-xs font-semibold uppercase tracking-wide text-slate-400">{t("filter_section")}</p>
+            <div className={features.enableSort ? "border-b border-emm-neutral-100 pb-2" : ""}>
+              <p className="px-2 pb-1 text-xs font-semibold uppercase tracking-wide text-emm-neutral-400">{t("filter_section")}</p>
               {filterOptions.map((option) => {
                 const isActive = (filterName ?? "") === option.value;
 
                 return (
                   <button
-                    className={`flex w-full items-center rounded-md px-2 py-2 text-left text-sm ${isActive ? "bg-sky-100 text-slate-900" : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"}`}
+                    className={`flex w-full items-center rounded-md px-2 py-2 text-left text-sm ${isActive ? "bg-emm-accent-100 text-emm-neutral-900" : "text-emm-neutral-600 hover:bg-emm-neutral-100 hover:text-emm-neutral-900"}`}
                     key={option.value}
                     onClick={() => setFilter(option.value || null)}
                     type="button"
@@ -134,19 +134,19 @@ export function FilterSort() {
           ) : null}
           {features.enableSort ? (
             <div className={showFilter ? "pt-2" : ""}>
-              <p className="px-2 pb-1 text-xs font-semibold uppercase tracking-wide text-slate-400">{t("sort_section")}</p>
+              <p className="px-2 pb-1 text-xs font-semibold uppercase tracking-wide text-emm-neutral-400">{t("sort_section")}</p>
               {sortOptions.map((option) => {
                 const isActive = (sortField ?? "") === option.value;
 
                 return (
                   <button
-                    className={`flex w-full items-center justify-between rounded-md px-2 py-2 text-left text-sm ${isActive ? "bg-sky-100 text-slate-900" : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"}`}
+                    className={`flex w-full items-center justify-between rounded-md px-2 py-2 text-left text-sm ${isActive ? "bg-emm-accent-100 text-emm-neutral-900" : "text-emm-neutral-600 hover:bg-emm-neutral-100 hover:text-emm-neutral-900"}`}
                     key={option.value}
                     onClick={() => setSort(option.value || null)}
                     type="button"
                   >
                     <span>{option.label}</span>
-                    {isActive && option.value ? <span className="text-xs uppercase text-slate-500">{sortDirection === 1 ? "Asc" : "Desc"}</span> : null}
+                    {isActive && option.value ? <span className="text-xs uppercase text-emm-neutral-500">{sortDirection === 1 ? "Asc" : "Desc"}</span> : null}
                   </button>
                 );
               })}

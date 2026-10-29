@@ -59,11 +59,11 @@ export function EditMetasModal() {
     <ModalShell onClose={closeModal} open={activeModal === CORE_MODAL_IDS.editMetas} title={t("edit_metas_modal_title")}>
       <div className="space-y-4">
         <div className="space-y-2">
-          <label className="block text-sm font-medium text-slate-700" htmlFor="edit-metas-title">
+          <label className="block text-sm font-medium text-emm-neutral-700" htmlFor="edit-metas-title">
             {t("seo_title")}
           </label>
           <input
-            className="w-full rounded-xl border border-slate-300 px-3 py-2"
+            className="w-full rounded-xl border border-emm-neutral-300 px-3 py-2"
             id="edit-metas-title"
             onChange={(event) => setForm((state) => ({ ...state, title: event.target.value }))}
             placeholder={t("seo_title")}
@@ -71,11 +71,11 @@ export function EditMetasModal() {
           />
         </div>
         <div className="space-y-2">
-          <label className="block text-sm font-medium text-slate-700" htmlFor="edit-metas-alt">
+          <label className="block text-sm font-medium text-emm-neutral-700" htmlFor="edit-metas-alt">
             {t("seo_alt")}
           </label>
           <input
-            className="w-full rounded-xl border border-slate-300 px-3 py-2"
+            className="w-full rounded-xl border border-emm-neutral-300 px-3 py-2"
             id="edit-metas-alt"
             onChange={(event) => setForm((state) => ({ ...state, alt: event.target.value }))}
             placeholder={t("seo_alt")}
@@ -83,18 +83,18 @@ export function EditMetasModal() {
           />
         </div>
         <div className="space-y-2">
-          <label className="block text-sm font-medium text-slate-700" htmlFor="edit-metas-description">
+          <label className="block text-sm font-medium text-emm-neutral-700" htmlFor="edit-metas-description">
             {t("seo_description")}
           </label>
           <textarea
-            className="min-h-32 w-full rounded-xl border border-slate-300 px-3 py-2"
+            className="min-h-32 w-full rounded-xl border border-emm-neutral-300 px-3 py-2"
             id="edit-metas-description"
             onChange={(event) => setForm((state) => ({ ...state, description: event.target.value }))}
             placeholder={t("seo_description")}
             value={form.description}
           />
         </div>
-        {mutation.error ? <p className="text-sm text-red-600">{mutation.error.message}</p> : null}
+        {mutation.error ? <p className="text-sm text-emm-danger-600">{mutation.error.message}</p> : null}
         <div className="flex justify-end gap-2 mt-3">
           <Button onClick={closeModal} type="button" variant="ghost">
             {t("cancel")}
