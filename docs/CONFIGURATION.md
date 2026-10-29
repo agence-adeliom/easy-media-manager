@@ -190,9 +190,9 @@ interface EasyMediaRoutes {
 
 | Property | HTTP method | Description |
 |----------|-------------|-------------|
-| `files` | `POST` | List files and folders in a given folder. |
+| `files` | `GET` | List files and folders in a given folder (query string: `folder`, `search`, `path`). |
 | `upload` | `POST` (multipart) | Upload one or more files. |
-| `uploadCropped` | `POST` (multipart) | Upload a cropped version of an image. |
+| `uploadCropped` | `POST` | Upload a cropped version of an image (JSON body, image as a base64 data URL). |
 | `uploadLink` | `POST` | Import a file from a remote URL. |
 | `newFolder` | `POST` | Create a new folder. |
 | `deleteFile` | `POST` | Delete one or more files or folders. |
@@ -202,7 +202,7 @@ interface EasyMediaRoutes {
 | `generateAlt` | `POST` | AI-generate alt text for a single file. |
 | `generateAltGroup` | `POST` | AI-generate alt text for a selection of files. |
 | `generateAllAlt` | `POST` | AI-generate alt text for all files in the current folder. |
-| `globalSearch` | `POST` | Full-text search across all files. |
+| `globalSearch` | `GET` | Full-text search across all files. |
 | `folderDownload` | `POST` | Download a folder as a ZIP archive. |
 | `filesDownload` | `POST` | Download a selection of files as a ZIP archive. |
 

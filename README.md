@@ -52,7 +52,7 @@ EasyMedia.configure({
     generatingAlts: false,
   },
   features: {
-      // ... see @docs/configurations.md for full list
+      // ... see docs/CONFIGURATION.md for full list
   },
   routes: {
     files: '/get-files',
@@ -87,7 +87,7 @@ EasyMedia.mount({ target: '#app' });
       generatingAlts: false,
     },
     features: {
-        // ... see @docs/configurations.md for full list
+        // ... see docs/CONFIGURATION.md for full list
     },
     routes: {
       files: '/get-files',
@@ -307,7 +307,7 @@ npm publish        # runs prod automatically via prepublishOnly
 | `isReady` | `() => boolean` | Returns true after `init` |
 | `translations` | `{ en, fr }` | Built-in translation objects |
 
-See [CONFIGURATION.md](./CONFIGURATION.md) for the full configuration reference and [PLUGINS.md](./PLUGINS.md) for the plugin guide.
+See [CONFIGURATION.md](https://github.com/agence-adeliom/easy-media-manager/blob/main/docs/CONFIGURATION.md) for the full configuration reference and [PLUGINS.md](https://github.com/agence-adeliom/easy-media-manager/blob/main/docs/PLUGINS.md) for the plugin guide.
 
 ---
 
