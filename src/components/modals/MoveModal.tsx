@@ -164,46 +164,46 @@ export function MoveModal() {
 
   return (
     <ModalShell onClose={handleClose} open={isOpen} title={t("move_main")}>
-      <div className="space-y-4">
-        <div className="space-y-3 rounded-xl border border-emm-neutral-200 p-3">
-          <p className="text-sm font-medium text-emm-neutral-900">{t("destination_folder")}</p>
+      <div className="emm:space-y-4">
+        <div className="emm:space-y-3 emm:rounded-xl emm:border emm:border-emm-neutral-200 emm:p-3">
+          <p className="emm:text-sm emm:font-medium emm:text-emm-neutral-900">{t("destination_folder")}</p>
 
-          <div className="flex flex-wrap items-center gap-1 text-sm text-emm-neutral-500">
+          <div className="emm:flex emm:flex-wrap emm:items-center emm:gap-1 emm:text-sm emm:text-emm-neutral-500">
             <button
               className={cn(
-                "inline-flex cursor-pointer items-center gap-1 rounded px-1 py-0.5 transition hover:text-emm-neutral-900",
-                browseFolderId === rootFolderId && "font-medium text-emm-neutral-900",
+                "emm:inline-flex emm:cursor-pointer emm:items-center emm:gap-1 emm:rounded emm:px-1 emm:py-0.5 emm:transition emm:hover:text-emm-neutral-900",
+                browseFolderId === rootFolderId && "emm:font-medium emm:text-emm-neutral-900",
               )}
               onClick={() => setBrowseFolderId(rootFolderId)}
               type="button"
             >
-              <House className="h-4 w-4" />
+              <House className="emm:h-4 emm:w-4" />
               <span>{pathRoot?.name ?? t("library")}</span>
             </button>
             {breadcrumb.map((item: FolderBreadcrumbItem, index) => (
               <button
                 className={cn(
-                  "inline-flex cursor-pointer items-center gap-1 rounded px-1 py-0.5 transition hover:text-emm-neutral-900",
-                  index === breadcrumb.length - 1 && "font-medium text-emm-neutral-900",
+                  "emm:inline-flex emm:cursor-pointer emm:items-center emm:gap-1 emm:rounded emm:px-1 emm:py-0.5 emm:transition emm:hover:text-emm-neutral-900",
+                  index === breadcrumb.length - 1 && "emm:font-medium emm:text-emm-neutral-900",
                 )}
                 key={item.id}
                 onClick={() => setBrowseFolderId(item.id)}
                 type="button"
               >
-                <ChevronRight className="h-4 w-4" />
+                <ChevronRight className="emm:h-4 emm:w-4" />
                 {item.name}
               </button>
             ))}
           </div>
 
-          <div className="rounded-xl border border-emm-neutral-200">
-            {destinationsQuery.isLoading ? <p className="px-3 py-4 text-sm text-emm-neutral-500">{t("loading")}</p> : null}
-            {destinationsQuery.error ? <p className="px-3 py-4 text-sm text-emm-danger-600">{getErrorMessage(destinationsQuery.error, t)}</p> : null}
+          <div className="emm:rounded-xl emm:border emm:border-emm-neutral-200">
+            {destinationsQuery.isLoading ? <p className="emm:px-3 emm:py-4 emm:text-sm emm:text-emm-neutral-500">{t("loading")}</p> : null}
+            {destinationsQuery.error ? <p className="emm:px-3 emm:py-4 emm:text-sm emm:text-emm-danger-600">{getErrorMessage(destinationsQuery.error, t)}</p> : null}
             {!destinationsQuery.isLoading && !destinationsQuery.error && destinationFolders.length === 0 ? (
-              <p className="px-3 py-4 text-sm text-emm-neutral-500">{t("move_empty_destination_folders")}</p>
+              <p className="emm:px-3 emm:py-4 emm:text-sm emm:text-emm-neutral-500">{t("move_empty_destination_folders")}</p>
             ) : null}
             {!destinationsQuery.isLoading && !destinationsQuery.error ? (
-              <ul className="grid gap-2 p-3 sm:grid-cols-2 lg:grid-cols-3">
+              <ul className="emm:grid emm:gap-2 emm:p-3 emm:sm:grid-cols-2 emm:lg:grid-cols-3">
                 {destinationFolders.map((folder) => {
                   const disabled = isFolderDisabled(folder);
 
@@ -211,10 +211,10 @@ export function MoveModal() {
                     <li key={folder.id}>
                       <button
                         className={cn(
-                          "group relative flex w-full min-w-0 items-center gap-3 rounded-lg bg-emm-item px-3 py-2.5 text-left transition hover:border-emm-neutral-400 hover:bg-emm-accent-50 hover:shadow-sm",
+                          "emm:group emm:relative emm:flex emm:w-full emm:min-w-0 emm:items-center emm:gap-3 emm:rounded-lg emm:bg-emm-item emm:px-3 emm:py-2.5 emm:text-left emm:transition emm:hover:border-emm-neutral-400 emm:hover:bg-emm-accent-50 emm:hover:shadow-sm",
                           disabled
-                            ? "cursor-not-allowed text-emm-neutral-400"
-                            : "cursor-pointer text-emm-neutral-900",
+                            ? "emm:cursor-not-allowed emm:text-emm-neutral-400"
+                            : "emm:cursor-pointer emm:text-emm-neutral-900",
                         )}
                         disabled={disabled}
                         onClick={() => setBrowseFolderId(folder.id)}
@@ -222,13 +222,13 @@ export function MoveModal() {
                       >
                         <span
                           className={cn(
-                            "shrink-0 text-emm-neutral-500",
-                            disabled && "text-emm-neutral-300",
+                            "emm:shrink-0 emm:text-emm-neutral-500",
+                            disabled && "emm:text-emm-neutral-300",
                           )}
                         >
-                          <Folder className="h-10 w-10 fill-current" />
+                          <Folder className="emm:h-10 emm:w-10 emm:fill-current" />
                         </span>
-                        <span className="truncate text-sm font-medium">{folder.name}</span>
+                        <span className="emm:truncate emm:text-sm emm:font-medium">{folder.name}</span>
                       </button>
                     </li>
                   );
@@ -237,13 +237,13 @@ export function MoveModal() {
             ) : null}
           </div>
 
-          <div className="flex flex-wrap items-center justify-end gap-3 border-t border-emm-neutral-200 pt-3">
-            <div className="text-right">
-              <p className="text-xs font-medium uppercase tracking-wide text-emm-neutral-500">{t("move_selected_folder")}</p>
-              <p className="text-sm text-emm-neutral-600">
+          <div className="emm:flex emm:flex-wrap emm:items-center emm:justify-end emm:gap-3 emm:border-t emm:border-emm-neutral-200 emm:pt-3">
+            <div className="emm:text-right">
+              <p className="emm:text-xs emm:font-medium emm:uppercase emm:tracking-wide emm:text-emm-neutral-500">{t("move_selected_folder")}</p>
+              <p className="emm:text-sm emm:text-emm-neutral-600">
                 {destinationPath ? `/${t("library")}/${destinationPath}` : `/${t("library")}`}
               </p>
-              {invalidDestination ? <p className="text-sm text-emm-danger-600">{t("move_unavailable")}</p> : null}
+              {invalidDestination ? <p className="emm:text-sm emm:text-emm-danger-600">{t("move_unavailable")}</p> : null}
             </div>
             <Button onClick={handleClose} type="button" variant="ghost">
               {t("cancel")}
@@ -259,20 +259,20 @@ export function MoveModal() {
           </div>
         </div>
 
-        <div className="space-y-3 rounded-xl border border-emm-neutral-200 p-3">
-          <p className="text-sm font-medium text-emm-neutral-900">{t("files_to_move_list")}</p>
-          <ul className="space-y-2">
+        <div className="emm:space-y-3 emm:rounded-xl emm:border emm:border-emm-neutral-200 emm:p-3">
+          <p className="emm:text-sm emm:font-medium emm:text-emm-neutral-900">{t("files_to_move_list")}</p>
+          <ul className="emm:space-y-2">
             {movableList.map((item, index) => (
               <li
                 className={cn(
-                  "flex items-center justify-between gap-3 rounded px-2 py-1.5 text-sm",
-                  index % 2 === 0 ? "bg-emm-neutral-50" : "bg-emm-surface",
+                  "emm:flex emm:items-center emm:justify-between emm:gap-3 emm:rounded emm:px-2 emm:py-1.5 emm:text-sm",
+                  index % 2 === 0 ? "emm:bg-emm-neutral-50" : "emm:bg-emm-surface",
                 )}
                 key={`${item.storage_path}-${index}`}
               >
-                <span className="truncate">{item.name}</span>
+                <span className="emm:truncate">{item.name}</span>
                 <button
-                  className="shrink-0 cursor-pointer text-sm text-emm-accent-700 underline-offset-2 transition hover:text-emm-accent-900 hover:underline"
+                  className="emm:shrink-0 emm:cursor-pointer emm:text-sm emm:text-emm-accent-700 emm:underline-offset-2 emm:transition emm:hover:text-emm-accent-900 emm:hover:underline"
                   onClick={() => handleRemove(index)}
                   type="button"
                 >
@@ -283,7 +283,7 @@ export function MoveModal() {
           </ul>
         </div>
 
-        {mutation.error ? <p className="text-sm text-emm-danger-600">{getErrorMessage(mutation.error, t)}</p> : null}
+        {mutation.error ? <p className="emm:text-sm emm:text-emm-danger-600">{getErrorMessage(mutation.error, t)}</p> : null}
       </div>
     </ModalShell>
   );

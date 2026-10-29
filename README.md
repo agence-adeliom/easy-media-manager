@@ -164,25 +164,27 @@ The CSS ships in two versions with the same rules, all scoped under `.easy-media
 | Layered (default) | `@agence-adeliom/easy-media-manager/style.css` | `dist/iife/easy-media.css` | Tailwind, or any CSS in cascade layers |
 | Unlayered | `@agence-adeliom/easy-media-manager/style.unlayered.css` | `dist/iife/easy-media.unlayered.css` | Bootstrap, Tabler, a CMS admin theme: any CSS outside layers |
 
+In both, the utility classes are prefixed (`emm:grid`, `emm:p-3`): the host's own `.grid` or
+`.p-3 { … !important }` (Bootstrap, Tabler) never reach the manager.
+
 The default stylesheet puts every rule in [cascade layers](https://developer.mozilla.org/en-US/docs/Web/CSS/@layer)
 (`theme`, `base`, `components`, `utilities`), like Tailwind does. The cascade compares layers before
 specificity: a host rule **outside** any layer always wins over a layered rule. With a Tailwind host, this
-keeps the manager easy to adjust from the project's own CSS. With a Bootstrap or Tabler host, it breaks the
-manager: Tabler's `.grid` turns the file grid into 12 columns, Bootstrap's `p { margin-bottom: 1rem }`
-adds margins to the modal titles.
+keeps the manager easy to adjust from the project's own CSS. With a Bootstrap or Tabler host, the host's
+element rules win: Bootstrap's `p { margin-bottom: 1rem }` adds margins to the modal titles.
 
 The unlayered stylesheet is the same CSS with the layer blocks removed. The library rules then compete on
-specificity again, and their `.easy-media` scope makes them win over the usual host rules (`.easy-media .grid`
-beats `.grid`). Overriding the manager from the host CSS then requires a selector at least as specific,
-scoped under `.easy-media`.
+specificity again, and their `.easy-media` scope makes them win over the host element rules
+(`.easy-media p` beats `p`). Overriding the manager from the host CSS then requires a selector at least as
+specific, scoped under `.easy-media`.
 
 ```typescript
 // Sylius admin (Tabler), Symfony app with Bootstrap…
 import '@agence-adeliom/easy-media-manager/style.unlayered.css';
 ```
 
-If you used `revert-layer` to work around a conflict with the layered stylesheet, remove it when switching:
-outside layers, `revert-layer` falls back to the browser defaults.
+If you used `revert-layer` to work around a conflict (`.easy-media .grid { … }`), remove it: the library
+no longer uses the unprefixed class names, and outside layers `revert-layer` falls back to the browser defaults.
 
 ---
 

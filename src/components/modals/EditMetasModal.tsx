@@ -58,45 +58,45 @@ export function EditMetasModal() {
 
   return (
     <ModalShell onClose={closeModal} open={activeModal === CORE_MODAL_IDS.editMetas} title={t("edit_metas_modal_title")}>
-      <div className="space-y-4">
-        <div className="space-y-2">
-          <label className="block text-sm font-medium text-emm-neutral-700" htmlFor="edit-metas-title">
+      <div className="emm:space-y-4">
+        <div className="emm:space-y-2">
+          <label className="emm:block emm:text-sm emm:font-medium emm:text-emm-neutral-700" htmlFor="edit-metas-title">
             {t("seo_title")}
           </label>
           <input
-            className="w-full rounded-xl border border-emm-neutral-300 px-3 py-2"
+            className="emm:w-full emm:rounded-xl emm:border emm:border-emm-neutral-300 emm:px-3 emm:py-2"
             id="edit-metas-title"
             onChange={(event) => setForm((state) => ({ ...state, title: event.target.value }))}
             placeholder={t("seo_title")}
             value={form.title}
           />
         </div>
-        <div className="space-y-2">
-          <label className="block text-sm font-medium text-emm-neutral-700" htmlFor="edit-metas-alt">
+        <div className="emm:space-y-2">
+          <label className="emm:block emm:text-sm emm:font-medium emm:text-emm-neutral-700" htmlFor="edit-metas-alt">
             {t("seo_alt")}
           </label>
           <input
-            className="w-full rounded-xl border border-emm-neutral-300 px-3 py-2"
+            className="emm:w-full emm:rounded-xl emm:border emm:border-emm-neutral-300 emm:px-3 emm:py-2"
             id="edit-metas-alt"
             onChange={(event) => setForm((state) => ({ ...state, alt: event.target.value }))}
             placeholder={t("seo_alt")}
             value={form.alt}
           />
         </div>
-        <div className="space-y-2">
-          <label className="block text-sm font-medium text-emm-neutral-700" htmlFor="edit-metas-description">
+        <div className="emm:space-y-2">
+          <label className="emm:block emm:text-sm emm:font-medium emm:text-emm-neutral-700" htmlFor="edit-metas-description">
             {t("seo_description")}
           </label>
           <textarea
-            className="min-h-32 w-full rounded-xl border border-emm-neutral-300 px-3 py-2"
+            className="emm:min-h-32 emm:w-full emm:rounded-xl emm:border emm:border-emm-neutral-300 emm:px-3 emm:py-2"
             id="edit-metas-description"
             onChange={(event) => setForm((state) => ({ ...state, description: event.target.value }))}
             placeholder={t("seo_description")}
             value={form.description}
           />
         </div>
-        {mutation.error ? <p className="text-sm text-emm-danger-600">{getErrorMessage(mutation.error, t)}</p> : null}
-        <div className="flex justify-end gap-2 mt-3">
+        {mutation.error ? <p className="emm:text-sm emm:text-emm-danger-600">{getErrorMessage(mutation.error, t)}</p> : null}
+        <div className="emm:flex emm:justify-end emm:gap-2 emm:mt-3">
           <Button onClick={closeModal} type="button" variant="ghost">
             {t("cancel")}
           </Button>

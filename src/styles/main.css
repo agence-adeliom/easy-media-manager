@@ -1,11 +1,17 @@
-@import "tailwindcss";
+/*
+ * Every utility is prefixed (`emm:p-3`, `emm:hover:bg-emm-accent-50`, `emm:emm-dark:bg-black`): host frameworks
+ * declare utilities with the same names, some with `!important` (Bootstrap and Tabler `.p-3`, `.rounded`,
+ * `.gap-2`…), which would win over the library whatever the cascade layers. Plugins styled with the library
+ * utilities use the prefix too.
+ */
+@import "tailwindcss" prefix(emm);
 @source "../";
 
 /*
  * Theme tokens.
  *
  * Every color used by the components goes through one of the utilities below
- * (`bg-emm-accent-600`, `text-emm-neutral-900`…). Each utility reads an
+ * (`emm:bg-emm-accent-600`, `emm:text-emm-neutral-900`…). Each utility reads an
  * optional `--emm-*` custom property and falls back to the default palette,
  * so the manager looks the same when nothing is set, and a project themes it
  * by setting the custom properties on `.easy-media` or any ancestor:

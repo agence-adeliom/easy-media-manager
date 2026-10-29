@@ -93,31 +93,31 @@ export function PreviewModal({ items }: PreviewModalProps) {
       titlePrefix={
         <a
           aria-label={t("download_file")}
-          className="inline-flex items-center justify-center p-2 text-emm-neutral-700 transition-colors hover:text-emm-neutral-900"
+          className="emm:inline-flex emm:items-center emm:justify-center emm:p-2 emm:text-emm-neutral-700 emm:transition-colors emm:hover:text-emm-neutral-900"
           download
           href={selectedFile.download_url ?? selectedFile.path}
           rel="noreferrer noopener"
           target="_blank"
         >
-          <Download className="h-4 w-4" />
+          <Download className="emm:h-4 emm:w-4" />
         </a>
       }
-      widthClassName="max-w-5xl"
+      widthClassName="emm:max-w-5xl"
     >
-      <div className="space-y-6">
-        <div className="flex items-center justify-center gap-4">
+      <div className="emm:space-y-6">
+        <div className="emm:flex emm:items-center emm:justify-center emm:gap-4">
           {hasNavigation ? (
             <Button
               aria-label={t("preview_previous")}
-              className="h-11 w-11 shrink-0 rounded-full border-emm-neutral-200 p-0"
+              className="emm:h-11 emm:w-11 emm:shrink-0 emm:rounded-full emm:border-emm-neutral-200 emm:p-0"
               onClick={() => goToItem(previousItem)}
               type="button"
               variant="ghost"
             >
-              <ChevronLeft className="h-5 w-5" />
+              <ChevronLeft className="emm:h-5 emm:w-5" />
             </Button>
           ) : null}
-          <div className="min-w-0 flex-1">
+          <div className="emm:min-w-0 emm:flex-1">
             {fileType.isImage(selectedFile) ? <ImagePreview file={selectedFile} /> : null}
             {fileType.isVideo(selectedFile) ? <VideoPlayer file={selectedFile} /> : null}
             {fileType.isAudio(selectedFile) ? <AudioPlayer file={selectedFile} /> : null}
@@ -127,12 +127,12 @@ export function PreviewModal({ items }: PreviewModalProps) {
           {hasNavigation ? (
             <Button
               aria-label={t("preview_next")}
-              className="h-11 w-11 shrink-0 rounded-full border-emm-neutral-200 p-0"
+              className="emm:h-11 emm:w-11 emm:shrink-0 emm:rounded-full emm:border-emm-neutral-200 emm:p-0"
               onClick={() => goToItem(nextItem)}
               type="button"
               variant="ghost"
             >
-              <ChevronRight className="h-5 w-5" />
+              <ChevronRight className="emm:h-5 emm:w-5" />
             </Button>
           ) : null}
         </div>

@@ -20,7 +20,7 @@ function GenerateAltPluginModal({ close, context }: EasyMediaPluginModalProps) {
   const { routes, selectedFile, bulkList, t } = context;
 
   const mutation = useMutation({
-    mutationFn: async (scope: 'single' | 'group' | 'all') => {
+    mutationFn: async (scope: 'single' | 'emm:group' | 'all') => {
       if (!routes) {
         throw new Error(t('routes_unavailable'));
       }
@@ -36,7 +36,7 @@ function GenerateAltPluginModal({ close, context }: EasyMediaPluginModalProps) {
         });
       }
 
-      if (scope === 'group') {
+      if (scope === 'emm:group') {
         if (!routes.generateAltGroup) {
           throw new Error(t('plugins.generate_alt.group_unavailable'));
         }
@@ -62,10 +62,10 @@ function GenerateAltPluginModal({ close, context }: EasyMediaPluginModalProps) {
 
   return (
     <PluginModalShell title={t('plugins.generate_alt.title')} close={close}>
-      <div className="space-y-4 py-3">
-        <div className="flex flex-wrap gap-2">
+      <div className="emm:space-y-4 emm:py-3">
+        <div className="emm:flex emm:flex-wrap emm:gap-2">
           <button
-            className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-40"
+            className="emm:rounded-lg emm:border emm:border-emm-neutral-200 emm:px-4 emm:py-2 emm:text-sm emm:font-medium emm:text-emm-neutral-700 emm:hover:bg-emm-neutral-50 emm:disabled:opacity-40"
             disabled={selectedFile === null || mutation.isPending}
             onClick={() => mutation.mutate('single')}
             type="button"
@@ -73,15 +73,15 @@ function GenerateAltPluginModal({ close, context }: EasyMediaPluginModalProps) {
             {t('plugins.generate_alt.selected_file')}
           </button>
           <button
-            className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-40"
+            className="emm:rounded-lg emm:border emm:border-emm-neutral-200 emm:px-4 emm:py-2 emm:text-sm emm:font-medium emm:text-emm-neutral-700 emm:hover:bg-emm-neutral-50 emm:disabled:opacity-40"
             disabled={bulkList.length === 0 || mutation.isPending}
-            onClick={() => mutation.mutate('group')}
+            onClick={() => mutation.mutate('emm:group')}
             type="button"
           >
             {t('plugins.generate_alt.group')}
           </button>
           <button
-            className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-40"
+            className="emm:rounded-lg emm:bg-emm-neutral-900 emm:px-4 emm:py-2 emm:text-sm emm:font-medium emm:text-emm-inverse emm:hover:bg-emm-neutral-700 emm:disabled:opacity-40"
             disabled={mutation.isPending}
             onClick={() => mutation.mutate('all')}
             type="button"
@@ -90,12 +90,12 @@ function GenerateAltPluginModal({ close, context }: EasyMediaPluginModalProps) {
           </button>
         </div>
         {mutation.data ? (
-          <pre className="overflow-x-auto rounded-xl bg-slate-100 p-3 text-xs">
+          <pre className="emm:overflow-x-auto emm:rounded-xl emm:bg-emm-neutral-100 emm:p-3 emm:text-xs">
             {JSON.stringify(mutation.data, null, 2)}
           </pre>
         ) : null}
         {mutation.error ? (
-          <p className="text-sm text-red-600">{mutation.error.message}</p>
+          <p className="emm:text-sm emm:text-emm-danger-600">{mutation.error.message}</p>
         ) : null}
       </div>
     </PluginModalShell>

@@ -212,13 +212,13 @@ export function ImageEditor() {
   }
 
   return (
-    <ModalShell onClose={closeModal} open title={t("editor_title").replace("%name%", selectedFile.name)} widthClassName="max-w-6xl">
-      <div className="flex flex-col gap-4">
-        <div className="h-[60vh] overflow-hidden rounded-2xl bg-emm-neutral-950 emm-dark:bg-black p-3">
+    <ModalShell onClose={closeModal} open title={t("editor_title").replace("%name%", selectedFile.name)} widthClassName="emm:max-w-6xl">
+      <div className="emm:flex emm:flex-col emm:gap-4">
+        <div className="emm:h-[60vh] emm:overflow-hidden emm:rounded-2xl emm:bg-emm-neutral-950 emm:emm-dark:bg-black emm:p-3">
           <Cropper
-            backgroundClassName="bg-emm-neutral-950 emm-dark:bg-black"
-            boundaryClassName="bg-emm-neutral-950 emm-dark:bg-black"
-            className="h-full w-full"
+            backgroundClassName="emm:bg-emm-neutral-950 emm:emm-dark:bg-black"
+            boundaryClassName="emm:bg-emm-neutral-950 emm:emm-dark:bg-black"
+            className="emm:h-full emm:w-full"
             imageRestriction={ImageRestriction.stencil}
             onChange={handleCropperChange}
             ref={cropperRef}
@@ -233,53 +233,53 @@ export function ImageEditor() {
             transitions={false}
           />
         </div>
-        <div className="flex flex-wrap gap-2">
+        <div className="emm:flex emm:flex-wrap emm:gap-2">
           <Button onClick={() => handleModeChange("move")} type="button" variant={mode === "move" ? "primary" : "secondary"}>
-            <Move className="mr-2 h-4 w-4" />
+            <Move className="emm:mr-2 emm:h-4 emm:w-4" />
             {t("editor_mode_move")}
           </Button>
           <Button onClick={() => handleModeChange("crop")} type="button" variant={mode === "crop" ? "primary" : "secondary"}>
-            <Crop className="mr-2 h-4 w-4" />
+            <Crop className="emm:mr-2 emm:h-4 emm:w-4" />
             {t("editor_mode_crop")}
           </Button>
           <Button onClick={() => cropperRef.current?.zoomImage(1.1)} type="button">
-            <ZoomIn className="mr-2 h-4 w-4" />
+            <ZoomIn className="emm:mr-2 emm:h-4 emm:w-4" />
             {t("editor_zoom_in")}
           </Button>
           <Button onClick={() => cropperRef.current?.zoomImage(0.9)} type="button">
-            <ZoomOut className="mr-2 h-4 w-4" />
+            <ZoomOut className="emm:mr-2 emm:h-4 emm:w-4" />
             {t("editor_zoom_out")}
           </Button>
           <Button onClick={() => cropperRef.current?.rotateImage(45)} type="button">
-            <RotateCw className="mr-2 h-4 w-4" />
+            <RotateCw className="emm:mr-2 emm:h-4 emm:w-4" />
             {t("editor_rotate_right")}
           </Button>
           <Button onClick={() => cropperRef.current?.rotateImage(-45)} type="button">
-            <RotateCcw className="mr-2 h-4 w-4" />
+            <RotateCcw className="emm:mr-2 emm:h-4 emm:w-4" />
             {t("editor_rotate_left")}
           </Button>
           <Button onClick={() => cropperRef.current?.flipImage(true, false)} type="button">
-            <FlipHorizontal className="mr-2 h-4 w-4" />
+            <FlipHorizontal className="emm:mr-2 emm:h-4 emm:w-4" />
             {t("editor_flip_horizontal")}
           </Button>
           <Button onClick={() => cropperRef.current?.flipImage(false, true)} type="button">
-            <FlipVertical className="mr-2 h-4 w-4" />
+            <FlipVertical className="emm:mr-2 emm:h-4 emm:w-4" />
             {t("editor_flip_vertical")}
           </Button>
           <Button disabled={!hasCropSelection} onClick={handleClear} type="button" variant="ghost">
-            <XCircle className="mr-2 h-4 w-4" />
+            <XCircle className="emm:mr-2 emm:h-4 emm:w-4" />
             {t("editor_clear_selection")}
           </Button>
           <Button disabled={!hasChanges} onClick={handleReset} type="button" variant="ghost">
-            <Undo2 className="mr-2 h-4 w-4" />
+            <Undo2 className="emm:mr-2 emm:h-4 emm:w-4" />
             {t("editor_reset")}
           </Button>
           <Button disabled={mutation.isPending || !hasChanges} onClick={() => mutation.mutate()} type="button" variant="primary">
-            <Save className="mr-2 h-4 w-4" />
+            <Save className="emm:mr-2 emm:h-4 emm:w-4" />
             {t("save_main")}
           </Button>
         </div>
-        {error ? <p className="text-sm text-emm-danger-600">{error}</p> : null}
+        {error ? <p className="emm:text-sm emm:text-emm-danger-600">{error}</p> : null}
       </div>
     </ModalShell>
   );

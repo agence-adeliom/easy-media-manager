@@ -11,13 +11,13 @@ export function UploadProgress() {
   }
 
   return (
-    <div className="rounded-xl border border-emm-neutral-200 bg-emm-surface p-4">
-      <div className="mb-2 flex items-center justify-between text-sm text-emm-neutral-600">
+    <div className="emm:rounded-xl emm:border emm:border-emm-neutral-200 emm:bg-emm-surface emm:p-4">
+      <div className="emm:mb-2 emm:flex emm:items-center emm:justify-between emm:text-sm emm:text-emm-neutral-600">
         <span>{t("upload_progress")}</span>
         <span>{progress}%</span>
       </div>
-      <div className="h-2 overflow-hidden rounded-full bg-emm-neutral-100">
-        <div className="h-full rounded-full bg-emm-neutral-900 transition-all" style={{ width: `${progress}%` }} />
+      <div className="emm:h-2 emm:overflow-hidden emm:rounded-full emm:bg-emm-neutral-100">
+        <div className="emm:h-full emm:rounded-full emm:bg-emm-neutral-900 emm:transition-all" style={{ width: `${progress}%` }} />
       </div>
     </div>
   );

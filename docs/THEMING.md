@@ -197,7 +197,10 @@ The tokens can also point to the host design system, for example Tabler in a Syl
 ## Using the tokens in a plugin
 
 A plugin's UI is rendered inside `.easy-media`, so it can read the same tokens and follow the
-host theme. Always repeat the default as the fallback, since the tokens are usually not set:
+host theme. With the library's utilities, use the prefixed token colors
+(`emm:bg-emm-neutral-900 emm:text-emm-inverse`); only the utilities the library itself uses are in
+its stylesheet. In your own CSS, always repeat the default as the fallback, since the tokens are
+usually not set:
 
 ```css
 .my-plugin-panel {
@@ -219,17 +222,29 @@ The library ships its CSS in two versions, with the same rules scoped under `.ea
 | Layered (default) | `@agence-adeliom/easy-media-manager/style.css` | `dist/iife/easy-media.css` |
 | Unlayered | `@agence-adeliom/easy-media-manager/style.unlayered.css` | `dist/iife/easy-media.unlayered.css` |
 
-The default stylesheet is built with Tailwind CSS v4: all of its rules (`base`, `components`,
-`utilities`) are inside [cascade layers](https://developer.mozilla.org/en-US/docs/Web/CSS/@layer).
+Two kinds of host rules can reach the manager's elements.
+
+**Classes of the same name.** Bootstrap and Tabler declare utility classes with the same names as
+Tailwind's, some with `!important` (`.p-3`, `.rounded`, `.gap-2`, `.w-full`…), which wins over any
+rule without it, layered or not. The library's utilities are therefore prefixed: its elements carry
+`emm:p-3`, `emm:grid`, `emm:hover:bg-emm-accent-50`, which no host stylesheet declares. This holds
+with both stylesheets.
+
+| Host rule | Library element | Result |
+|-----------|-----------------|--------|
+| `.grid { grid-template-columns: repeat(12, 1fr) }` (Tabler) | `class="emm:grid emm:xl:grid-cols-4"` | Not matched: 4 columns |
+| `.p-3 { padding: 1rem !important }` (Bootstrap) | `class="emm:p-3"` | Not matched: 0.75rem |
+
+**Element rules.** Host selectors such as `p`, `label` or `button` still match the manager's
+elements. The default stylesheet is built with Tailwind CSS v4: all of its rules (`base`,
+`components`, `utilities`) are inside [cascade layers](https://developer.mozilla.org/en-US/docs/Web/CSS/@layer).
 The cascade compares layers **before** specificity and source order: a rule outside any layer
 always beats a layered rule, whatever its specificity. The CSS of most host pages (Bootstrap,
-Tabler, a CMS admin theme) is not layered, so any of its rules that matches an element of the
-manager overrides the library. A few examples:
+Tabler, a CMS admin theme) is not layered:
 
 | Host rule (not layered) | Library rule (layered) | Result |
 |-------------------------|------------------------|--------|
-| `.grid { grid-template-columns: … }` (Tabler) | `.easy-media .grid-cols-* { grid-template-columns: … }` | The file grid gets Tabler's 12-column layout |
-| `p { margin-bottom: 1rem }` (Bootstrap reboot) | `.easy-media .mb-0 { margin-bottom: 0 }` | Paragraphs get an extra margin |
+| `p { margin-bottom: 1rem }` (Bootstrap reboot) | `.easy-media p { margin: 0 }` (preflight) | Paragraphs get an extra margin |
 
 The theme tokens are not affected: they are custom properties read with a fallback, so they
 work the same with both stylesheets.
@@ -238,9 +253,9 @@ work the same with both stylesheets.
 
 - **Host CSS outside layers** (Bootstrap, Tabler, a CMS admin theme): use the **unlayered**
   stylesheet. It is the same CSS with the layer blocks removed, so the library rules compete on
-  specificity again, and their `.easy-media` scope makes them win over the usual host rules:
-  `.easy-media .grid` (0,2,0) beats `.grid` (0,1,0) and `p` (0,0,1). Overriding the manager from
-  the host CSS then takes a selector at least as specific, scoped under `.easy-media`.
+  specificity again, and their `.easy-media` scope makes them win over the host element rules:
+  `.easy-media p` (0,1,1) beats `p` (0,0,1). Overriding the manager from the host CSS then takes
+  a selector at least as specific, scoped under `.easy-media`.
 
   ```typescript
   import '@agence-adeliom/easy-media-manager/style.unlayered.css';
@@ -252,7 +267,7 @@ work the same with both stylesheets.
 
 ### Overriding the manager from the host project
 
-Target a stable hook rather than a Tailwind utility class (`.z-50`), which is not part of the
+Target a stable hook rather than a utility class (`.emm\:z-50`), which is not part of the
 public contract. For example, to open the modals and the picker above a host navigation bar with
 a high `z-index` (a plain stacking issue, with either stylesheet):
 
@@ -264,7 +279,7 @@ a high `z-index` (a plain stacking issue, with either stylesheet):
 
 With the default stylesheet, any host rule outside a layer beats the library, whatever the load
 order. With the unlayered one, the override needs a specificity at least equal to the library
-rule (`.easy-media [data-easy-media-overlay]` is 0,2,0, like `.easy-media .z-50`) and to be loaded
+rule (`.easy-media [data-easy-media-overlay]` is 0,2,0, like `.easy-media .emm\:z-50`) and to be loaded
 after it; repeat the scope (`.easy-media.easy-media …`) if the load order is not guaranteed.
 
 ### Moving from `revert-layer` workarounds
@@ -280,5 +295,6 @@ Before the unlayered stylesheet existed, the conflicts were patched in the host 
 }
 ```
 
-Remove these rules when switching to the unlayered stylesheet: outside a layer, `revert-layer`
-behaves like `revert` and falls back to the browser defaults, which breaks the grid.
+Remove them: the library's grid is now `emm:grid`, which Tabler's `.grid` does not match, so
+`.easy-media .grid` matches nothing. With the unlayered stylesheet, a leftover `revert-layer` rule
+on another selector behaves like `revert` and falls back to the browser defaults.

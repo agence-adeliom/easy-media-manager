@@ -301,7 +301,7 @@ export function FileGrid({ onItemsChange }: FileGridProps) {
       <EmptyState
         actionLabel={canResetFilterFromEmptyState ? t("empty.reset_filters") : undefined}
         description={searchQuery ? t("empty_search_description") : t("empty_folder_description")}
-        icon={searchQuery ? <SearchX className="h-10 w-10" /> : <FolderOpen className="h-10 w-10" />}
+        icon={searchQuery ? <SearchX className="emm:h-10 emm:w-10" /> : <FolderOpen className="emm:h-10 emm:w-10" />}
         onAction={canResetFilterFromEmptyState ? () => setFilter(null) : undefined}
         title={searchQuery ? t("empty_search_title") : t("empty_folder_title")}
       />
@@ -316,7 +316,7 @@ export function FileGrid({ onItemsChange }: FileGridProps) {
         onDragStart={handleDragStart}
         sensors={sensors}
       >
-        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="emm:grid emm:gap-2 emm:sm:grid-cols-2 emm:lg:grid-cols-3 emm:xl:grid-cols-4">
           {items.map((item, index) => {
             const isBulkSelected = bulkList.some((entry) => getMediaItemKey(entry) === getMediaItemKey(item));
             const isSelected = !isBulkSelected && selectedFile !== null && getMediaItemKey(selectedFile) === getMediaItemKey(item);
@@ -341,7 +341,7 @@ export function FileGrid({ onItemsChange }: FileGridProps) {
         </div>
         <DragOverlay>
           {dragOverlayLabel ? (
-            <div className="rounded-2xl border border-emm-accent-300 bg-emm-accent-50 px-4 py-3 text-sm font-medium text-emm-accent-900 shadow-xl">
+            <div className="emm:rounded-2xl emm:border emm:border-emm-accent-300 emm:bg-emm-accent-50 emm:px-4 emm:py-3 emm:text-sm emm:font-medium emm:text-emm-accent-900 emm:shadow-xl">
               {dragOverlayLabel}
             </div>
           ) : null}
@@ -351,7 +351,7 @@ export function FileGrid({ onItemsChange }: FileGridProps) {
 
   if (query.isLoading) {
     return (
-      <div className="rounded-2xl border border-emm-neutral-200 bg-emm-surface p-8 text-sm text-emm-neutral-500">
+      <div className="emm:rounded-2xl emm:border emm:border-emm-neutral-200 emm:bg-emm-surface emm:p-8 emm:text-sm emm:text-emm-neutral-500">
         {t("loading")}
       </div>
     );
@@ -362,19 +362,19 @@ export function FileGrid({ onItemsChange }: FileGridProps) {
       return (
         <EmptyState
           description={t("empty_folder_not_found_description")}
-          icon={<FolderX className="h-10 w-10" />}
+          icon={<FolderX className="emm:h-10 emm:w-10" />}
           title={t("empty_folder_not_found_title")}
         />
       );
     }
 
-    return <EmptyState description={getErrorMessage(query.error, t)} icon={<TriangleAlert className="h-10 w-10" />} title={t("loading_error_title")} />;
+    return <EmptyState description={getErrorMessage(query.error, t)} icon={<TriangleAlert className="emm:h-10 emm:w-10" />} title={t("loading_error_title")} />;
   }
 
   return (
-    <div className="space-y-4">
-      {moveError ? <p className="rounded-2xl border border-emm-danger-200 bg-emm-danger-50 px-4 py-3 text-sm text-emm-danger-700">{moveError}</p> : null}
-      <div className="rounded-2xl">{gridContent}</div>
+    <div className="emm:space-y-4">
+      {moveError ? <p className="emm:rounded-2xl emm:border emm:border-emm-danger-200 emm:bg-emm-danger-50 emm:px-4 emm:py-3 emm:text-sm emm:text-emm-danger-700">{moveError}</p> : null}
+      <div className="emm:rounded-2xl">{gridContent}</div>
       <InfiniteLoader isLoading={query.isFetchingNextPage} sentinelRef={sentinelRef} />
     </div>
   );

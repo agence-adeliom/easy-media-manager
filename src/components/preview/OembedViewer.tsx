@@ -4,13 +4,13 @@ export function OembedViewer({ file }: { file: MediaFileItem }) {
   const ratio = file.metas.code?.ratio;
 
   if (!ratio) {
-    return <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: String(file.metas.code?.html ?? "") }} />;
+    return <div className="prose emm:max-w-none" dangerouslySetInnerHTML={{ __html: String(file.metas.code?.html ?? "") }} />;
   }
 
   return (
-    <div className="relative w-full overflow-hidden rounded-lg" style={{ paddingBottom: `${ratio}%` }}>
+    <div className="emm:relative emm:w-full emm:overflow-hidden emm:rounded-lg" style={{ paddingBottom: `${ratio}%` }}>
       <div
-        className="absolute inset-0 [&_iframe]:!h-full [&_iframe]:!w-full"
+        className="emm:absolute emm:inset-0 emm:[&_iframe]:!h-full emm:[&_iframe]:!w-full"
         dangerouslySetInnerHTML={{ __html: String(file.metas.code?.html ?? "") }}
       />
     </div>

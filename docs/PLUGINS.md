@@ -153,6 +153,8 @@ export const generateAltClient = {
 
 The modal component receives `close` and `context` as props. It uses TanStack Query's `useMutation` to call the API and Sonner's `toast` for feedback.
 
+It is styled with the library's utilities, which are prefixed with `emm:` and use the theme colors (`emm:bg-emm-neutral-100`, `emm:text-emm-danger-600`, see [THEMING.md](./THEMING.md)). Only the utilities the library itself uses are in its stylesheet: style anything else with your own CSS.
+
 ```tsx
 // examples/plugins/generate-alt/index.tsx
 
@@ -205,8 +207,8 @@ function GenerateAltPluginModal({ close, context }: EasyMediaPluginModalProps) {
 
   return (
     <ModalShell onClose={close} open title={t('plugins.generate_alt.title')}>
-      <div className="space-y-4">
-        <div className="flex flex-wrap gap-2">
+      <div className="emm:space-y-4">
+        <div className="emm:flex emm:flex-wrap emm:gap-2">
           <Button
             disabled={selectedFile === null || mutation.isPending}
             onClick={() => mutation.mutate('single')}
@@ -232,13 +234,13 @@ function GenerateAltPluginModal({ close, context }: EasyMediaPluginModalProps) {
 
         {/* Raw API response for debugging */}
         {mutation.data && (
-          <pre className="overflow-x-auto rounded-xl bg-slate-100 p-3 text-xs">
+          <pre className="emm:overflow-x-auto emm:rounded-xl emm:bg-emm-neutral-100 emm:p-3 emm:text-xs">
             {JSON.stringify(mutation.data, null, 2)}
           </pre>
         )}
 
         {mutation.error && (
-          <p className="text-sm text-red-600">{mutation.error.message}</p>
+          <p className="emm:text-sm emm:text-emm-danger-600">{mutation.error.message}</p>
         )}
       </div>
     </ModalShell>

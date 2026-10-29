@@ -301,35 +301,35 @@ function MediaManagerBody({ colorScheme, themeStyle }: { colorScheme: "light" | 
   const shell = (
     <div
       className={cn(
-        "easy-media flex flex-col bg-emm-background text-emm-neutral-900",
+        "easy-media emm:flex emm:flex-col emm:bg-emm-background emm:text-emm-neutral-900",
         // Inside the picker the shell must fit the 80vh overlay, otherwise the footer is pushed off-screen.
-        mode === "modal" ? "min-h-0 flex-1 overflow-y-auto" : "min-h-screen",
+        mode === "modal" ? "emm:min-h-0 emm:flex-1 emm:overflow-y-auto" : "emm:min-h-screen",
       )}
       data-emm-mode={colorScheme}
       style={themeStyle as CSSProperties}
     >
-      <div className="mx-auto flex w-full flex-1 flex-col">
+      <div className="emm:mx-auto emm:flex emm:w-full emm:flex-1 emm:flex-col">
         <Toolbar />
         <Breadcrumb />
         <UploadZone />
         <UploadProgress />
         <div
           className={cn(
-            "relative flex flex-1 gap-3 p-4",
-            features.enableUpload && isDraggingFiles && "bg-emm-accent-50/60",
+            "emm:relative emm:flex emm:flex-1 emm:gap-3 emm:p-4",
+            features.enableUpload && isDraggingFiles && "emm:bg-emm-accent-50/60",
           )}
           onDragEnter={handleNativeDragEnter}
           onDragLeave={handleNativeDragLeave}
           onDragOver={handleNativeDragOver}
           onDrop={handleNativeDrop}
         >
-          <main className="min-w-0 flex-1">
+          <main className="emm:min-w-0 emm:flex-1">
             <FileGrid onItemsChange={setItems} />
           </main>
           {features.enableUpload && isDraggingFiles ? (
-            <div className="pointer-events-none absolute inset-4 z-20 flex items-center justify-center rounded-2xl border-2 border-dashed border-emm-accent-500 bg-emm-accent-100/90 p-6">
-              <div className="flex items-center gap-3 rounded-full bg-emm-surface/95 px-5 py-3 text-sm font-medium text-emm-accent-900 shadow-lg">
-                <FolderUp className="h-5 w-5" />
+            <div className="emm:pointer-events-none emm:absolute emm:inset-4 emm:z-20 emm:flex emm:items-center emm:justify-center emm:rounded-2xl emm:border-2 emm:border-dashed emm:border-emm-accent-500 emm:bg-emm-accent-100/90 emm:p-6">
+              <div className="emm:flex emm:items-center emm:gap-3 emm:rounded-full emm:bg-emm-surface/95 emm:px-5 emm:py-3 emm:text-sm emm:font-medium emm:text-emm-accent-900 emm:shadow-lg">
+                <FolderUp className="emm:h-5 emm:w-5" />
                 {t("upload_to_folder_hint")}
               </div>
             </div>

@@ -21,7 +21,7 @@ export function ModalShell({
   open,
   title,
   onClose,
-  widthClassName = "max-w-2xl",
+  widthClassName = "emm:max-w-2xl",
   bodyClassName,
   titlePrefix,
 }: PropsWithChildren<ModalShellProps>) {
@@ -54,27 +54,27 @@ export function ModalShell({
   }
 
   return createPortal(
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-emm-neutral-900/35 p-4 emm-dark:bg-black/60 backdrop-blur-[2px]" data-easy-media-overlay="overlay">
-      <button aria-label={t("close")} className="absolute inset-0 cursor-default" onClick={onClose} type="button" />
+    <div className="emm:fixed emm:inset-0 emm:z-50 emm:flex emm:items-center emm:justify-center emm:bg-emm-neutral-900/35 emm:p-4 emm:emm-dark:bg-black/60 emm:backdrop-blur-[2px]" data-easy-media-overlay="overlay">
+      <button aria-label={t("close")} className="emm:absolute emm:inset-0 emm:cursor-default" onClick={onClose} type="button" />
       <section
-        className={`relative z-10 flex max-h-[90vh] w-full flex-col overflow-hidden rounded-xl border border-emm-neutral-200/80 bg-emm-surface shadow-[0_24px_80px_rgba(15,23,42,0.18)] ${widthClassName}`}
+        className={`emm:relative emm:z-10 emm:flex emm:max-h-[90vh] emm:w-full emm:flex-col emm:overflow-hidden emm:rounded-xl emm:border emm:border-emm-neutral-200/80 emm:bg-emm-surface emm:shadow-[0_24px_80px_rgba(15,23,42,0.18)] ${widthClassName}`}
       >
-        <header className="flex items-start justify-between gap-4 border-b border-emm-neutral-100 px-3 py-3">
-          <div className="min-w-0 flex items-center gap-3">
-            {titlePrefix ? <div className="shrink-0">{titlePrefix}</div> : null}
-            <p className="mb-0 py-1 text-xl font-semibold tracking-tight text-emm-neutral-900">{title}</p>
+        <header className="emm:flex emm:items-start emm:justify-between emm:gap-4 emm:border-b emm:border-emm-neutral-100 emm:px-3 emm:py-3">
+          <div className="emm:min-w-0 emm:flex emm:items-center emm:gap-3">
+            {titlePrefix ? <div className="emm:shrink-0">{titlePrefix}</div> : null}
+            <p className="emm:mb-0 emm:py-1 emm:text-xl emm:font-semibold emm:tracking-tight emm:text-emm-neutral-900">{title}</p>
           </div>
           <Button
             aria-label={t("close")}
-            className="rounded-none border-0 shadow-none"
+            className="emm:rounded-none emm:border-0 emm:shadow-none"
             onClick={onClose}
             type="button"
             variant="ghost"
           >
-            <X className="h-4 w-4" />
+            <X className="emm:h-4 emm:w-4" />
           </Button>
         </header>
-        <div className={cn("overflow-y-auto px-6 py-3", bodyClassName)}>{children}</div>
+        <div className={cn("emm:overflow-y-auto emm:px-6 emm:py-3", bodyClassName)}>{children}</div>
       </section>
     </div>,
     getPortalTarget(),
