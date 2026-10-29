@@ -150,3 +150,23 @@ test('pick(): resolves with the chosen image', async ({ page }) => {
   expect(result.type).toMatch(/^image/);
   expect(errors).toEqual([]);
 });
+
+for (const { name, url, labels } of MANAGERS) {
+  test(`${name}: the host page CSS does not override the library utilities`, async ({ page }) => {
+    await page.goto(url);
+    // Same class names as the library utilities, unlayered, like Tabler and Bootstrap.
+    await page.addStyleTag({ content: '.grid { grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 0 } .hidden { display: block }' });
+    const grid = page.locator('div.grid', { has: page.locator('article') }).first();
+
+    await expect(card(page, 'Photos')).toBeVisible();
+    const style = await grid.evaluate((element) => {
+      const computed = getComputedStyle(element);
+
+      return { columns: computed.gridTemplateColumns.split(' ').length, gap: computed.rowGap };
+    });
+    expect(style).toEqual({ columns: 4, gap: '8px' });
+    await toolbarButton(page, labels.uploadMain).click();
+    await expect(page.locator('.easy-media input[type=file].hidden')).toHaveCount(1);
+    await expect(page.locator('.easy-media input[type=file].hidden')).toBeHidden();
+  });
+}

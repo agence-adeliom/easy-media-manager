@@ -1,4 +1,12 @@
-@import "tailwindcss";
+/*
+ * Tailwind without its cascade layers: in a layer, any unlayered rule of the host page wins whatever its
+ * specificity (Tabler's `.grid` gave the file grid 12 columns). Unlayered and scoped under `.easy-media`, the
+ * library rules (0,2,0) win over the host class rules (0,1,0), and a project override wins with a higher
+ * specificity or the same one loaded after.
+ */
+@import "tailwindcss/theme.css";
+@import "tailwindcss/preflight.css";
+@import "tailwindcss/utilities.css";
 @source "../";
 
 /*

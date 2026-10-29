@@ -147,7 +147,10 @@ The IIFE bundle embeds React and all dependencies. The ESM build externalises `r
 ## Customizing styles (CSS overrides)
 
 All of the library's CSS is scoped under the `.easy-media` class to avoid leaking into the
-host application. There is no theming/CSS-variable layer — instead, you can override specific
+host application. It is not in cascade layers: a host rule on the same class name (Tabler's
+`.grid`, 0,1,0) loses to the library rule (`.easy-media .grid`, 0,2,0). Host utilities declared
+with `!important` (Bootstrap and Tabler `.p-3`, `.rounded`, `.gap-2`…) still win on the elements
+that use the same class names. There is no theming/CSS-variable layer — instead, you can override specific
 styles from your own project's stylesheet.
 
 To make targeting reliable, overlay/modal roots expose a stable hook attribute:
