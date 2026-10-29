@@ -61,9 +61,6 @@ export function createPickStore() {
       const { pendingResolve, pickOptions, folderBeforePick } = get();
 
       pendingResolve?.(item);
-      if (item !== null && pickOptions !== null) {
-        window.dispatchEvent(new CustomEvent("easy-media:pick", { detail: { file: item, options: pickOptions } }));
-      }
       set(initialState);
 
       const mediaState = mediaStore.getState();
@@ -75,6 +72,11 @@ export function createPickStore() {
       mediaState.closeModal();
       mediaState.closeManager();
       mediaState.setMode("fullpage");
+
+      // Last, once the picker is closed: a listener may open a new one.
+      if (item !== null && pickOptions !== null) {
+        window.dispatchEvent(new CustomEvent("easy-media:pick", { detail: { file: item, options: pickOptions } }));
+      }
     },
     cancelPick() {
       get().resolvePick(null);

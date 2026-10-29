@@ -168,6 +168,30 @@ test('pick(): resolves with the chosen image', async ({ page }) => {
   expect(errors).toEqual([]);
 });
 
+test('pick(): an easy-media:pick listener can open a new picker', async ({ page }) => {
+  const errors = collectErrors(page);
+  const overlay = page.locator('[data-easy-media-overlay="overlay"]');
+
+  await page.goto('http://localhost:5175/');
+  await page.evaluate(() => {
+    const host = window as unknown as { EasyMedia: { pick: () => Promise<unknown> }; nextPick?: Promise<unknown> };
+    window.addEventListener('easy-media:pick', () => { host.nextPick = host.EasyMedia.pick(); }, { once: true });
+  });
+
+  await page.getByRole('button', { name: 'Browse images only…' }).click();
+  await expect(overlay).toBeVisible();
+  await overlay.locator('article').filter({ hasText: 'Photos' }).dblclick();
+  await overlay.locator('article').filter({ has: page.locator('img') }).first().click();
+  await overlay.locator('footer button:not([disabled])').last().click();
+
+  // The picker opened by the listener stays open, and still resolves.
+  await expect(overlay).toBeVisible();
+  await overlay.getByRole('button', { name: 'Cancel' }).click();
+  await expect(overlay).toBeHidden();
+  expect(await page.evaluate(() => (window as unknown as { nextPick: Promise<unknown> }).nextPick)).toBeNull();
+  expect(errors).toEqual([]);
+});
+
 test('getFile(): reads a file by its id', async ({ page }) => {
   const errors = collectErrors(page);
 
