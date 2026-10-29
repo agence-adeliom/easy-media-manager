@@ -1,3 +1,5 @@
+import type { MediaItem } from "./media";
+
 export interface EasyMediaMimeTypes {
   image: string[];
   archive: string[];
@@ -117,6 +119,19 @@ export interface PickRestrictions {
 export interface PickOptions {
   restrictions?: PickRestrictions;
   features?: Partial<EasyMediaFeatureFlags>;
+}
+
+/** Detail of the `easy-media:pick` window event, dispatched when a picker resolves with a file. */
+export interface EasyMediaPickEventDetail {
+  file: MediaItem;
+  /** Options the picker was opened with. */
+  options: PickOptions;
+}
+
+declare global {
+  interface WindowEventMap {
+    "easy-media:pick": CustomEvent<EasyMediaPickEventDetail>;
+  }
 }
 
 export interface EasyMediaInitConfig {

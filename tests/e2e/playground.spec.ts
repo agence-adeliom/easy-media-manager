@@ -136,6 +136,18 @@ test('pick(): resolves with the chosen image', async ({ page }) => {
   const overlay = page.locator('[data-easy-media-overlay="overlay"]');
 
   await page.goto('http://localhost:5175/');
+  await page.evaluate(() => {
+    const events: unknown[] = [];
+    (window as unknown as { pickEvents: unknown[] }).pickEvents = events;
+    window.addEventListener('easy-media:pick', (event) => events.push(event.detail));
+  });
+
+  // Closed without a choice: no event.
+  await page.getByRole('button', { name: 'Browse images only…' }).click();
+  await expect(overlay).toBeVisible();
+  await overlay.getByRole('button', { name: 'Cancel' }).click();
+  await expect(overlay).toBeHidden();
+
   await page.getByRole('button', { name: 'Browse images only…' }).click();
   await expect(overlay).toBeVisible();
   await overlay.locator('article').filter({ hasText: 'Photos' }).dblclick();
@@ -148,6 +160,11 @@ test('pick(): resolves with the chosen image', async ({ page }) => {
 
   const result = JSON.parse((await page.locator('#result-1').textContent()) ?? '{}');
   expect(result.type).toMatch(/^image/);
+  // The choice is also announced on window, with the options of the picker.
+  const events = await page.evaluate(() => (window as unknown as { pickEvents: { file: { id: number }; options: unknown }[] }).pickEvents);
+  expect(events).toHaveLength(1);
+  expect(events[0].file.id).toBe(result.id);
+  expect(events[0].options).toEqual({ restrictions: { types: 'images' } });
   expect(errors).toEqual([]);
 });
 

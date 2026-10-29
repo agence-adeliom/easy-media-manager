@@ -58,9 +58,12 @@ export function createPickStore() {
       });
     },
     resolvePick(item) {
-      const { pendingResolve, folderBeforePick } = get();
+      const { pendingResolve, pickOptions, folderBeforePick } = get();
 
       pendingResolve?.(item);
+      if (item !== null && pickOptions !== null) {
+        window.dispatchEvent(new CustomEvent("easy-media:pick", { detail: { file: item, options: pickOptions } }));
+      }
       set(initialState);
 
       const mediaState = mediaStore.getState();

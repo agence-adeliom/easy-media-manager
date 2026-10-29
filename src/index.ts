@@ -24,6 +24,7 @@ export type {
   EasyMediaFeatureFlags,
   EasyMediaInitConfig,
   EasyMediaMountOptions,
+  EasyMediaPickEventDetail,
   EasyMediaRoutes,
   EasyMediaTheme,
   EasyMediaThemeMode,
