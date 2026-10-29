@@ -44,18 +44,18 @@ export function NewFolderModal() {
     <ModalShell onClose={closeModal} open={activeModal === CORE_MODAL_IDS.newFolder} title={t("add_new_folder")}>
       <div className="space-y-4">
         <div className="space-y-2">
-          <label className="block text-sm font-medium text-slate-700" htmlFor="new-folder-name">
+          <label className="block text-sm font-medium text-emm-neutral-700" htmlFor="new-folder-name">
             {t("new_folder_name")}
           </label>
           <input
-            className="w-full rounded-xl border border-slate-300 px-3 py-2"
+            className="w-full rounded-xl border border-emm-neutral-300 px-3 py-2"
             id="new-folder-name"
             onChange={(event) => setName(event.target.value)}
             placeholder={t("new_folder_name")}
             value={name}
           />
         </div>
-        {mutation.error ? <p className="text-sm text-red-600">{mutation.error.message}</p> : null}
+        {mutation.error ? <p className="text-sm text-emm-danger-600">{mutation.error.message}</p> : null}
         <div className="flex justify-end gap-2 mt-3">
           <Button onClick={closeModal} type="button" variant="ghost">
             {t("cancel")}

@@ -55,15 +55,15 @@ export function DeleteConfirmModal() {
     <ModalShell bodyClassName="p-0" onClose={closeModal} open={activeModal === CORE_MODAL_IDS.delete} title={t("delete_main")}>
       <div className="flex flex-col">
         <div className="flex items-start gap-4 px-6 py-5">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-red-50 text-red-600">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-emm-danger-50 text-emm-danger-600">
             <AlertTriangle className="h-5 w-5" />
           </div>
           <div className="space-y-2">
-            <p className="text-sm leading-6 text-slate-600">{t("delete_confirm_message").replace("%count%", String(targets.length))}</p>
-            {mutation.error ? <p className="text-sm text-red-600">{mutation.error.message}</p> : null}
+            <p className="text-sm leading-6 text-emm-neutral-600">{t("delete_confirm_message").replace("%count%", String(targets.length))}</p>
+            {mutation.error ? <p className="text-sm text-emm-danger-600">{mutation.error.message}</p> : null}
           </div>
         </div>
-        <div className="flex justify-end gap-3 border-t border-slate-100 bg-slate-50/80 px-6 py-4">
+        <div className="flex justify-end gap-3 border-t border-emm-neutral-100 bg-emm-neutral-50/80 px-6 py-4">
           <Button onClick={closeModal} type="button" variant="secondary">
             {t("cancel")}
           </Button>

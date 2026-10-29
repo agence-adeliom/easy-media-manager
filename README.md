@@ -184,31 +184,22 @@ outside layers, `revert-layer` falls back to the browser defaults.
 
 ---
 
-## Customizing styles (CSS overrides)
+## Theming and CSS overrides
 
 All of the library's CSS is scoped under the `.easy-media` class to avoid leaking into the
-host application. There is no theming/CSS-variable layer — instead, you can override specific
-styles from your own project's stylesheet.
-
-To make targeting reliable, overlay/modal roots expose a stable hook attribute:
-`data-easy-media-overlay="overlay"`. Use it instead of overriding raw Tailwind utility
-classes (e.g. `.z-40`), which are not part of the public contract and would affect every
-element using that utility.
-
-Load your own stylesheet **after** the library's `style.css`, then target the hook. Example —
-raising the picker/modal overlay above a host element on a Sylius project:
+host application. Colors and font are read from optional `--emm-*` custom properties, so a
+project can theme the manager from its own stylesheet:
 
 ```css
-/* my-project — easy-media overrides */
-.easy-media [data-easy-media-overlay="overlay"] {
-  z-index: 1000;
+.easy-media {
+  --emm-accent-600: #4f46e5;
+  --emm-font: "Inter", system-ui, sans-serif;
 }
 ```
 
-Specificity note: `.easy-media [data-easy-media-overlay="overlay"]` (0,2,0) ties with the
-library's utility class `.easy-media .z-40` (0,2,0), so it only wins if your stylesheet is
-loaded **after** the library CSS. If load order isn't guaranteed, use `!important` or bump
-specificity (e.g. repeat the scope: `.easy-media.easy-media [data-easy-media-overlay="overlay"]`).
+The library's rules live in CSS cascade layers, so an unlayered host stylesheet (Bootstrap,
+Tabler…) can override them. See [THEMING.md](https://github.com/agence-adeliom/easy-media-manager/blob/main/docs/THEMING.md)
+for the list of tokens, the known conflicts with host CSS and how to work around them.
 
 ---
 
@@ -350,7 +341,7 @@ npm publish        # runs prod automatically via prepublishOnly
 | `isReady` | `() => boolean` | Returns true after `init` |
 | `translations` | `{ en, fr }` | Built-in translation objects |
 
-See [CONFIGURATION.md](https://github.com/agence-adeliom/easy-media-manager/blob/main/docs/CONFIGURATION.md) for the full configuration reference and [PLUGINS.md](https://github.com/agence-adeliom/easy-media-manager/blob/main/docs/PLUGINS.md) for the plugin guide.
+See [CONFIGURATION.md](https://github.com/agence-adeliom/easy-media-manager/blob/main/docs/CONFIGURATION.md) for the full configuration reference, [PLUGINS.md](https://github.com/agence-adeliom/easy-media-manager/blob/main/docs/PLUGINS.md) for the plugin guide and [THEMING.md](https://github.com/agence-adeliom/easy-media-manager/blob/main/docs/THEMING.md) for theming.
 
 ---
 

@@ -10,14 +10,14 @@ export function Breadcrumb() {
   const t = useTranslations();
 
   return (
-    <nav className="flex flex-wrap items-center gap-1 text-sm text-slate-600 bg-slate-100 border-b p-3">
+    <nav className="flex flex-wrap items-center gap-1 text-sm text-emm-neutral-600 bg-emm-neutral-100 border-b p-3">
       <Button onClick={() => goToFolder(-1)} type="button" variant="breadcrumb">
         <House className="mr-1.5 h-4 w-4" />
         {t("library")}
       </Button>
       {folderStack.map((folder, index) => (
         <span className="flex items-center" key={`${folder.id}-${folder.name}`}>
-          <ChevronRight className="h-4 w-4 text-slate-400" />
+          <ChevronRight className="h-4 w-4 text-emm-neutral-400" />
           <Button onClick={() => goToFolder(index)} type="button" variant="breadcrumb">
             {folder.name}
           </Button>
