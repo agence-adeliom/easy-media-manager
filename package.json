@@ -88,7 +88,7 @@
     "multer": "^2.5.0",
     "postcss-prefix-selector": "^2.1.1",
     "tsx": "^4.23.15",
-    "typescript": "^5.7.0",
+    "typescript": "^7.0.2",
     "vite": "^8.3.5",
     "vite-plugin-dts": "^4.5.4"
   }
