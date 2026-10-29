@@ -3,7 +3,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import Uppy from "@uppy/core";
 
 import { EasyMediaApiError } from "@/api/client";
-import { requestHeaders } from "@/api/http";
+import { parseJson, requestHeaders } from "@/api/http";
 import { useMediaStore } from "@/store/media-store";
 
 const CHUNK_SIZE = 1024 * 1024;
@@ -45,11 +45,7 @@ async function postUpload(route: string, formData: FormData) {
       signal: controller.signal,
     });
 
-    if (!response.ok) {
-      throw new EasyMediaApiError(`HTTP ${response.status}`, response.status);
-    }
-
-    return (await response.json()) as UploadResult[];
+    return await parseJson<UploadResult[]>(response);
   } finally {
     window.clearTimeout(timeoutId);
   }

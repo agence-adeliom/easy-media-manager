@@ -11,7 +11,7 @@ export const frTranslations: EasyMediaTranslations = {
   add_more: 'Ajouter plus de fichiers',
   add_list: 'Ajouter à la liste',
   options: 'Options',
-  ajax_error: "Oh non ! Quelque chose s'est mal passé",
+  ajax_error: 'La requête a échoué. Veuillez réessayer.',
   unknown_error: 'Erreur inconnue.',
   application: 'Application',
   are_you_sure_delete: 'Etes-vous sûr que vous voulez supprimer ?!!',

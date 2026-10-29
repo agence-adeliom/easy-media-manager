@@ -242,3 +242,41 @@ test('pick(): stays inside the restrictions.path folder', async ({ page }) => {
 
   expect(errors).toEqual([]);
 });
+
+const REQUEST_FAILED: Record<string, string> = {
+  'IIFE bundle (en)': 'The request failed. Please try again.',
+  'ESM source (fr)': 'La requête a échoué. Veuillez réessayer.',
+};
+
+for (const { name, url, labels } of MANAGERS) {
+  test(`${name}: shows the backend error or a translated message, never the technical one`, async ({ page }) => {
+    // Sonner puts the newest toast in front.
+    const newestToast = page.locator('[data-sonner-toast][data-front="true"]');
+
+    async function createFolder() {
+      await toolbarButton(page, labels.addNewFolder).click();
+      await page.locator('#new-folder-name').fill('e2e-error');
+      await page.getByRole('button', { name: labels.create, exact: true }).click();
+    }
+
+    await page.goto(url);
+    await expect(card(page, 'Photos')).toBeVisible();
+
+    await page.route('**/create-new-folder', (route) => route.fulfill({ status: 500, body: 'Internal Server Error' }));
+    await createFolder();
+    await expect(newestToast).toHaveText(REQUEST_FAILED[name]);
+    await expect(page.getByText('HTTP 500')).toHaveCount(0);
+    await page.getByRole('button', { name: labels.close, exact: true }).last().click();
+
+    await page.unroute('**/create-new-folder');
+    await page.route('**/create-new-folder', (route) => route.fulfill({ status: 422, json: { error: 'Folder name already taken' } }));
+    await createFolder();
+    await expect(newestToast).toHaveText('Folder name already taken');
+    await page.getByRole('button', { name: labels.close, exact: true }).last().click();
+
+    await page.unroute('**/create-new-folder');
+    await page.route('**/create-new-folder', (route) => route.abort('connectionrefused'));
+    await createFolder();
+    await expect(newestToast).toHaveText(REQUEST_FAILED[name]);
+  });
+}

@@ -11,6 +11,7 @@ import { InfiniteLoader } from "@/components/browser/InfiniteLoader";
 import { useClipboard } from "@/hooks/use-clipboard";
 import { useInfiniteScroll } from "@/hooks/use-infinite-scroll";
 import { useTranslations } from "@/hooks/use-translations";
+import { getErrorMessage } from "@/lib/error-message";
 import { filterByHiddenExt, filterByPickTypes, filterByType, sortFiles } from "@/lib/file-utils";
 import { CORE_MODAL_IDS } from "@/lib/modal-ids";
 import { useMediaStore } from "@/store/media-store";
@@ -195,8 +196,8 @@ export function FileGrid({ onItemsChange }: FileGridProps) {
       toast.success(t("move_success"));
     },
     onError: (error: Error) => {
-      setMoveError(error.message);
-      toast.error(error.message);
+      setMoveError(getErrorMessage(error, t));
+      toast.error(getErrorMessage(error, t));
     },
   });
 
@@ -367,7 +368,7 @@ export function FileGrid({ onItemsChange }: FileGridProps) {
       );
     }
 
-    return <EmptyState description={query.error.message} icon={<TriangleAlert className="h-10 w-10" />} title={t("loading_error_title")} />;
+    return <EmptyState description={getErrorMessage(query.error, t)} icon={<TriangleAlert className="h-10 w-10" />} title={t("loading_error_title")} />;
   }
 
   return (

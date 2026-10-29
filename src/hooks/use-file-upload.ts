@@ -4,6 +4,7 @@ import { useTranslations } from "@/hooks/use-translations";
 import { useUppy } from "@/hooks/use-uppy";
 import { getFileSize, isPickTypeAllowed } from "@/lib/file-utils";
 import { useMediaStore } from "@/store/media-store";
+import { getErrorMessage } from "@/lib/error-message";
 
 export function useFileUpload() {
   const t = useTranslations();
@@ -70,7 +71,7 @@ export function useFileUpload() {
 
       return results;
     } catch (caughtError) {
-      const message = caughtError instanceof Error ? caughtError.message : t("upload_failed");
+      const message = getErrorMessage(caughtError, t);
       toast.error(message);
       throw new Error(message);
     } finally {

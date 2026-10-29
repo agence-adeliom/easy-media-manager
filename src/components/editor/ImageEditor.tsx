@@ -20,6 +20,7 @@ import { easyMediaClient } from "@/api/client";
 import { ModalShell } from "@/components/modals/ModalShell";
 import { Button } from "@/components/ui/Button";
 import { useTranslations } from "@/hooks/use-translations";
+import { getErrorMessage } from "@/lib/error-message";
 import { CORE_MODAL_IDS } from "@/lib/modal-ids";
 import { useMediaStore } from "@/store/media-store";
 import { isMediaFile } from "@/types/media";
@@ -164,7 +165,7 @@ export function ImageEditor() {
       toast.success(t("editor_save_success"));
     },
     onError: (caughtError) => {
-      const message = caughtError instanceof Error ? caughtError.message : t("unknown_error");
+      const message = getErrorMessage(caughtError, t);
       setError(message);
       toast.error(message);
     },

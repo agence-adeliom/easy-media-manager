@@ -17,7 +17,7 @@ export function useFiles(route: string, folderId: number | null, search?: string
       });
 
       if (response.error) {
-        throw new EasyMediaApiError(response.error);
+        throw new EasyMediaApiError(response.error, undefined, true);
       }
 
       return response;
