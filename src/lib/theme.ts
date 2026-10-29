@@ -1,7 +1,8 @@
 import type { EasyMediaTheme, EasyMediaThemeShade } from "@/types/config";
 
 // How each shade of a scale is derived from its base color (shade 500): mixed with white for the
-// lighter shades, with black for the darker ones.
+// lighter shades, with black for the darker ones. In dark mode the scale is reversed (`50` gets the
+// mix of `950`), like the default dark palette in main.css.
 const SHADES: [EasyMediaThemeShade, "white" | "black" | null, number][] = [
   [50, "white", 8],
   [100, "white", 15],
@@ -16,8 +17,8 @@ const SHADES: [EasyMediaThemeShade, "white" | "black" | null, number][] = [
   [950, "black", 30],
 ];
 
-/** The `--emm-*` custom properties of a theme. */
-export function themeProperties(theme: EasyMediaTheme | undefined): Record<string, string> {
+/** The `--emm-*` custom properties of a theme, for the color scheme being rendered. */
+export function themeProperties(theme: EasyMediaTheme | undefined, scheme: "light" | "dark"): Record<string, string> {
   const properties: Record<string, string> = {};
   if (!theme) {
     return properties;
@@ -29,9 +30,10 @@ export function themeProperties(theme: EasyMediaTheme | undefined): Record<strin
       continue;
     }
 
-    for (const [shade, mix, percent] of SHADES) {
+    SHADES.forEach(([shade], index) => {
+      const [, mix, percent] = scheme === "dark" ? SHADES[SHADES.length - 1 - index] : SHADES[index];
       properties[`--emm-${scale}-${shade}`] = mix ? `color-mix(in oklab, ${base} ${percent}%, ${mix})` : base;
-    }
+    });
   }
 
   if (theme.font) {
@@ -45,11 +47,4 @@ export function themeProperties(theme: EasyMediaTheme | undefined): Record<strin
   }
 
   return properties;
-}
-
-/** Sets the theme on the root of the manager, where every part of it (portals included) inherits it. */
-export function applyTheme(element: HTMLElement, theme: EasyMediaTheme | undefined): void {
-  for (const [property, value] of Object.entries(themeProperties(theme))) {
-    element.style.setProperty(property, value);
-  }
 }

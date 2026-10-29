@@ -143,6 +143,7 @@ interface EasyMediaConfig {
 
 ```typescript
 interface EasyMediaTheme {
+  mode?: 'light' | 'dark' | 'auto'; // default 'light'; 'auto' follows the system setting
   accent?: string;   // whole accent scale from one color
   neutral?: string;  // whole neutral scale from one color
   danger?: string;   // whole danger scale from one color
@@ -165,7 +166,7 @@ EasyMedia.configure({
 Any CSS color works, including `var(--my-brand)`. The theme is applied once, by the first `init()`
 (or `mount()`, `pick()`): changing it later has no effect. See
 [THEMING.md](https://github.com/agence-adeliom/easy-media-manager/blob/main/docs/THEMING.md) for the
-list of tokens and how a scale is derived from one color.
+list of tokens, how a scale is derived from one color, and the dark mode.
 
 ### Request headers
 

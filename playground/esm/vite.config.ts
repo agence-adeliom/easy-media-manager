@@ -10,6 +10,7 @@ const cssPrefixPlugin = prefixSelector({
   prefix: '.easy-media',
   transform(prefix, selector, prefixedSelector) {
     if (selector.startsWith('.easy-media')) return selector;
+    if (selector.startsWith(':where(.easy-media')) return selector;
     if (selector.includes('sonner') || selector.includes('data-sonner')) return selector;
     if (selector === ':root') return prefix;
     if (selector === 'html' || selector === 'body') return prefix;

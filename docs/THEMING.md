@@ -9,6 +9,7 @@ when none is set, it looks exactly like the default theme (Tailwind `slate`, `sk
 
 - [Setting a theme](#setting-a-theme)
 - [Setting a theme from the configuration](#setting-a-theme-from-the-configuration)
+- [Dark mode](#dark-mode)
 - [Tokens](#tokens)
 - [Deriving a scale from one color](#deriving-a-scale-from-one-color)
 - [Using the tokens in a plugin](#using-the-tokens-in-a-plugin)
@@ -66,6 +67,57 @@ stylesheet. The theme is read once, by the first `init()`, `mount()` or `pick()`
 
 ---
 
+## Dark mode
+
+```typescript
+EasyMedia.configure({
+  config: {
+    // ...
+    theme: { mode: 'auto' }, // 'light' (default) | 'dark' | 'auto'
+  },
+});
+```
+
+- `light` is the default, whatever the system setting: a host page that has no dark mode (a
+  back-office, a CMS admin) keeps a light manager.
+- `dark` always renders the dark palette.
+- `auto` follows the system setting (`prefers-color-scheme`) and switches live when it changes.
+
+The library sets the resolved mode on its root elements as `data-emm-mode="light"` or
+`data-emm-mode="dark"`.
+
+### How the dark palette works
+
+The three scales are **reversed**: in dark mode `--emm-neutral-50` is the darkest shade and
+`--emm-neutral-950` the lightest. Every "light background, dark text" pair of the components
+becomes "dark background, light text", so the tokens keep their role in both modes:
+`--emm-neutral-900` is always the main text. `--emm-inverse` (the text on strong backgrounds)
+becomes dark too, and `--emm-background` gets a color since a dark manager cannot rely on the
+host page behind it.
+
+The defaults (reversed `slate`, `sky` and `red`, a `slate` surface and background) are declared
+on `.easy-media[data-emm-mode="dark"]` with zero specificity. To adjust them:
+
+```css
+/* Tokens for dark mode only */
+.easy-media[data-emm-mode="dark"] {
+  --emm-surface: #111827;
+  --emm-accent-700: #93c5fd; /* reversed: a light shade */
+}
+```
+
+In dark mode, set the tokens on `.easy-media`, not on an ancestor such as `:root`: the default dark
+palette is declared on `.easy-media` itself and would win over the inherited values.
+
+With the `theme` option, `accent`, `neutral` and `danger` follow the mode: in dark mode their scale
+is derived the other way round (`50` gets the mix of `950`). `tokens` and `font` apply as given in
+both modes, and win over the stylesheet as in light mode.
+
+A few backgrounds stay dark in both modes: the overlays behind the modals and the picker, the image
+editor and the video player. The drop zone, dark in light mode, stays dark too.
+
+---
+
 ## Tokens
 
 ### Color scales
@@ -95,6 +147,7 @@ The shades used the most:
 | Token | Default | Used for |
 |-------|---------|----------|
 | `--emm-surface` | `#fff` | Panels, cards, inputs, menus, modals |
+| `--emm-background` | `transparent` | Behind the manager (the host page shows through in light mode) |
 | `--emm-inverse` | `#fff` | Text and icons on a dark or accent background (buttons, tooltips, drop zone) |
 | `--emm-toolbar` | Tailwind `neutral-700` | Top toolbar background |
 | `--emm-item` | Tailwind `neutral-50` | File and folder cards |
