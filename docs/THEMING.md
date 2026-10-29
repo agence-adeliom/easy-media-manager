@@ -8,6 +8,7 @@ when none is set, it looks exactly like the default theme (Tailwind `slate`, `sk
 ## Table of Contents
 
 - [Setting a theme](#setting-a-theme)
+- [Setting a theme from the configuration](#setting-a-theme-from-the-configuration)
 - [Tokens](#tokens)
 - [Deriving a scale from one color](#deriving-a-scale-from-one-color)
 - [Using the tokens in a plugin](#using-the-tokens-in-a-plugin)
@@ -35,7 +36,34 @@ which are rendered in a portal. Load order and specificity do not matter.
 
 ---
 
-## Tokens
+## Setting a theme from the configuration
+
+The same tokens can be set from JavaScript, with the `theme` option of the configuration:
+
+```typescript
+EasyMedia.configure({
+  config: {
+    // ...
+    theme: {
+      accent: '#4f46e5',                  // the whole accent scale
+      font: '"Inter", system-ui, sans-serif',
+      tokens: { toolbar: '#1e1b4b', 'accent-700': '#3730a3' },
+    },
+  },
+  // ...
+});
+```
+
+| Key | Sets |
+|-----|------|
+| `accent`, `neutral`, `danger` | The eleven shades of the scale from one color, see [Deriving a scale from one color](#deriving-a-scale-from-one-color) |
+| `font` | `--emm-font` |
+| `tokens` | Any token by name, without the `--emm-` prefix. Applied after the scales, so it can adjust one of their shades |
+
+The library sets these values as inline custom properties on its root elements. They win over
+the same tokens set in a stylesheet, and the tokens the configuration leaves out still follow the
+stylesheet. The theme is read once, by the first `init()`, `mount()` or `pick()`.
+
 
 ### Color scales
 
@@ -79,7 +107,8 @@ The shades used the most:
 ## Deriving a scale from one color
 
 A scale has eleven shades, but you rarely need to set them all. With `color-mix()`, a whole
-scale can follow one brand color:
+scale can follow one brand color. This is what the `accent`, `neutral` and `danger` keys of the
+[`theme` option](#setting-a-theme-from-the-configuration) do, with these exact mixes:
 
 ```css
 .easy-media {

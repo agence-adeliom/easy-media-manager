@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type DragEvent as ReactDragEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type DragEvent as ReactDragEvent } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { FolderUp } from "lucide-react";
 import { Toaster } from "sonner";
@@ -24,6 +24,7 @@ import { useResponsive } from "@/hooks/use-responsive";
 import { useTranslations } from "@/hooks/use-translations";
 import { cn } from "@/lib/cn";
 import { hasDraggedFiles } from "@/lib/file-drop";
+import { themeProperties } from "@/lib/theme";
 import { CORE_MODAL_IDS } from "@/lib/modal-ids";
 import { createPluginContext } from "@/plugins/context";
 import { getPluginModalById } from "@/plugins/registry";
@@ -44,6 +45,10 @@ function MediaManagerBody() {
   const bulkMode = useMediaStore((state) => state.bulkMode);
   const bulkList = useMediaStore((state) => state.bulkList);
   const isSmallScreen = useMediaStore((state) => state.isSmallScreen);
+  const theme = useMediaStore((state) => state.config?.theme);
+  // Also set on the root element (index.ts) for the portals: repeated here so that a host rule on
+  // `.easy-media`, which matches this element too, does not override the configured theme.
+  const themeStyle = useMemo(() => themeProperties(theme) as CSSProperties, [theme]);
   const activeModal = useMediaStore((state) => state.activeModal);
   const searchQuery = useMediaStore((state) => state.searchQuery);
   const pushFolder = useMediaStore((state) => state.pushFolder);
@@ -302,6 +307,7 @@ function MediaManagerBody() {
         // Inside the picker the shell must fit the 80vh overlay, otherwise the footer is pushed off-screen.
         mode === "modal" ? "min-h-0 flex-1 overflow-y-auto" : "min-h-screen",
       )}
+      style={themeStyle}
     >
       <div className="mx-auto flex w-full flex-1 flex-col">
         <Toolbar />
