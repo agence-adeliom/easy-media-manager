@@ -4,7 +4,7 @@ import { useFileType } from "@/hooks/use-file-type";
 import type { MediaItem } from "@/types/media";
 import { isFolder } from "@/types/media";
 
-export function FileIcon({ item, className = "h-10 w-10" }: { item: MediaItem; className?: string }) {
+export function FileIcon({ item, className = "emm:h-10 emm:w-10" }: { item: MediaItem; className?: string }) {
   const fileType = useFileType();
 
   if (isFolder(item)) {

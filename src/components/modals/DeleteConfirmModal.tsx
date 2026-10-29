@@ -53,18 +53,18 @@ export function DeleteConfirmModal() {
   });
 
   return (
-    <ModalShell bodyClassName="p-0" onClose={closeModal} open={activeModal === CORE_MODAL_IDS.delete} title={t("delete_main")}>
-      <div className="flex flex-col">
-        <div className="flex items-start gap-4 px-6 py-5">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-emm-danger-50 text-emm-danger-600">
-            <AlertTriangle className="h-5 w-5" />
+    <ModalShell bodyClassName="emm:p-0" onClose={closeModal} open={activeModal === CORE_MODAL_IDS.delete} title={t("delete_main")}>
+      <div className="emm:flex emm:flex-col">
+        <div className="emm:flex emm:items-start emm:gap-4 emm:px-6 emm:py-5">
+          <div className="emm:flex emm:h-12 emm:w-12 emm:shrink-0 emm:items-center emm:justify-center emm:rounded-full emm:bg-emm-danger-50 emm:text-emm-danger-600">
+            <AlertTriangle className="emm:h-5 emm:w-5" />
           </div>
-          <div className="space-y-2">
-            <p className="text-sm leading-6 text-emm-neutral-600">{t("delete_confirm_message").replace("%count%", String(targets.length))}</p>
-            {mutation.error ? <p className="text-sm text-emm-danger-600">{getErrorMessage(mutation.error, t)}</p> : null}
+          <div className="emm:space-y-2">
+            <p className="emm:text-sm emm:leading-6 emm:text-emm-neutral-600">{t("delete_confirm_message").replace("%count%", String(targets.length))}</p>
+            {mutation.error ? <p className="emm:text-sm emm:text-emm-danger-600">{getErrorMessage(mutation.error, t)}</p> : null}
           </div>
         </div>
-        <div className="flex justify-end gap-3 border-t border-emm-neutral-100 bg-emm-neutral-50/80 px-6 py-4">
+        <div className="emm:flex emm:justify-end emm:gap-3 emm:border-t emm:border-emm-neutral-100 emm:bg-emm-neutral-50/80 emm:px-6 emm:py-4">
           <Button onClick={closeModal} type="button" variant="secondary">
             {t("cancel")}
           </Button>

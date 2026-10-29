@@ -14,15 +14,15 @@ export function Breadcrumb() {
   const rootLabel = rootIndex < 0 ? t("library") : folderStack[rootIndex]?.name;
 
   return (
-    <nav className="flex flex-wrap items-center gap-1 text-sm text-emm-neutral-600 bg-emm-neutral-100 border-b p-3">
+    <nav className="emm:flex emm:flex-wrap emm:items-center emm:gap-1 emm:text-sm emm:text-emm-neutral-600 emm:bg-emm-neutral-100 emm:border-b emm:p-3">
       <Button onClick={() => goToFolder(rootIndex)} type="button" variant="breadcrumb">
-        <House className="mr-1.5 h-4 w-4" />
+        <House className="emm:mr-1.5 emm:h-4 emm:w-4" />
         {rootLabel}
       </Button>
       {folderStack.map((folder, index) =>
         index > rootIndex ? (
-          <span className="flex items-center" key={`${folder.id}-${folder.name}`}>
-            <ChevronRight className="h-4 w-4 text-emm-neutral-400" />
+          <span className="emm:flex emm:items-center" key={`${folder.id}-${folder.name}`}>
+            <ChevronRight className="emm:h-4 emm:w-4 emm:text-emm-neutral-400" />
             <Button onClick={() => goToFolder(index)} type="button" variant="breadcrumb">
               {folder.name}
             </Button>

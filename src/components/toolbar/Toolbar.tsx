@@ -31,12 +31,12 @@ export function Toolbar() {
   const canRename = !hasMultipleSelection && selectedFile !== null;
   const canEditMetas = !hasMultipleSelection && selectedFile !== null && isMediaFile(selectedFile);
   const selectedItemsToMove = bulkMode && bulkList.length > 0 ? bulkList : selectedFile ? [selectedFile] : [];
-  const toolbarButtonClassName = "border-emm-neutral-300 bg-emm-surface text-emm-neutral-900 hover:border-emm-accent-200 hover:bg-emm-accent-200";
+  const toolbarButtonClassName = "emm:border-emm-neutral-300 emm:bg-emm-surface emm:text-emm-neutral-900 emm:hover:border-emm-accent-200 emm:hover:bg-emm-accent-200";
   const uploadButtonClassName = uploadPanelOpen
-    ? "border-emm-accent-700 bg-emm-accent-700 text-emm-inverse shadow-sm hover:bg-emm-accent-600 hover:text-emm-inverse"
+    ? "emm:border-emm-accent-700 emm:bg-emm-accent-700 emm:text-emm-inverse emm:shadow-sm emm:hover:bg-emm-accent-600 emm:hover:text-emm-inverse"
     : toolbarButtonClassName;
   const bulkButtonClassName = bulkMode
-    ? "border-emm-accent-700 bg-emm-accent-700 text-emm-inverse shadow-sm hover:bg-emm-accent-600"
+    ? "emm:border-emm-accent-700 emm:bg-emm-accent-700 emm:text-emm-inverse emm:shadow-sm emm:hover:bg-emm-accent-600"
     : toolbarButtonClassName;
   const pluginContext = createPluginContext(store);
   const pluginActions = getPluginToolbarActions();
@@ -46,32 +46,32 @@ export function Toolbar() {
   const hasSelectionToolbar = Boolean(selectedFile || canEditImage || selectionPluginActions.length > 0);
 
   return (
-    <div className="flex flex-wrap items-start gap-2 bg-emm-toolbar px-3 py-2 md:flex-nowrap md:items-center md:justify-between">
-      <div className="flex items-center gap-1">
+    <div className="emm:flex emm:flex-wrap emm:items-start emm:gap-2 emm:bg-emm-toolbar emm:px-3 emm:py-2 emm:md:flex-nowrap emm:md:items-center emm:md:justify-between">
+      <div className="emm:flex emm:items-center emm:gap-1">
         {features.enableUpload ? (
           <Tooltip content={t("upload_main")}>
             <Button
               aria-pressed={uploadPanelOpen}
-              className={`px-2 ${uploadButtonClassName}`}
+              className={`emm:px-2 ${uploadButtonClassName}`}
               onClick={toggleUploadPanel}
               type="button"
               variant={uploadPanelOpen ? "primary" : "ghost"}
             >
-              <Upload className="h-4 w-4" />
+              <Upload className="emm:h-4 emm:w-4" />
             </Button>
           </Tooltip>
         ) : null}
         {features.enableUpload ? (
           <Tooltip content={t("add_new_folder")}>
-            <Button className={`px-2 ${toolbarButtonClassName}`} onClick={() => openModal(CORE_MODAL_IDS.newFolder)} type="button" variant="ghost">
-              <FolderPlus className="h-4 w-4" />
+            <Button className={`emm:px-2 ${toolbarButtonClassName}`} onClick={() => openModal(CORE_MODAL_IDS.newFolder)} type="button" variant="ghost">
+              <FolderPlus className="emm:h-4 emm:w-4" />
             </Button>
           </Tooltip>
         ) : null}
         {features.enableUpload ? (
           <Tooltip content={t("upload_via_url")}>
-            <Button className={`px-2 ${toolbarButtonClassName}`} onClick={() => openModal(CORE_MODAL_IDS.uploadLink)} type="button" variant="ghost">
-              <Link2 className="h-4 w-4" />
+            <Button className={`emm:px-2 ${toolbarButtonClassName}`} onClick={() => openModal(CORE_MODAL_IDS.uploadLink)} type="button" variant="ghost">
+              <Link2 className="emm:h-4 emm:w-4" />
             </Button>
           </Tooltip>
         ) : null}
@@ -80,25 +80,25 @@ export function Toolbar() {
         ))}
       </div>
       {hasSelectionToolbar ? (
-        <div className={`flex items-center gap-1 ${features.enableUpload ? "border-l border-emm-neutral-300 pl-2" : ""}`}>
+        <div className={`emm:flex emm:items-center emm:gap-1 ${features.enableUpload ? "emm:border-l emm:border-emm-neutral-300 emm:pl-2" : ""}`}>
           {features.enableEditor && canEditImage ? (
             <Tooltip content={t("editor")}>
-              <Button className={`px-2 ${toolbarButtonClassName}`} onClick={() => openModal(CORE_MODAL_IDS.editor)} type="button" variant="ghost">
-                <WandSparkles className="h-4 w-4" />
+              <Button className={`emm:px-2 ${toolbarButtonClassName}`} onClick={() => openModal(CORE_MODAL_IDS.editor)} type="button" variant="ghost">
+                <WandSparkles className="emm:h-4 emm:w-4" />
               </Button>
             </Tooltip>
           ) : null}
           {features.enableRename && canRename ? (
             <Tooltip content={t("rename")}>
-              <Button className={`px-2 ${toolbarButtonClassName}`} onClick={() => openModal(CORE_MODAL_IDS.rename)} type="button" variant="ghost">
-                <Pencil className="h-4 w-4" />
+              <Button className={`emm:px-2 ${toolbarButtonClassName}`} onClick={() => openModal(CORE_MODAL_IDS.rename)} type="button" variant="ghost">
+                <Pencil className="emm:h-4 emm:w-4" />
               </Button>
             </Tooltip>
           ) : null}
           {features.enableMetas && canEditMetas ? (
             <Tooltip content={t("edit_metas")}>
-              <Button className={`px-2 ${toolbarButtonClassName}`} onClick={() => openModal(CORE_MODAL_IDS.editMetas)} type="button" variant="ghost">
-                <Hash className="h-4 w-4" />
+              <Button className={`emm:px-2 ${toolbarButtonClassName}`} onClick={() => openModal(CORE_MODAL_IDS.editMetas)} type="button" variant="ghost">
+                <Hash className="emm:h-4 emm:w-4" />
               </Button>
             </Tooltip>
           ) : null}
@@ -107,15 +107,15 @@ export function Toolbar() {
           ))}
           {features.enableDelete && selectedFile ? (
             <Tooltip content={t("delete_main")}>
-              <Button className={`px-2 ${toolbarButtonClassName}`} onClick={() => openModal(CORE_MODAL_IDS.delete)} type="button" variant="ghost">
-                <Trash2 className="h-4 w-4" />
+              <Button className={`emm:px-2 ${toolbarButtonClassName}`} onClick={() => openModal(CORE_MODAL_IDS.delete)} type="button" variant="ghost">
+                <Trash2 className="emm:h-4 emm:w-4" />
               </Button>
             </Tooltip>
           ) : null}
           {features.enableMove && selectedItemsToMove.length > 0 ? (
             <Tooltip content={`${t("move")} (${selectedItemsToMove.length})`}>
               <Button
-                className={`px-2 ${toolbarButtonClassName}`}
+                className={`emm:px-2 ${toolbarButtonClassName}`}
                 onClick={() => {
                   setMovableList(selectedItemsToMove);
                   openModal(CORE_MODAL_IDS.move);
@@ -123,28 +123,28 @@ export function Toolbar() {
                 type="button"
                 variant="ghost"
               >
-                <FolderTree className="h-4 w-4" />
+                <FolderTree className="emm:h-4 emm:w-4" />
               </Button>
             </Tooltip>
           ) : null}
         </div>
       ) : null}
-      <div className="flex items-center gap-1 md:ml-auto md:justify-end md:shrink-0">
+      <div className="emm:flex emm:items-center emm:gap-1 emm:md:ml-auto emm:md:justify-end emm:md:shrink-0">
         <Tooltip content={t("refresh")}>
-          <Button className={`px-2 ${toolbarButtonClassName}`} onClick={() => window.dispatchEvent(new CustomEvent("easy-media:refresh"))} type="button" variant="primary">
-            <RefreshCcw className="h-4 w-4" />
+          <Button className={`emm:px-2 ${toolbarButtonClassName}`} onClick={() => window.dispatchEvent(new CustomEvent("easy-media:refresh"))} type="button" variant="primary">
+            <RefreshCcw className="emm:h-4 emm:w-4" />
           </Button>
         </Tooltip>
         {features.enableBulkSelection ? (
           <Tooltip content={t("select_bulk")}>
             <Button
               aria-pressed={bulkMode}
-              className={`px-2 ${bulkButtonClassName}`}
+              className={`emm:px-2 ${bulkButtonClassName}`}
               onClick={toggleBulkMode}
               type="button"
               variant={bulkMode ? "primary" : "ghost"}
             >
-              <ListPlus className="h-4 w-4" />
+              <ListPlus className="emm:h-4 emm:w-4" />
             </Button>
           </Tooltip>
         ) : null}
@@ -178,8 +178,8 @@ function PluginToolbarButton({ action, buttonClassName, context }: PluginToolbar
 
   return (
     <Tooltip content={context.t(action.labelKey)}>
-      <Button className={`px-2 ${buttonClassName}`} disabled={isDisabled} onClick={() => action.onClick(context)} type="button" variant="ghost">
-        <Icon className="h-4 w-4" />
+      <Button className={`emm:px-2 ${buttonClassName}`} disabled={isDisabled} onClick={() => action.onClick(context)} type="button" variant="ghost">
+        <Icon className="emm:h-4 emm:w-4" />
       </Button>
     </Tooltip>
   );

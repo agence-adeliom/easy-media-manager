@@ -4,7 +4,7 @@ import { expect, test } from '@playwright/test';
 const THEMED = 'http://localhost:5174/?theme';
 
 function toolbar(page: import('@playwright/test').Page) {
-  return page.locator('.easy-media .bg-emm-toolbar').first();
+  return page.locator('.easy-media .emm\\:bg-emm-toolbar').first();
 }
 
 test('theme: sets the scales, the font and the tokens on the whole manager, modals included', async ({ page }) => {

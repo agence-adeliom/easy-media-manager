@@ -17,9 +17,9 @@ export function Tooltip({ children, content, className }: PropsWithChildren<Tool
       : children;
 
   return (
-    <span className={cn("relative inline-flex", className)}>
-      <span className="peer inline-flex">{control}</span>
-      <span className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 hidden -translate-x-1/2 rounded bg-emm-neutral-900 px-2 py-1 text-xs text-emm-inverse peer-hover:block peer-focus-within:block">
+    <span className={cn("emm:relative emm:inline-flex", className)}>
+      <span className="emm:peer emm:inline-flex">{control}</span>
+      <span className="emm:pointer-events-none emm:absolute emm:bottom-full emm:left-1/2 emm:z-10 emm:mb-2 emm:hidden emm:-translate-x-1/2 emm:rounded emm:bg-emm-neutral-900 emm:px-2 emm:py-1 emm:text-xs emm:text-emm-inverse emm:peer-hover:block emm:peer-focus-within:block">
         {content}
       </span>
     </span>
