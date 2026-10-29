@@ -1,6 +1,12 @@
 // Consumer code typechecked against dist/esm through the package exports
 // (`npm run test:types`). Each @ts-expect-error proves a type is not `any`.
-import EasyMediaDefault, { EasyMedia, type EasyMediaRoutes, type MediaItem, type PickOptions } from "@agence-adeliom/easy-media-manager";
+import EasyMediaDefault, {
+  EasyMedia,
+  type EasyMediaPickEventDetail,
+  type EasyMediaRoutes,
+  type MediaItem,
+  type PickOptions,
+} from "@agence-adeliom/easy-media-manager";
 import { defineEasyMediaPlugin, getJson } from "@agence-adeliom/easy-media-manager/plugin-sdk";
 
 const options: PickOptions = { restrictions: { types: "images" } };
@@ -12,6 +18,16 @@ EasyMedia.doesNotExist();
 
 // @ts-expect-error `files` must be a string
 const routes: Partial<EasyMediaRoutes> = { files: 42 };
+
+// The package augments WindowEventMap, so the event detail is typed.
+window.addEventListener("easy-media:pick", (event) => {
+  const detail: EasyMediaPickEventDetail = event.detail;
+  const id: number = detail.file.id;
+  // @ts-expect-error `file` is a MediaItem
+  const wrong: string = detail.file;
+
+  return [id, wrong, detail.options];
+});
 
 const plugin = defineEasyMediaPlugin;
 const fetched: Promise<unknown> = getJson("/media");
