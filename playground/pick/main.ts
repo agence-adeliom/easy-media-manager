@@ -112,6 +112,11 @@ document.getElementById('pick-docs-2')!.addEventListener('click', async () => {
   renderResult2(file);
 });
 
+document.getElementById('pick-pdf-mime-2')!.addEventListener('click', async () => {
+  const file = await EasyMedia.pick({ restrictions: { types: 'application/pdf', uploadSize: 1_000_000 } });
+  renderResult2(file);
+});
+
 document.getElementById('pick-images-2')!.addEventListener('click', async () => {
   const file = await EasyMedia.pick({ restrictions: { types: 'images' } });
   renderResult2(file);

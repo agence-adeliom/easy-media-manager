@@ -162,6 +162,8 @@ export const frTranslations: EasyMediaTranslations = {
   upload_success: 'Téléchargé avec succès',
   upload_files_success: '%count% fichier(s) envoyé(s).',
   upload_failed: 'Envoi impossible.',
+  upload_rejected_size: '%name% : le fichier dépasse %size%.',
+  upload_rejected_type: "%name% : ce type de fichier n'est pas autorisé ici.",
   upload_text: 'Glisser-déposer des fichiers<br><small>ou</small><br>Cliquez pour télécharger',
   upload_use_random_names: 'Utiliser des noms aléatoires ?',
   upload_in_progress: 'Le téléchargement est déjà en cours',

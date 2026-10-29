@@ -150,3 +150,35 @@ test('pick(): resolves with the chosen image', async ({ page }) => {
   expect(result.type).toMatch(/^image/);
   expect(errors).toEqual([]);
 });
+
+test('pick(): restricts the files and the uploads to a MIME type', async ({ page }) => {
+  const errors = collectErrors(page);
+  const overlay = page.locator('[data-easy-media-overlay="overlay"]');
+  const cards = overlay.locator('article');
+
+  await page.goto('http://localhost:5175/');
+  await page.getByRole('button', { name: 'Browse PDF files (MIME type)…' }).click();
+  await expect(overlay).toBeVisible();
+
+  await cards.filter({ hasText: 'Documents' }).dblclick();
+  await expect(cards.filter({ hasText: 'sample-pdf-1.pdf' })).toBeVisible();
+  await overlay.getByRole('button', { name: 'Home' }).click();
+  await cards.filter({ hasText: 'Photos' }).dblclick();
+  await expect(cards.filter({ hasText: 'Vacations' })).toBeVisible();
+  await expect(cards.filter({ hasText: '.jpg' })).toHaveCount(0);
+
+  await toolbarButton(page, 'Upload').click();
+  const input = overlay.locator('input[type=file]');
+  await expect(input).toHaveAttribute('accept', 'application/pdf');
+  await input.setInputFiles([
+    { name: 'refused.png', mimeType: 'image/png', buffer: PNG },
+    { name: 'too-big.pdf', mimeType: 'application/pdf', buffer: Buffer.alloc(1_500_000, 7) },
+  ]);
+  await expect(page.locator('[data-sonner-toast]').first()).toContainText('refused.png: this file type is not allowed here.');
+  await expect(page.locator('[data-sonner-toast]').first()).toContainText('too-big.pdf: the file exceeds 1 MB.');
+  await toolbarButton(page, 'Upload').click();
+  await expect(cards.filter({ hasText: 'refused.png' })).toHaveCount(0);
+  await expect(cards.filter({ hasText: 'too-big.pdf' })).toHaveCount(0);
+
+  expect(errors).toEqual([]);
+});
