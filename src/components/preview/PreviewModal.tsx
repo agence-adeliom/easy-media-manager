@@ -10,6 +10,7 @@ import { VideoPlayer } from "@/components/preview/VideoPlayer";
 import { FileDetails } from "@/components/sidebar/FileDetails";
 import { Button } from "@/components/ui/Button";
 import { useFileType } from "@/hooks/use-file-type";
+import { useTranslations } from "@/hooks/use-translations";
 import { CORE_MODAL_IDS } from "@/lib/modal-ids";
 import { useMediaStore } from "@/store/media-store";
 import type { MediaItem } from "@/types/media";
@@ -25,6 +26,7 @@ export function PreviewModal({ items }: PreviewModalProps) {
   const selectedFile = useMediaStore((state) => state.selectedFile);
   const selectFile = useMediaStore((state) => state.selectFile);
   const fileType = useFileType();
+  const t = useTranslations();
   const isPreviewOpen = activeModal === CORE_MODAL_IDS.preview && selectedFile !== null && isMediaFile(selectedFile);
 
   const previewableItems = useMemo(
@@ -90,7 +92,7 @@ export function PreviewModal({ items }: PreviewModalProps) {
       title={selectedFile.name}
       titlePrefix={
         <a
-          aria-label="Download file"
+          aria-label={t("download_file")}
           className="inline-flex items-center justify-center p-2 text-slate-700 transition-colors hover:text-slate-900"
           download
           href={selectedFile.download_url ?? selectedFile.path}
@@ -106,7 +108,7 @@ export function PreviewModal({ items }: PreviewModalProps) {
         <div className="flex items-center justify-center gap-4">
           {hasNavigation ? (
             <Button
-              aria-label="Element precedent"
+              aria-label={t("preview_previous")}
               className="h-11 w-11 shrink-0 rounded-full border-slate-200 p-0"
               onClick={() => goToItem(previousItem)}
               type="button"
@@ -124,7 +126,7 @@ export function PreviewModal({ items }: PreviewModalProps) {
           </div>
           {hasNavigation ? (
             <Button
-              aria-label="Element suivant"
+              aria-label={t("preview_next")}
               className="h-11 w-11 shrink-0 rounded-full border-slate-200 p-0"
               onClick={() => goToItem(nextItem)}
               type="button"
