@@ -1,5 +1,7 @@
 # @agence-adeliom/easy-media-manager
 
+![Easy Media Manager, built by Adeliom](https://raw.githubusercontent.com/agence-adeliom/easy-media-manager/main/.github/cover.png)
+
 A headless, framework-agnostic media manager built with React — file browsing, upload, cropping, metadata editing, and a picker modal, all wired to your own backend API.
 
 ## Features
