@@ -219,6 +219,16 @@ test('pick(): stays inside the restrictions.path folder', async ({ page }) => {
   await expect(breadcrumb.getByRole('button')).toHaveText(['Photos']);
   await expect(cards.filter({ hasText: 'Vacations' })).toBeVisible();
 
+  // The move modal cannot reach a destination above the restricted folder either.
+  await cards.filter({ hasText: 'Vacations' }).click();
+  await toolbarButton(page, 'Move (1)').click();
+  const destinations = page.locator('[data-easy-media-overlay]').filter({ hasText: 'Destination Folder' }).last();
+  await expect(destinations.getByRole('button', { name: 'Photos', exact: true })).toBeVisible();
+  await expect(destinations.getByRole('button', { name: 'Home', exact: true })).toHaveCount(0);
+  await destinations.getByRole('button', { name: 'Photos', exact: true }).click();
+  await expect(destinations.getByText('Documents', { exact: true })).toHaveCount(0);
+  await destinations.getByRole('button', { name: 'Cancel' }).click();
+
   await overlay.getByRole('button', { name: 'Cancel' }).click();
   await expect(overlay).toBeHidden();
 
