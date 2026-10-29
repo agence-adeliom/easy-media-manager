@@ -126,6 +126,7 @@ interface EasyMediaConfig {
   mimeTypes?: EasyMediaMimeTypes;
   generatingAlts: boolean;
   headers?: Record<string, string>;
+  theme?: EasyMediaTheme;
 }
 ```
 
@@ -136,6 +137,35 @@ interface EasyMediaConfig {
 | `mimeTypes` | `EasyMediaMimeTypes` | No | Override the MIME type categories used for filtering. See below. |
 | `generatingAlts` | `boolean` | Yes | Enable the AI alt-text generation feature globally. Also requires `features.enableGeneratingAlts`. |
 | `headers` | `Record<string, string>` | No | Headers added to every request of the manager (listing, upload, rename…), after the library ones. Typically a CSRF token or an authorization header. Plugins read them from `context.config.headers`. |
+| `theme` | `EasyMediaTheme` | No | Colors and font of the manager. See [Theme](#theme). |
+
+### Theme
+
+```typescript
+interface EasyMediaTheme {
+  accent?: string;   // whole accent scale from one color
+  neutral?: string;  // whole neutral scale from one color
+  danger?: string;   // whole danger scale from one color
+  font?: string;     // font-family
+  tokens?: Partial<Record<EasyMediaThemeToken, string>>; // any token: 'accent-700', 'surface', 'toolbar'…
+}
+```
+
+```typescript
+EasyMedia.configure({
+  config: {
+    baseUrl: '/api',
+    generatingAlts: false,
+    theme: { accent: '#4f46e5', font: '"Inter", sans-serif', tokens: { toolbar: '#1e1b4b' } },
+  },
+  // ...
+});
+```
+
+Any CSS color works, including `var(--my-brand)`. The theme is applied once, by the first `init()`
+(or `mount()`, `pick()`): changing it later has no effect. See
+[THEMING.md](https://github.com/agence-adeliom/easy-media-manager/blob/main/docs/THEMING.md) for the
+list of tokens and how a scale is derived from one color.
 
 ### Request headers
 

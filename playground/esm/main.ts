@@ -5,11 +5,19 @@ import { EasyMedia, frTranslations } from '@agence-adeliom/easy-media-manager';
 import { generateAltPlugin } from '../../examples/plugins/generate-alt/index';
 
 EasyMedia.use(generateAltPlugin);
+
+// `?theme` shows the `theme` option (and lets the e2e tests check it): an indigo accent scale,
+// a serif font and a darker toolbar.
+const theme = new URLSearchParams(window.location.search).has('theme')
+  ? { accent: '#6366f1', font: 'Georgia, serif', tokens: { toolbar: '#312e81' } }
+  : undefined;
+
 EasyMedia.configure({
   locale: 'fr',
   translations: frTranslations,
   config: {
     baseUrl: '/api',
+    theme,
     generatingAlts: true,
   },
   features: {

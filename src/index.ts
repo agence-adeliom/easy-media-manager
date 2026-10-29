@@ -5,6 +5,7 @@ import { EasyMediaApiError, easyMediaClient } from "@/api/client";
 import { hasErrorMessage } from "@/api/http";
 import { MediaManager } from "@/components/MediaManager";
 import { ROOT_ELEMENT_ID, setRootElement } from "@/lib/root";
+import { applyTheme } from "@/lib/theme";
 import { takeQueuedEasyMediaPlugins } from "@/plugins/queue";
 import { getPluginTranslations, lockPluginRegistry, registerPlugin, registerPlugins } from "@/plugins/registry";
 import type { EasyMediaPlugin } from "@/plugins/types";
@@ -25,6 +26,9 @@ export type {
   EasyMediaInitConfig,
   EasyMediaMountOptions,
   EasyMediaRoutes,
+  EasyMediaTheme,
+  EasyMediaThemeShade,
+  EasyMediaThemeToken,
   EasyMediaTranslations,
   PickFileType,
   PickMimeType,
@@ -115,6 +119,9 @@ function init(config: EasyMediaInitConfig) {
   });
   initialized = true;
   render();
+  if (rootElement !== null) {
+    applyTheme(rootElement, config.config?.theme);
+  }
 }
 
 function pick(options: PickOptions = {}) {

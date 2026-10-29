@@ -10,6 +10,32 @@ export interface EasyMediaConfig {
   mimeTypes?: EasyMediaMimeTypes;
   generatingAlts: boolean;
   headers?: Record<string, string>;
+  /** Colors and font of the manager, see docs/THEMING.md. */
+  theme?: EasyMediaTheme;
+}
+
+export type EasyMediaThemeShade = 50 | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900 | 950;
+
+/** A theme token, without the `--emm-` prefix of its custom property: `accent-600`, `surface`… */
+export type EasyMediaThemeToken =
+  | `${"neutral" | "accent" | "danger"}-${EasyMediaThemeShade}`
+  | "surface"
+  | "inverse"
+  | "toolbar"
+  | "item"
+  | "font";
+
+export interface EasyMediaTheme {
+  /** One color for the whole accent scale: it is shade `500`, the other shades are mixed with white or black. */
+  accent?: string;
+  /** One color for the whole neutral scale (text, borders), same rule as `accent`. */
+  neutral?: string;
+  /** One color for the whole danger scale (errors, delete), same rule as `accent`. */
+  danger?: string;
+  /** `font-family` of the manager. */
+  font?: string;
+  /** Any token by name, set after the scales so it can adjust one of their shades. */
+  tokens?: Partial<Record<EasyMediaThemeToken, string>>;
 }
 
 export interface EasyMediaRoutes {
