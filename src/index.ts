@@ -1,6 +1,8 @@
 import { createElement } from "react";
 import { createRoot, type Root } from "react-dom/client";
 
+import { EasyMediaApiError, easyMediaClient } from "@/api/client";
+import { hasErrorMessage } from "@/api/http";
 import { MediaManager } from "@/components/MediaManager";
 import { ROOT_ELEMENT_ID, setRootElement } from "@/lib/root";
 import { takeQueuedEasyMediaPlugins } from "@/plugins/queue";
@@ -9,7 +11,7 @@ import type { EasyMediaPlugin } from "@/plugins/types";
 import { mediaStore } from "@/store/media-store";
 import { pickStore } from "@/store/pick-store";
 import type { EasyMediaConfigOverride, EasyMediaInitConfig, EasyMediaMountOptions, EasyMediaTranslations, PickOptions } from "@/types/config";
-import type { MediaItem } from "@/types/media";
+import type { MediaFileItem, MediaItem } from "@/types/media";
 import { enTranslations } from "@/translations/en";
 import { frTranslations } from "@/translations/fr";
 
@@ -36,6 +38,7 @@ interface EasyMediaWindowApi {
   configure: (config: EasyMediaInitConfig) => void;
   init: (config: EasyMediaInitConfig) => void;
   pick: (options?: PickOptions) => Promise<MediaItem | null>;
+  getFile: (id: number | string) => Promise<MediaFileItem | null>;
   isReady: () => boolean;
   __mountFullPage: (target: string | HTMLElement) => void;
   mount?: (options: EasyMediaMountOptions) => void;
@@ -121,6 +124,31 @@ function pick(options: PickOptions = {}) {
   return pickStore.getState().startPick(options);
 }
 
+/** The file of an id, through the `fileInfos` route; `null` when it does not exist (any more). */
+async function getFile(id: number | string): Promise<MediaFileItem | null> {
+  if (!initialized) {
+    init(resolveConfig({}));
+  }
+
+  const route = mediaStore.getState().routes?.fileInfos;
+
+  if (!route) {
+    throw new Error("EasyMedia: getFile() needs the fileInfos route in the configuration.");
+  }
+
+  try {
+    const file = await easyMediaClient.getFileInfo(route, id);
+
+    return hasErrorMessage(file) ? null : file;
+  } catch (error) {
+    if (error instanceof EasyMediaApiError && error.status === 404) {
+      return null;
+    }
+
+    throw error;
+  }
+}
+
 function mountFullPage(element: string | HTMLElement) {
   if (!initialized) {
     throw new Error("EasyMedia not initialized.");
@@ -146,6 +174,7 @@ const api: EasyMediaWindowApi = {
   configure,
   init,
   pick,
+  getFile,
   isReady: () => initialized,
   __mountFullPage: mountFullPage,
   translations: { en: enTranslations, fr: frTranslations },

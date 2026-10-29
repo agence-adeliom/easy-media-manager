@@ -150,3 +150,20 @@ test('pick(): resolves with the chosen image', async ({ page }) => {
   expect(result.type).toMatch(/^image/);
   expect(errors).toEqual([]);
 });
+
+test('getFile(): reads a file by its id', async ({ page }) => {
+  const errors = collectErrors(page);
+
+  await page.goto('http://localhost:5175/');
+  const [file, missing] = await page.evaluate(async () => {
+    const { EasyMedia } = window as unknown as { EasyMedia: { getFile: (id: number) => Promise<unknown> } };
+
+    return Promise.all([EasyMedia.getFile(1), EasyMedia.getFile(999999)]);
+  });
+
+  expect(file).toMatchObject({ id: 1, name: 'cliff.jpg', type: expect.stringMatching(/^image/) });
+  expect(missing).toBeNull();
+  // Reading does not open the picker.
+  await expect(page.locator('[data-easy-media-overlay="overlay"]')).toHaveCount(0);
+  expect(errors.filter((error) => !error.includes('404'))).toEqual([]);
+});
