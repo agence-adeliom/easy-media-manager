@@ -1,17 +1,19 @@
 import { ChevronRight, House } from "lucide-react";
 
 import { Button } from "@/components/ui/Button";
+import { useTranslations } from "@/hooks/use-translations";
 import { useMediaStore } from "@/store/media-store";
 
 export function Breadcrumb() {
   const folderStack = useMediaStore((state) => state.folderStack);
   const goToFolder = useMediaStore((state) => state.goToFolder);
+  const t = useTranslations();
 
   return (
     <nav className="flex flex-wrap items-center gap-1 text-sm text-slate-600 bg-slate-100 border-b p-3">
       <Button onClick={() => goToFolder(-1)} type="button" variant="breadcrumb">
         <House className="mr-1.5 h-4 w-4" />
-        Home
+        {t("library")}
       </Button>
       {folderStack.map((folder, index) => (
         <span className="flex items-center" key={`${folder.id}-${folder.name}`}>
