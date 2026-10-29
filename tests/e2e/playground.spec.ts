@@ -136,6 +136,18 @@ test('pick(): resolves with the chosen image', async ({ page }) => {
   const overlay = page.locator('[data-easy-media-overlay="overlay"]');
 
   await page.goto('http://localhost:5175/');
+  await page.evaluate(() => {
+    const events: unknown[] = [];
+    (window as unknown as { pickEvents: unknown[] }).pickEvents = events;
+    window.addEventListener('easy-media:pick', (event) => events.push(event.detail));
+  });
+
+  // Closed without a choice: no event.
+  await page.getByRole('button', { name: 'Browse images only…' }).click();
+  await expect(overlay).toBeVisible();
+  await overlay.getByRole('button', { name: 'Cancel' }).click();
+  await expect(overlay).toBeHidden();
+
   await page.getByRole('button', { name: 'Browse images only…' }).click();
   await expect(overlay).toBeVisible();
   await overlay.locator('article').filter({ hasText: 'Photos' }).dblclick();
@@ -148,6 +160,35 @@ test('pick(): resolves with the chosen image', async ({ page }) => {
 
   const result = JSON.parse((await page.locator('#result-1').textContent()) ?? '{}');
   expect(result.type).toMatch(/^image/);
+  // The choice is also announced on window, with the options of the picker.
+  const events = await page.evaluate(() => (window as unknown as { pickEvents: { file: { id: number }; options: unknown }[] }).pickEvents);
+  expect(events).toHaveLength(1);
+  expect(events[0].file.id).toBe(result.id);
+  expect(events[0].options).toEqual({ restrictions: { types: 'images' } });
+  expect(errors).toEqual([]);
+});
+
+test('pick(): an easy-media:pick listener can open a new picker', async ({ page }) => {
+  const errors = collectErrors(page);
+  const overlay = page.locator('[data-easy-media-overlay="overlay"]');
+
+  await page.goto('http://localhost:5175/');
+  await page.evaluate(() => {
+    const host = window as unknown as { EasyMedia: { pick: () => Promise<unknown> }; nextPick?: Promise<unknown> };
+    window.addEventListener('easy-media:pick', () => { host.nextPick = host.EasyMedia.pick(); }, { once: true });
+  });
+
+  await page.getByRole('button', { name: 'Browse images only…' }).click();
+  await expect(overlay).toBeVisible();
+  await overlay.locator('article').filter({ hasText: 'Photos' }).dblclick();
+  await overlay.locator('article').filter({ has: page.locator('img') }).first().click();
+  await overlay.locator('footer button:not([disabled])').last().click();
+
+  // The picker opened by the listener stays open, and still resolves.
+  await expect(overlay).toBeVisible();
+  await overlay.getByRole('button', { name: 'Cancel' }).click();
+  await expect(overlay).toBeHidden();
+  expect(await page.evaluate(() => (window as unknown as { nextPick: Promise<unknown> }).nextPick)).toBeNull();
   expect(errors).toEqual([]);
 });
 

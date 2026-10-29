@@ -133,6 +133,17 @@ if (file) {
 
 `restrictions.path` (`'/products/doors'`) opens the picker in that folder and keeps the user inside it.
 
+Each chosen file is also announced on `window` by an `easy-media:pick` event, whose `detail` holds the `file` and the `options` of the picker. Code that did not open the picker can react to a choice, a preview next to a form field for instance:
+
+```typescript
+window.addEventListener('easy-media:pick', (event) => {
+  const { file, options } = event.detail; // EasyMediaPickEventDetail
+  preview.src = file.path;
+});
+```
+
+The event is not dispatched when the picker is closed without a choice.
+
 `restrictions.types` accepts one category or an array of categories. Use `all` or omit it to show every media type. Supported values are `images`, `videos`, `audio`, `folders`, `text`, `pdf`, `applications`, `archives`, and `oembed` plus their singular internal names such as `image`, `video`, `folder`, `application`, and `compressed`. It also accepts MIME types (`application/pdf`) and wildcards (`image/*`). Uploads that do not match `types` or exceed `uploadSize` are refused.
 
 ### Reading a file by its id
