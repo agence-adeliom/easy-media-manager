@@ -66,6 +66,7 @@
     "prepublishOnly": "npm run prod",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
+    "test:types": "tsc -p tests/types",
     "test:e2e": "npm run build:esm && npm run build:iife-playground && npm run build:iife-plugin-generate-alt && playwright test"
   },
   "peerDependencies": {

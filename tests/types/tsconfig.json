@@ -1,0 +1,15 @@
+{
+  // Typechecks consumer code against the built package (dist), through its `exports`.
+  "compilerOptions": {
+    "target": "ES2020",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "noEmit": true,
+    // Also check the shipped .d.ts files: a missing one must fail here.
+    "skipLibCheck": false
+  },
+  "files": ["consumer.ts"]
+}
