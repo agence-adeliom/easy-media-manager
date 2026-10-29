@@ -34,11 +34,14 @@ jobs:
             echo "::error::Tag $GITHUB_REF_NAME does not match package.json version $version"
             exit 1
           fi
-      # `prepare` runs build:all during npm ci, `prepublishOnly` typechecks and rebuilds.
+      # `prepare` runs build:all during npm ci.
       - run: npm ci
+      - run: npm run typecheck
+      # The trusted publisher may only stage: a maintainer then publishes with
+      # `npm stage list` and `npm stage approve <stage-id>`, which asks for 2FA.
       # Prereleases (v1.2.0-beta.1) go to the `next` dist-tag so they never become `latest`.
       - run: |
           case "$GITHUB_REF_NAME" in
-            *-*) npm publish --provenance --access public --tag next ;;
-            *) npm publish --provenance --access public ;;
+            *-*) npm stage publish --provenance --access public --tag next ;;
+            *) npm stage publish --provenance --access public ;;
           esac
