@@ -64,6 +64,9 @@ The library sets these values as inline custom properties on its root elements. 
 the same tokens set in a stylesheet, and the tokens the configuration leaves out still follow the
 stylesheet. The theme is read once, by the first `init()`, `mount()` or `pick()`.
 
+---
+
+## Tokens
 
 ### Color scales
 
