@@ -18,6 +18,7 @@ export function FilterSort() {
   const sortField = useMediaStore((state) => state.sortField);
   const sortDirection = useMediaStore((state) => state.sortDirection);
   const restrictions = useMediaStore((state) => state.restrictions);
+  const mimeTypes = useMediaStore((state) => state.config?.mimeTypes);
   const setFilter = useMediaStore((state) => state.setFilter);
   const setSort = useMediaStore((state) => state.setSort);
   const [isOpen, setIsOpen] = useState(false);
@@ -35,7 +36,7 @@ export function FilterSort() {
     { value: "oembed", label: t("filter_oembed") },
   ], [t]);
   const filterOptions = useMemo(() => {
-    const allowedTypes = resolvePickFilterTypes(restrictions.types);
+    const allowedTypes = resolvePickFilterTypes(restrictions.types, mimeTypes);
 
     if (allowedTypes === null) {
       return allFilterOptions;
@@ -44,7 +45,7 @@ export function FilterSort() {
     const allowedTypeSet = new Set<FileCategory>(allowedTypes);
 
     return allFilterOptions.filter((option) => option.value === "" || allowedTypeSet.has(option.value));
-  }, [allFilterOptions, restrictions.types]);
+  }, [allFilterOptions, mimeTypes, restrictions.types]);
   const filterTypeOptionsCount = filterOptions.filter((option) => option.value !== "").length;
   const showFilter = features.enableFilter && filterTypeOptionsCount > 1;
   const sortOptions = [

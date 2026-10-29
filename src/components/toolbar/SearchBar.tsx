@@ -36,7 +36,7 @@ export function SearchBar() {
         value={value}
       />
       {value ? (
-        <button className="flex h-6 w-6 items-center justify-center rounded text-slate-400 hover:bg-slate-100 hover:text-slate-600" onClick={() => setValue("")} type="button">
+        <button aria-label={t("search_clear")} className="flex h-6 w-6 items-center justify-center rounded text-slate-400 hover:bg-slate-100 hover:text-slate-600" onClick={() => setValue("")} type="button">
           <X className="h-3.5 w-3.5" />
         </button>
       ) : null}

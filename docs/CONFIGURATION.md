@@ -304,11 +304,14 @@ interface PickRestrictions {
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `types` | `PickFileType \| PickFileType[] \| null` | Allowed media categories in this picker session. Defaults to `all`. Folders remain visible for navigation unless the only type is `folder` / `folders`. |
-| `uploadSize` | `number \| null` | Maximum upload file size in bytes. |
+| `types` | `PickFileType \| PickFileType[] \| null` | Allowed media categories or MIME types in this picker session. Defaults to `all`. Folders remain visible for navigation unless the only type is `folder` / `folders`. Uploads of another type are refused. |
+| `uploadSize` | `number \| null` | Maximum upload file size in bytes. Larger uploads are refused. |
 
 ```typescript
+type PickMimeType = `${string}/${string}`; // 'application/pdf', 'image/*'
+
 type PickFileType =
+  | PickMimeType
   | 'all'
   | 'image'
   | 'images'
@@ -341,10 +344,12 @@ type PickFileType =
 | `application` / `applications` | Application files, excluding archives that are categorized as `compressed`. |
 | `archive` / `archives` / `compressed` | Archive files. |
 | `oembed` | oEmbed media items. |
+| `image/svg+xml`, `application/pdf`… | Files of exactly this MIME type. The backend must return the MIME type in `type`. |
+| `image/*`, `video/*`… | Files of this MIME family, whatever their subtype. |
 
 When `types` targets file categories, folders are still displayed so the user can navigate. To show only folders, use `types: 'folders'`.
 
-In picker sessions, the toolbar type filter is limited to the categories allowed by `restrictions.types`.
+In picker sessions, the toolbar type filter is limited to the categories allowed by `restrictions.types`, and the upload input only offers the allowed types when they can be expressed as an `accept` attribute. A file refused by `types` or `uploadSize` is not uploaded and a toast names it.
 
 ### Example
 
@@ -367,6 +372,16 @@ Allow multiple categories:
 const document = await EasyMedia.pick({
   restrictions: {
     types: ['pdf', 'text'],
+  },
+});
+```
+
+Or MIME types, mixed with categories if needed:
+
+```typescript
+const logo = await EasyMedia.pick({
+  restrictions: {
+    types: ['image/svg+xml', 'image/png'],
   },
 });
 ```

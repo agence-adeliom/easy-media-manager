@@ -50,7 +50,11 @@ export interface EasyMediaFeatureFlags {
   enableSort: boolean;
 }
 
+/** A MIME type (`application/pdf`) or a MIME wildcard (`image/*`). */
+export type PickMimeType = `${string}/${string}`;
+
 export type PickFileType =
+  | PickMimeType
   | "all"
   | "image"
   | "images"

@@ -27,6 +27,7 @@ export type {
   EasyMediaRoutes,
   EasyMediaTranslations,
   PickFileType,
+  PickMimeType,
   PickOptions,
   PickRestrictions,
 } from "@/types/config";

@@ -6,6 +6,7 @@ import { useFileUpload } from "@/hooks/use-file-upload";
 import { useTranslations } from "@/hooks/use-translations";
 import { cn } from "@/lib/cn";
 import { hasDraggedFiles } from "@/lib/file-drop";
+import { resolvePickAccept } from "@/lib/file-utils";
 import { useMediaStore } from "@/store/media-store";
 
 interface UploadZoneProps {
@@ -16,6 +17,7 @@ interface UploadZoneProps {
 export function UploadZone({ className, forceVisible = false }: UploadZoneProps) {
   const t = useTranslations();
   const uploadPanelOpen = useMediaStore((state) => state.uploadPanelOpen);
+  const pickTypes = useMediaStore((state) => state.restrictions.types);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const dragDepthRef = useRef(0);
   const [error, setError] = useState<string | null>(null);
@@ -123,6 +125,7 @@ export function UploadZone({ className, forceVisible = false }: UploadZoneProps)
           </p>
         </div>
         <input
+          accept={resolvePickAccept(pickTypes)}
           className="hidden"
           multiple
           onChange={(event) => void onFiles(event.target.files)}
