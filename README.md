@@ -199,9 +199,10 @@ project can theme the manager from its own stylesheet:
 }
 ```
 
-The library's rules live in CSS cascade layers, so an unlayered host stylesheet (Bootstrap,
-Tabler…) can override them. See [THEMING.md](https://github.com/agence-adeliom/easy-media-manager/blob/main/docs/THEMING.md)
-for the list of tokens, the known conflicts with host CSS and how to work around them.
+With Bootstrap, Tabler or any other host CSS outside cascade layers, import the unlayered
+stylesheet, see [Choosing a stylesheet](#choosing-a-stylesheet). See
+[THEMING.md](https://github.com/agence-adeliom/easy-media-manager/blob/main/docs/THEMING.md)
+for the list of tokens and how the manager lives with the host page's CSS.
 
 ---
 
