@@ -3,8 +3,10 @@ import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 
+import { unlayeredCss } from './vite-plugin-unlayered-css.ts';
+
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
+  plugins: [react(), tailwindcss(), unlayeredCss()],
   define: {
     // Vite 8 no longer resolves NODE_ENV through the blanket `process.env: {}`,
     // which leaves bare `process.env.NODE_ENV` reads in the IIFE bundle.

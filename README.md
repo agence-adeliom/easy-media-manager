@@ -37,6 +37,9 @@ Download the built assets from the `dist/iife/` directory of the npm package:
 <script src="/path/to/easy-media.js"></script>
 ```
 
+Bootstrap, Tabler or other unlayered CSS on the page? Use `easy-media.unlayered.css`, see
+[Choosing a stylesheet](#choosing-a-stylesheet).
+
 ---
 
 ## Quick Start
@@ -149,6 +152,35 @@ const file = await EasyMedia.getFile(input.value); // MediaFileItem, or null if 
 | **Plugin SDK** | `dist/plugin-sdk.js` | Building plugins without bundling the full manager |
 
 The IIFE bundle embeds React and all dependencies. The ESM build externalises `react` and `react-dom` as peer dependencies and is fully tree-shakeable.
+
+### Choosing a stylesheet
+
+The CSS ships in two versions with the same rules, all scoped under `.easy-media`:
+
+| Stylesheet | ESM import | IIFE file | Use it when the host page's CSS is… |
+|------------|------------|-----------|-------------------------------------|
+| Layered (default) | `@agence-adeliom/easy-media-manager/style.css` | `dist/iife/easy-media.css` | Tailwind, or any CSS in cascade layers |
+| Unlayered | `@agence-adeliom/easy-media-manager/style.unlayered.css` | `dist/iife/easy-media.unlayered.css` | Bootstrap, Tabler, a CMS admin theme: any CSS outside layers |
+
+The default stylesheet puts every rule in [cascade layers](https://developer.mozilla.org/en-US/docs/Web/CSS/@layer)
+(`theme`, `base`, `components`, `utilities`), like Tailwind does. The cascade compares layers before
+specificity: a host rule **outside** any layer always wins over a layered rule. With a Tailwind host, this
+keeps the manager easy to adjust from the project's own CSS. With a Bootstrap or Tabler host, it breaks the
+manager: Tabler's `.grid` turns the file grid into 12 columns, Bootstrap's `p { margin-bottom: 1rem }`
+adds margins to the modal titles.
+
+The unlayered stylesheet is the same CSS with the layer blocks removed. The library rules then compete on
+specificity again, and their `.easy-media` scope makes them win over the usual host rules (`.easy-media .grid`
+beats `.grid`). Overriding the manager from the host CSS then requires a selector at least as specific,
+scoped under `.easy-media`.
+
+```typescript
+// Sylius admin (Tabler), Symfony app with Bootstrap…
+import '@agence-adeliom/easy-media-manager/style.unlayered.css';
+```
+
+If you used `revert-layer` to work around a conflict with the layered stylesheet, remove it when switching:
+outside layers, `revert-layer` falls back to the browser defaults.
 
 ---
 

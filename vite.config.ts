@@ -4,6 +4,8 @@ import react from '@vitejs/plugin-react';
 import prefixSelector from 'postcss-prefix-selector';
 import { defineConfig } from 'vite';
 
+import { unlayeredCss } from './vite-plugin-unlayered-css.ts';
+
 const cssPrefixPlugin = prefixSelector({
   prefix: '.easy-media',
   transform(prefix, selector, prefixedSelector) {
@@ -17,7 +19,7 @@ const cssPrefixPlugin = prefixSelector({
 });
 
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
+  plugins: [react(), tailwindcss(), unlayeredCss()],
   css: {
     postcss: {
       plugins: [cssPrefixPlugin],
