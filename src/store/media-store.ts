@@ -171,7 +171,11 @@ function applyBaseUrl(routes: EasyMediaRoutes, baseUrl: string | undefined): Eas
   const prefixedRoutes: EasyMediaRoutes = { ...routes };
 
   for (const key of Object.keys(routes) as Array<keyof EasyMediaRoutes>) {
-    prefixedRoutes[key] = `${base}${routes[key]}`;
+    const route = routes[key];
+
+    if (route !== undefined) {
+      prefixedRoutes[key] = `${base}${route}`;
+    }
   }
 
   return prefixedRoutes;

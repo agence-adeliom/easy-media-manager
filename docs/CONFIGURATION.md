@@ -166,11 +166,12 @@ interface EasyMediaMimeTypes {
 
 ## EasyMediaRoutes
 
-Maps each manager action to a backend endpoint. Every property is required. All paths are relative to `config.baseUrl`.
+Maps each manager action to a backend endpoint. Every property is required except `fileInfos`. All paths are relative to `config.baseUrl`.
 
 ```typescript
 interface EasyMediaRoutes {
   files: string;
+  fileInfos?: string;
   upload: string;
   uploadCropped: string;
   uploadLink: string;
@@ -191,6 +192,7 @@ interface EasyMediaRoutes {
 | Property | HTTP method | Description |
 |----------|-------------|-------------|
 | `files` | `GET` | List files and folders in a given folder (query string: `folder`, `search`, `path`). |
+| `fileInfos` | `GET` | One file by its id (query string: `item`), for `EasyMedia.getFile()`. Optional. |
 | `upload` | `POST` (multipart) | Upload one or more files. |
 | `uploadCropped` | `POST` | Upload a cropped version of an image (JSON body, image as a base64 data URL). |
 | `uploadLink` | `POST` | Import a file from a remote URL. |

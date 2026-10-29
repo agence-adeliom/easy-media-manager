@@ -14,6 +14,8 @@ export interface EasyMediaConfig {
 
 export interface EasyMediaRoutes {
   files: string;
+  /** File of an id (`GET ?item=<id>`), read by `EasyMedia.getFile()`. */
+  fileInfos?: string;
   upload: string;
   uploadCropped: string;
   uploadLink: string;
