@@ -1,6 +1,19 @@
 {
   "name": "@agence-adeliom/easy-media-manager",
   "version": "0.1.0",
+  "description": "Headless, framework-agnostic media manager built with React: file browsing, upload, cropping, metadata editing and a picker modal, wired to your own backend API.",
+  "keywords": [
+    "media-manager",
+    "media-library",
+    "file-manager",
+    "file-picker",
+    "image-picker",
+    "upload",
+    "image-cropper",
+    "react",
+    "headless",
+    "asset-management"
+  ],
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -22,12 +35,12 @@
   ],
   "exports": {
     ".": {
-      "import": "./dist/esm/index.js",
-      "types": "./dist/esm/index.d.ts"
+      "types": "./dist/esm/index.d.ts",
+      "import": "./dist/esm/index.js"
     },
     "./plugin-sdk": {
-      "import": "./dist/esm/plugin-sdk.js",
-      "types": "./dist/esm/plugin-sdk.d.ts"
+      "types": "./dist/esm/plugin-sdk.d.ts",
+      "import": "./dist/esm/plugin-sdk.js"
     },
     "./style.css": "./dist/esm/style.css",
     "./style.unlayered.css": "./dist/esm/style.unlayered.css",
