@@ -29,6 +29,8 @@ jobs:
       # `prepare` runs build:all during npm ci.
       - run: npm ci
       - run: npm run typecheck
+      # Consumer code against the shipped .d.ts files, built by `prepare`.
+      - run: npm run test:types
       # Only what ships to consumers; dev tooling alerts come through Dependabot.
       - run: npm audit --omit=dev --audit-level=high
 

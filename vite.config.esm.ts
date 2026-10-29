@@ -25,9 +25,10 @@ export default defineConfig({
     react(),
     tailwindcss(),
     unlayeredCss(),
+    // One .d.ts per source file: a rollup only inlines the entries' own
+    // declarations and drops `declare global` blocks.
     dts({
-      include: ['src/index.ts', 'src/plugin-sdk.ts'],
-      rollupTypes: true,
+      include: ['src'],
       outDir: 'dist/esm',
     }),
   ],
