@@ -5,7 +5,9 @@ import { toast } from "sonner";
 import { easyMediaClient } from "@/api/client";
 import { ModalShell } from "@/components/modals/ModalShell";
 import { Button } from "@/components/ui/Button";
+import { textFieldClassName } from "@/components/ui/text-field";
 import { useTranslations } from "@/hooks/use-translations";
+import { cn } from "@/lib/cn";
 import { getErrorMessage } from "@/lib/error-message";
 import { CORE_MODAL_IDS } from "@/lib/modal-ids";
 import { useMediaStore } from "@/store/media-store";
@@ -64,7 +66,7 @@ export function EditMetasModal() {
             {t("seo_title")}
           </label>
           <input
-            className="emm:w-full emm:rounded-xl emm:border emm:border-emm-neutral-300 emm:px-3 emm:py-2"
+            className={textFieldClassName}
             id="edit-metas-title"
             onChange={(event) => setForm((state) => ({ ...state, title: event.target.value }))}
             placeholder={t("seo_title")}
@@ -76,7 +78,7 @@ export function EditMetasModal() {
             {t("seo_alt")}
           </label>
           <input
-            className="emm:w-full emm:rounded-xl emm:border emm:border-emm-neutral-300 emm:px-3 emm:py-2"
+            className={textFieldClassName}
             id="edit-metas-alt"
             onChange={(event) => setForm((state) => ({ ...state, alt: event.target.value }))}
             placeholder={t("seo_alt")}
@@ -88,7 +90,7 @@ export function EditMetasModal() {
             {t("seo_description")}
           </label>
           <textarea
-            className="emm:min-h-32 emm:w-full emm:rounded-xl emm:border emm:border-emm-neutral-300 emm:px-3 emm:py-2"
+            className={cn("emm:min-h-32", textFieldClassName)}
             id="edit-metas-description"
             onChange={(event) => setForm((state) => ({ ...state, description: event.target.value }))}
             placeholder={t("seo_description")}

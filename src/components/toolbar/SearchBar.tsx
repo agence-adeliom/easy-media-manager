@@ -25,7 +25,7 @@ export function SearchBar() {
   }, [setSearch, value]);
 
   return (
-    <label className="emm:flex emm:h-10 emm:w-56 emm:items-center emm:gap-2 emm:rounded-md emm:border emm:border-emm-neutral-300 emm:bg-emm-surface emm:px-3 emm:text-sm">
+    <label className="emm:flex emm:h-10 emm:w-56 emm:items-center emm:gap-2 emm:rounded-md emm:border emm:border-emm-neutral-300 emm:bg-emm-surface emm:px-3 emm:text-sm emm:focus-within:border-emm-accent-500 emm:focus-within:ring-3 emm:focus-within:ring-emm-accent-200">
       <span className="emm:shrink-0">
         <Search className="emm:h-3.5 emm:w-3.5 emm:text-emm-neutral-400" />
       </span>

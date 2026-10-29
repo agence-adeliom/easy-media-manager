@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { easyMediaClient } from "@/api/client";
 import { ModalShell } from "@/components/modals/ModalShell";
 import { Button } from "@/components/ui/Button";
+import { textFieldClassName } from "@/components/ui/text-field";
 import { useTranslations } from "@/hooks/use-translations";
 import { getErrorMessage } from "@/lib/error-message";
 import { CORE_MODAL_IDS } from "@/lib/modal-ids";
@@ -51,7 +52,7 @@ export function UploadLinkModal() {
             {t("link")}
           </label>
           <input
-            className="emm:w-full emm:rounded-xl emm:border emm:border-emm-neutral-300 emm:px-3 emm:py-2"
+            className={textFieldClassName}
             id="upload-link-url"
             onChange={(event) => setUrl(event.target.value)}
             placeholder="https://..."
