@@ -18,3 +18,8 @@ playground/data/dev.sqlite-wal
 playground/data/storage
 playground/data/uploads/
 playground/data/chunks/
+
+# E2E tests
+.e2e-data/
+test-results/
+playwright-report/

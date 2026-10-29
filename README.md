@@ -256,7 +256,7 @@ This starts two processes concurrently:
 - Stubs out alt-generation routes (returns fake results instantly)
 - Serves the IIFE test page at `http://localhost:3001`
 
-On first start the database is empty and gets seeded automatically with demo folders and files if you have sample files available. You can also upload your own files directly through the UI.
+On first start the database is empty and gets seeded automatically with demo folders and the placeholder files in `playground/samples/`. Set `EASY_MEDIA_SAMPLES_DIR` to seed from another folder. You can also upload your own files directly through the UI.
 
 **ESM playground** (`playground/esm/`) — a minimal React app that mounts `EasyMedia` against the Express API. It resolves `@agence-adeliom/easy-media-manager` directly to `src/index.ts` so any source change triggers HMR immediately.
 
@@ -272,7 +272,18 @@ npm run build:all              # Both distribution formats (no example plugins)
 
 #### Data directory
 
-`playground/data/` is gitignored — each contributor gets their own local database and uploads. Running `npm run playground` creates it automatically on first launch.
+`playground/data/` is gitignored — each contributor gets their own local database and uploads. Running `npm run playground` creates it automatically on first launch. Set `EASY_MEDIA_DATA_DIR` to use another folder.
+
+### End-to-end tests
+
+```bash
+npx playwright install chromium  # once
+npm run test:e2e
+```
+
+Builds the IIFE playground bundle, starts the three playground servers on a throwaway database (`.e2e-data/`) and drives them with Playwright: browsing, folder creation, simple and chunked uploads, image editor, deletion and `EasyMedia.pick()`. Stop `npm run playground` first, the tests need ports 3001, 5174 and 5175. On failure, screenshots and traces are written to `test-results/`.
+
+The same suite runs in CI on every pull request, with React 19 and React 18. Dependabot opens dependency updates every Monday: minor and patch updates grouped in one PR per dependency type, one PR per major update.
 
 ### Building & publishing
 

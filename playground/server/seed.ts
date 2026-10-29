@@ -4,7 +4,7 @@ import { createFolder, createMedia, getDb } from './db';
 import { buildStoredMediaPath, storeMediaFromPath } from './storage';
 
 export async function seed() {
-  const samplesDir = '/Users/jeandavid/Documents/Samples';
+  const samplesDir = process.env.EASY_MEDIA_SAMPLES_DIR ?? path.join(process.cwd(), 'playground/samples');
 
   // Create demo directories
   const photos = createFolder('Photos', null);
