@@ -1,6 +1,6 @@
 {
   "name": "@agence-adeliom/easy-media-manager",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Headless, framework-agnostic media manager built with React: file browsing, upload, cropping, metadata editing and a picker modal, wired to your own backend API.",
   "keywords": [
     "media-manager",
