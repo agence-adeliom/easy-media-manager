@@ -14,7 +14,11 @@ export interface EasyMediaConfig {
   headers?: Record<string, string>;
   /** Colors and font of the manager, see docs/THEMING.md. */
   theme?: EasyMediaTheme;
+  /** Where a search looks first, when the `globalSearch` route is set: the whole library (default) or the current folder. */
+  searchScope?: EasyMediaSearchScope;
 }
+
+export type EasyMediaSearchScope = "library" | "folder";
 
 export type EasyMediaThemeShade = 50 | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900 | 950;
 
@@ -64,7 +68,8 @@ export interface EasyMediaRoutes {
   generateAlt: string;
   generateAltGroup: string;
   generateAllAlt: string;
-  globalSearch: string;
+  /** Files of the whole library whose name contains `q` (`GET ?q=<term>&page=<n>&path=<folder>`). Without it, the search only looks in the current folder. */
+  globalSearch?: string;
   folderDownload: string;
   filesDownload: string;
 }

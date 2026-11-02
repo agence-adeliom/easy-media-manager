@@ -1,5 +1,6 @@
 import { ChevronRight, House } from "lucide-react";
 
+import { SearchScopeBar } from "@/components/browser/SearchScopeBar";
 import { Button } from "@/components/ui/Button";
 import { useTranslations } from "@/hooks/use-translations";
 import { useMediaStore } from "@/store/media-store";
@@ -8,10 +9,16 @@ export function Breadcrumb() {
   const folderStack = useMediaStore((state) => state.folderStack);
   const pathRootDepth = useMediaStore((state) => state.pathRootDepth);
   const goToFolder = useMediaStore((state) => state.goToFolder);
+  const isSearching = useMediaStore((state) => state.searchQuery !== "");
+  const canSearchLibrary = useMediaStore((state) => Boolean(state.routes?.globalSearch));
   const t = useTranslations();
   // In a picker restricted to a folder, that folder is the root: its parents are not shown.
   const rootIndex = pathRootDepth === null ? -1 : pathRootDepth - 1;
   const rootLabel = rootIndex < 0 ? t("library") : folderStack[rootIndex]?.name;
+
+  if (isSearching && canSearchLibrary) {
+    return <SearchScopeBar />;
+  }
 
   return (
     <nav className="emm:flex emm:flex-wrap emm:items-center emm:gap-1 emm:text-sm emm:text-emm-neutral-600 emm:bg-emm-neutral-100 emm:border-b emm:p-3">

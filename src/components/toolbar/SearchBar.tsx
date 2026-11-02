@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Search, X } from "lucide-react";
 
+import { useSearchScope } from "@/hooks/use-search-scope";
 import { useTranslations } from "@/hooks/use-translations";
 import { useMediaStore } from "@/store/media-store";
 
@@ -8,6 +9,7 @@ export function SearchBar() {
   const t = useTranslations();
   const searchQuery = useMediaStore((state) => state.searchQuery);
   const setSearch = useMediaStore((state) => state.setSearch);
+  const { placeholder } = useSearchScope();
   const [value, setValue] = useState(searchQuery);
 
   useEffect(() => {
@@ -30,9 +32,18 @@ export function SearchBar() {
         <Search className="emm:h-3.5 emm:w-3.5 emm:text-emm-neutral-400" />
       </span>
       <input
+        aria-label={placeholder}
         className="emm:m-0 emm:block emm:h-10 emm:min-w-0 emm:flex-1 emm:border-0 emm:bg-transparent emm:p-0 emm:text-sm emm:leading-[2.5rem] emm:outline-none emm:ring-0 emm:focus:border-0 emm:focus:outline-none emm:focus:ring-0"
         onChange={(event) => setValue(event.target.value)}
-        placeholder={t("search_placeholder")}
+        onKeyDown={(event) => {
+          // The manager shortcuts ignore the text fields: Escape ends the search from the field too.
+          if (event.key === "Escape" && value !== "") {
+            event.stopPropagation();
+            setValue("");
+            setSearch("");
+          }
+        }}
+        placeholder={placeholder}
         value={value}
       />
       {value ? (

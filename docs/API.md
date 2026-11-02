@@ -305,9 +305,51 @@ New metadata is **shallow-merged** with existing metadata.
 
 ## GET /api/global-search
 
+Route `globalSearch`, read by the search bar when its scope is the whole library.
+
 **Query params:**
 | Param | Type | Required | Description |
 |-------|------|----------|-------------|
+| `q` | string | yes | Term searched in the file names (min. 2 characters) |
+| `page` | integer | no | Page number (default: 1) |
+| `path` | string | no | Only this folder and its subfolders (`/images/products`), sent by `pick()` with `restrictions.path` |
+
+**Response:** one page of files, like the `items` of `get-files`. Each file is in the format of the `get-files` items, with `breadcrumb`: the folders it is in, from the library root (excluded), empty for a file at the root.
+
+```json
+{
+  "items": {
+    "current_page": 1,
+    "data": [
+      {
+        "id": 2,
+        "name": "photo.jpg",
+        "type": "image/jpeg",
+        "size": 102400,
+        "path": "/api/uploads/photo-slug-2.jpg",
+        "download_url": "/api/uploads/photo-slug-2.jpg",
+        "storage_path": "uploads/photo-slug-2.jpg",
+        "last_modified": 1700000000,
+        "last_modified_formated": "14/11/2023",
+        "metas": { "alt": "", "title": "" },
+        "breadcrumb": [
+          { "id": 1, "name": "images" },
+          { "id": 4, "name": "products" }
+        ]
+      }
+    ],
+    "total": 1,
+    "per_page": 50,
+    "last_page": 1,
+    "next_page_url": null,
+    "prev_page_url": null
+  }
+}
+```
+
+Folders are not returned. With fewer than 2 characters in `q`, the page is empty. An unknown `path`: `{ "error": "…" }`.
+
+-------|------|----------|-------------|
 | `q` | string | yes | Search term (min. 2 characters) |
 
 **Response:**

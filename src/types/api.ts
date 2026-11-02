@@ -25,6 +25,16 @@ export interface FolderBreadcrumbItem {
   name: string;
 }
 
+export interface GlobalSearchRequest {
+  q: string;
+  path?: string;
+}
+
+export interface GlobalSearchResponse {
+  items: PaginatedItems<GlobalSearchItem>;
+  error?: string;
+}
+
 export interface GetFilesResponse {
   files: {
     path: string;
@@ -146,6 +156,5 @@ export interface EditMetasResponse {
   metas: MediaMetas;
 }
 
-export type GlobalSearchResponse = GlobalSearchItem[];
 
 export type MediaListResponse = MediaItem[];

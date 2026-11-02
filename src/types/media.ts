@@ -62,15 +62,9 @@ export interface MediaFileItem {
 
 export type MediaItem = FolderItem | MediaFileItem;
 
-export interface GlobalSearchItem {
-  name: string;
-  type: string | null;
-  path: string;
-  dir_path: string;
-  storage_path: string;
-  size: number | null;
-  last_modified: number | null;
-  last_modified_formated: string;
+/** A file found by the `globalSearch` route, with the folders it is in, from the library root (empty at the root). */
+export interface GlobalSearchItem extends MediaFileItem {
+  breadcrumb: Array<{ id: number; name: string }>;
 }
 
 export type FileCategory =

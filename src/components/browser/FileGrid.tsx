@@ -1,7 +1,7 @@
 import { DndContext, DragOverlay, PointerSensor, useSensor, useSensors, type DragEndEvent, type DragStartEvent } from "@dnd-kit/core";
 import { useEffect, useMemo, useState, type MouseEvent } from "react";
 import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { FolderOpen, FolderX, SearchX, TriangleAlert } from "lucide-react";
+import { FolderOpen, FolderX, Search, SearchX, TriangleAlert } from "lucide-react";
 import { toast } from "sonner";
 
 import { easyMediaClient } from "@/api/client";
@@ -17,7 +17,7 @@ import { CORE_MODAL_IDS } from "@/lib/modal-ids";
 import { useMediaStore } from "@/store/media-store";
 import { usePickStore } from "@/store/pick-store";
 import type { FolderBreadcrumbItem } from "@/types/api";
-import type { MediaItem } from "@/types/media";
+import type { GlobalSearchItem, MediaItem } from "@/types/media";
 import { getMediaItemKey, isFolder } from "@/types/media";
 
 interface FileGridProps {
@@ -29,6 +29,7 @@ export function FileGrid({ onItemsChange }: FileGridProps) {
   const routes = useMediaStore((state) => state.routes);
   const currentFolderId = useMediaStore((state) => state.currentFolderId);
   const searchQuery = useMediaStore((state) => state.searchQuery);
+  const searchScope = useMediaStore((state) => state.searchScope);
   const currentPath = useMediaStore((state) => state.currentPath);
   const folderStack = useMediaStore((state) => state.folderStack);
   const filterName = useMediaStore((state) => state.filterName);
@@ -51,6 +52,8 @@ export function FileGrid({ onItemsChange }: FileGridProps) {
   const setFilter = useMediaStore((state) => state.setFilter);
   const restoreFolderState = useMediaStore((state) => state.restoreFolderState);
   const setPathRootDepth = useMediaStore((state) => state.setPathRootDepth);
+  const setSearchResultCount = useMediaStore((state) => state.setSearchResultCount);
+  const openFolder = useMediaStore((state) => state.openFolder);
   const resolvePick = usePickStore((state) => state.resolvePick);
   const queryClient = useQueryClient();
   const { copy } = useClipboard();
@@ -61,7 +64,12 @@ export function FileGrid({ onItemsChange }: FileGridProps) {
   const [moveError, setMoveError] = useState<string | null>(null);
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
 
-  const query = useInfiniteQuery({
+  const searchTerm = searchQuery.trim();
+  // The whole library: the `globalSearch` route, from 2 characters (one would match most of the library).
+  const isLibrarySearch = Boolean(routes?.globalSearch) && searchScope === "library" && searchTerm !== "";
+  const isSearchTooShort = isLibrarySearch && searchTerm.length < 2;
+
+  const folderQuery = useInfiniteQuery({
     queryKey: ["files", currentFolderId, searchQuery, currentPath, restrictions.types ?? "all", restrictions.path ?? "", refreshIndex],
     queryFn: async ({ pageParam }) => {
       const response = await easyMediaClient.getFiles(String(pageParam || routes?.files), {
@@ -78,15 +86,36 @@ export function FileGrid({ onItemsChange }: FileGridProps) {
     },
     getNextPageParam: (lastPage) => lastPage.files.items.next_page_url,
     initialPageParam: null as string | null,
-    enabled: Boolean(routes?.files),
+    enabled: Boolean(routes?.files) && !isLibrarySearch,
   });
+
+  const libraryQuery = useInfiniteQuery({
+    queryKey: ["files", "library-search", searchTerm, restrictions.path ?? "", refreshIndex],
+    queryFn: async ({ pageParam }) => {
+      const response = await easyMediaClient.globalSearch(String(pageParam || routes?.globalSearch), {
+        q: searchTerm,
+        path: restrictions.path ?? undefined,
+      });
+
+      if (response.error) {
+        throw new Error(response.error);
+      }
+
+      return response;
+    },
+    getNextPageParam: (lastPage) => lastPage.items.next_page_url,
+    initialPageParam: null as string | null,
+    enabled: isLibrarySearch && !isSearchTooShort,
+  });
+
+  const query = isLibrarySearch ? libraryQuery : folderQuery;
 
   useEffect(() => {
     setLoading(query.isLoading || query.isFetchingNextPage);
   }, [query.isFetchingNextPage, query.isLoading, setLoading]);
 
   useEffect(() => {
-    const response = query.data?.pages[0];
+    const response = folderQuery.data?.pages[0];
 
     if (!response) {
       return;
@@ -119,7 +148,7 @@ export function FileGrid({ onItemsChange }: FileGridProps) {
       },
       true,
     );
-  }, [currentFolderId, currentPath, folderStack, query.data, restoreFolderState, restrictions.path, setPathRootDepth]);
+  }, [currentFolderId, currentPath, folderStack, folderQuery.data, restoreFolderState, restrictions.path, setPathRootDepth]);
 
   useEffect(() => {
     const onRefresh = () => {
@@ -134,7 +163,14 @@ export function FileGrid({ onItemsChange }: FileGridProps) {
     };
   }, [queryClient]);
 
-  const pagedItems = useMemo(() => query.data?.pages.flatMap((page) => page.files.items.data) ?? [], [query.data?.pages]);
+  const pagedItems = useMemo<MediaItem[]>(
+    () =>
+      isLibrarySearch
+        ? libraryQuery.data?.pages.flatMap((page) => page.items.data) ?? []
+        : folderQuery.data?.pages.flatMap((page) => page.files.items.data) ?? [],
+    [folderQuery.data?.pages, isLibrarySearch, libraryQuery.data?.pages],
+  );
+  const total = isLibrarySearch ? libraryQuery.data?.pages[0]?.items.total : folderQuery.data?.pages[0]?.files.items.total;
 
   const items = useMemo(() => {
     if (!config) {
@@ -155,6 +191,14 @@ export function FileGrid({ onItemsChange }: FileGridProps) {
   useEffect(() => {
     onItemsChange(items);
   }, [items, onItemsChange]);
+
+  // The server count, unless the browser hides some of the files (type filter, `restrictions.types`).
+  const isFilteredInBrowser = Boolean(filterName) || (restrictions.types ?? "all") !== "all";
+  const resultCount = searchTerm === "" || isSearchTooShort || total === undefined ? null : isFilteredInBrowser ? (query.hasNextPage ? null : items.length) : total;
+
+  useEffect(() => {
+    setSearchResultCount(resultCount);
+  }, [resultCount, setSearchResultCount]);
 
   useEffect(() => {
     if (selectedFile && !items.some((item) => getMediaItemKey(item) === getMediaItemKey(selectedFile))) {
@@ -323,7 +367,7 @@ export function FileGrid({ onItemsChange }: FileGridProps) {
 
             return (
               <FileCard
-                dragEnabled={features.enableMove}
+                dragEnabled={features.enableMove && !isLibrarySearch}
                 dragId={getMediaItemKey(item)}
                 index={index}
                 isBulkSelected={isBulkSelected}
@@ -331,8 +375,10 @@ export function FileGrid({ onItemsChange }: FileGridProps) {
                 isSelected={isSelected}
                 item={item}
                 key={getMediaItemKey(item)}
+                location={isLibrarySearch && "breadcrumb" in item ? (item as GlobalSearchItem).breadcrumb : undefined}
                 onCopyLink={(path) => void handleCopy(path)}
                 onDoubleClick={handleDoubleClick}
+                onOpenLocation={(location) => openFolder(location[location.length - 1]?.id ?? null)}
                 onSelect={handleSelect}
                 showBulkCheckbox={bulkMode}
               />
@@ -349,6 +395,10 @@ export function FileGrid({ onItemsChange }: FileGridProps) {
       </DndContext>
     );
 
+  if (isSearchTooShort) {
+    return <EmptyState description={t("search_min_length")} icon={<Search className="emm:h-10 emm:w-10" />} title={t("search_main")} />;
+  }
+
   if (query.isLoading) {
     return (
       <div className="emm:rounded-2xl emm:border emm:border-emm-neutral-200 emm:bg-emm-surface emm:p-8 emm:text-sm emm:text-emm-neutral-500">
@@ -358,7 +408,7 @@ export function FileGrid({ onItemsChange }: FileGridProps) {
   }
 
   if (query.error) {
-    if (currentFolderId !== null) {
+    if (!isLibrarySearch && currentFolderId !== null) {
       return (
         <EmptyState
           description={t("empty_folder_not_found_description")}

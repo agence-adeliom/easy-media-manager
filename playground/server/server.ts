@@ -671,30 +671,45 @@ app.post('/api/generate-all-alt', async (_req: Request, res: Response) => {
   }
 });
 
+// Like get-files, one page at a time; each file carries the folders it is in (`breadcrumb`).
 app.get('/api/global-search', (req: Request, res: Response) => {
   try {
-    const { q = '' } = req.query;
-    const query = String(q);
+    const query = typeof req.query.q === 'string' ? req.query.q.trim() : '';
+    const page = Math.max(parseNullableInt(req.query.page) ?? 1, 1);
+    const perPage = 50;
+    let rootFolderId: number | null = null;
 
-    if (query.length < 2) {
-      return res.json([]);
+    // `pick()` with `restrictions.path`: only that folder and its subfolders.
+    if (typeof req.query.path === 'string' && req.query.path.replace(/\//g, '') !== '') {
+      const pathFolder = getFolderByPath(req.query.path);
+
+      if (!pathFolder) {
+        return res.json({ error: `The folder ${req.query.path} does not exist` });
+      }
+
+      rootFolderId = pathFolder.id;
     }
 
-    const results = searchMedias(query).map((media) => ({
-      name: media.name,
-      type: getFileType(media.mime, media.name),
-      path: '/' + media.name,
-      dir_path: '/',
-      storage_path: buildMediaStoragePath(media),
-      size: media.size,
-      last_modified: media.last_modified,
-      last_modified_formated: formatDate(media.last_modified),
-    }));
+    const { medias, total } = query.length < 2
+      ? { medias: [], total: 0 }
+      : searchMedias(query, { rootFolderId, limit: perPage, offset: (page - 1) * perPage });
+    const lastPage = Math.ceil(total / perPage) || 1;
+    const pageUrl = (target: number) => `/api/global-search?page=${target}`;
 
-    return res.json(results);
+    res.json({
+      items: {
+        current_page: page,
+        data: medias.map((media) => ({ ...formatMedia(media), breadcrumb: buildBreadcrumb(media.folder_id) })),
+        total,
+        per_page: perPage,
+        last_page: lastPage,
+        next_page_url: page < lastPage ? pageUrl(page + 1) : null,
+        prev_page_url: page > 1 ? pageUrl(page - 1) : null,
+      },
+    });
   } catch (error) {
     console.error('Error in global-search:', error);
-    return res.json([]);
+    res.status(500).json({ error: 'Failed to search' });
   }
 });
 

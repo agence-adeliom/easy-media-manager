@@ -26,6 +26,7 @@ export type {
   EasyMediaMountOptions,
   EasyMediaPickEventDetail,
   EasyMediaRoutes,
+  EasyMediaSearchScope,
   EasyMediaTheme,
   EasyMediaThemeMode,
   EasyMediaThemeShade,
@@ -36,7 +37,7 @@ export type {
   PickOptions,
   PickRestrictions,
 } from "@/types/config";
-export type { MediaFileItem, MediaItem, MediaMetas } from "@/types/media";
+export type { GlobalSearchItem, MediaFileItem, MediaItem, MediaMetas } from "@/types/media";
 
 interface EasyMediaWindowApi {
   use: (plugin: EasyMediaPlugin) => void;
