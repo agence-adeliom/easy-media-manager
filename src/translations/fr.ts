@@ -142,6 +142,7 @@ export const frTranslations: EasyMediaTranslations = {
   search_results_other: '%count% résultats',
   search_min_length: 'Saisissez au moins 2 caractères pour chercher dans toute la médiathèque.',
   search_open_folder: 'Ouvrir le dossier %folder%',
+  search_close: 'Fermer la recherche',
   sidebar_no_file_title: 'Aucun fichier',
   sidebar_no_file_description: 'Sélectionnez un fichier pour afficher ses métadonnées.',
   select_main: 'Sélectionner',

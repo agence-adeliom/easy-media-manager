@@ -54,6 +54,7 @@ export function FileGrid({ onItemsChange }: FileGridProps) {
   const setPathRootDepth = useMediaStore((state) => state.setPathRootDepth);
   const setSearchResultCount = useMediaStore((state) => state.setSearchResultCount);
   const openFolder = useMediaStore((state) => state.openFolder);
+  const setSearch = useMediaStore((state) => state.setSearch);
   const resolvePick = usePickStore((state) => state.resolvePick);
   const queryClient = useQueryClient();
   const { copy } = useClipboard();
@@ -323,7 +324,16 @@ export function FileGrid({ onItemsChange }: FileGridProps) {
 
   function handleDoubleClick(item: MediaItem) {
     if (isFolder(item)) {
+      // A folder found by a search: opening it ends the search. A library result is not below the current folder.
+      if (isLibrarySearch) {
+        openFolder(item.id);
+        return;
+      }
+
       pushFolder(item.id, item.name);
+      if (searchQuery !== "") {
+        setSearch("");
+      }
       return;
     }
 

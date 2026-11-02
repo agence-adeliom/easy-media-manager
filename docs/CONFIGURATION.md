@@ -192,11 +192,14 @@ typed, with the number of results:
 
 | Scope | Route | Matches |
 |-------|-------|---------|
-| Whole library (`library`) | `globalSearch` | Files whose name contains the term, in every folder. Each result shows its folder, and a click on it opens that folder and ends the search. Starts at 2 characters. |
+| Whole library (`library`) | `globalSearch` | Folders, then files, whose name contains the term, in every folder. Each result shows the folder it is in, and a click on it opens that folder. Starts at 2 characters. |
 | Current folder (`folder`) | `files` (`search` query string) | Files and folders of the current folder whose name contains the term, without its subfolders. |
 
+Opening a folder found by a search (double click), in either scope, ends the search.
+
 `config.searchScope` sets the scope a search starts with; the user can switch at any time, and
-ending the search (Escape, the clear button, opening a result's folder) goes back to it. Without
+ending the search (Escape, the *Close search* button of the scope bar, the clear button of the field,
+opening a folder) goes back to it. Without
 the `globalSearch` route, the search only looks in the current folder and no scope is shown.
 
 In `pick()`, `restrictions.path` limits the library search to that folder and its subfolders
@@ -254,7 +257,7 @@ interface EasyMediaRoutes {
 | `generateAlt` | `POST` | AI-generate alt text for a single file. |
 | `generateAltGroup` | `POST` | AI-generate alt text for a selection of files. |
 | `generateAllAlt` | `POST` | AI-generate alt text for all files in the current folder. |
-| `globalSearch` | `GET` | Files of the whole library whose name contains a term (query string: `q`, `page`, `path`). Optional: without it, the search only looks in the current folder. See [Search](#search). |
+| `globalSearch` | `GET` | Folders and files of the whole library whose name contains a term (query string: `q`, `page`, `path`). Optional: without it, the search only looks in the current folder. See [Search](#search). |
 | `folderDownload` | `POST` | Download a folder as a ZIP archive. |
 | `filesDownload` | `POST` | Download a selection of files as a ZIP archive. |
 

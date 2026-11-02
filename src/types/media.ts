@@ -62,10 +62,10 @@ export interface MediaFileItem {
 
 export type MediaItem = FolderItem | MediaFileItem;
 
-/** A file found by the `globalSearch` route, with the folders it is in, from the library root (empty at the root). */
-export interface GlobalSearchItem extends MediaFileItem {
+/** A folder or a file found by the `globalSearch` route, with the folders it is in, from the library root (empty at the root). */
+export type GlobalSearchItem = (FolderItem | MediaFileItem) & {
   breadcrumb: Array<{ id: number; name: string }>;
-}
+};
 
 export type FileCategory =
   | "image"

@@ -242,6 +242,29 @@ export function searchMedias(
   return { medias, total: count };
 }
 
+/**
+ * Folders whose name contains `query`, in the whole library or below `rootFolderId` (the folder itself excluded), one
+ * page at a time (the `globalSearch` route lists them before the medias).
+ */
+export function searchFolders(
+  query: string,
+  { rootFolderId = null, limit, offset }: { rootFolderId?: number | null; limit: number; offset: number },
+): { folders: Folder[]; total: number } {
+  const subtree = rootFolderId === null
+    ? ''
+    : `WITH RECURSIVE subtree(id) AS (SELECT ? UNION ALL SELECT folders.id FROM folders JOIN subtree ON folders.parent_id = subtree.id) `;
+  const where = `name LIKE ?${rootFolderId === null ? '' : ' AND id IN (SELECT id FROM subtree) AND id <> ?'}`;
+  const params = rootFolderId === null ? [`%${query}%`] : [rootFolderId, `%${query}%`, rootFolderId];
+  const folders = getDb()
+    .prepare(`${subtree}SELECT * FROM folders WHERE ${where} ORDER BY name, id LIMIT ? OFFSET ?`)
+    .all(...params, limit, offset) as Folder[];
+  const { count } = getDb()
+    .prepare(`${subtree}SELECT COUNT(*) as count FROM folders WHERE ${where}`)
+    .get(...params) as { count: number };
+
+  return { folders, total: count };
+}
+
 export function getDataDir(): string {
   return DATA_DIR;
 }

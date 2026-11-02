@@ -1,3 +1,5 @@
+import { X } from "lucide-react";
+
 import { useSearchScope } from "@/hooks/use-search-scope";
 import { useTranslations } from "@/hooks/use-translations";
 import { cn } from "@/lib/cn";
@@ -8,6 +10,7 @@ import type { EasyMediaSearchScope } from "@/types/config";
 export function SearchScopeBar() {
   const t = useTranslations();
   const setSearchScope = useMediaStore((state) => state.setSearchScope);
+  const setSearch = useMediaStore((state) => state.setSearch);
   const resultCount = useMediaStore((state) => state.searchResultCount);
   const { scope, libraryLabel, folderLabel } = useSearchScope();
   const options: Array<{ value: EasyMediaSearchScope; label: string }> = [
@@ -43,11 +46,21 @@ export function SearchScopeBar() {
           );
         })}
       </div>
-      {resultCount !== null ? (
-        <span aria-live="polite" className="emm:ml-auto emm:text-xs emm:text-emm-neutral-500">
-          {resultCount === 1 ? t("search_results_one") : t("search_results_other").replace("%count%", resultCount.toLocaleString())}
-        </span>
-      ) : null}
+      <div className="emm:ml-auto emm:flex emm:items-center emm:gap-3">
+        {resultCount !== null ? (
+          <span aria-live="polite" className="emm:text-xs emm:text-emm-neutral-500">
+            {resultCount === 1 ? t("search_results_one") : t("search_results_other").replace("%count%", resultCount.toLocaleString())}
+          </span>
+        ) : null}
+        <button
+          className="emm:flex emm:cursor-pointer emm:items-center emm:gap-1 emm:rounded-full emm:px-2 emm:py-1 emm:text-xs emm:font-medium emm:text-emm-neutral-600 emm:transition-colors emm:hover:bg-emm-neutral-200 emm:hover:text-emm-neutral-900 emm:focus-visible:outline-hidden emm:focus-visible:ring-3 emm:focus-visible:ring-emm-accent-200"
+          onClick={() => setSearch("")}
+          type="button"
+        >
+          <X className="emm:h-3.5 emm:w-3.5" />
+          {t("search_close")}
+        </button>
+      </div>
     </nav>
   );
 }

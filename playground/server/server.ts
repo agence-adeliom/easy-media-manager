@@ -17,6 +17,7 @@ import {
   updateFolder,
   buildBreadcrumb,
   buildFolderPath,
+  searchFolders,
   searchMedias,
   getChunksDir,
   getDataDir,
@@ -671,7 +672,7 @@ app.post('/api/generate-all-alt', async (_req: Request, res: Response) => {
   }
 });
 
-// Like get-files, one page at a time; each file carries the folders it is in (`breadcrumb`).
+// Like get-files, one page at a time, folders first; each item carries the folders it is in (`breadcrumb`).
 app.get('/api/global-search', (req: Request, res: Response) => {
   try {
     const query = typeof req.query.q === 'string' ? req.query.q.trim() : '';
@@ -690,16 +691,23 @@ app.get('/api/global-search', (req: Request, res: Response) => {
       rootFolderId = pathFolder.id;
     }
 
-    const { medias, total } = query.length < 2
+    const offset = (page - 1) * perPage;
+    const folders = query.length < 2 ? { folders: [], total: 0 } : searchFolders(query, { rootFolderId, limit: perPage, offset });
+    // The medias follow the folders: their offset skips the folders of the previous pages.
+    const medias = query.length < 2
       ? { medias: [], total: 0 }
-      : searchMedias(query, { rootFolderId, limit: perPage, offset: (page - 1) * perPage });
+      : searchMedias(query, { rootFolderId, limit: perPage - folders.folders.length, offset: Math.max(0, offset - folders.total) });
+    const total = folders.total + medias.total;
     const lastPage = Math.ceil(total / perPage) || 1;
     const pageUrl = (target: number) => `/api/global-search?page=${target}`;
 
     res.json({
       items: {
         current_page: page,
-        data: medias.map((media) => ({ ...formatMedia(media), breadcrumb: buildBreadcrumb(media.folder_id) })),
+        data: [
+          ...folders.folders.map((folder) => ({ ...formatFolder(folder, buildFolderPath(folder.parent_id)), breadcrumb: buildBreadcrumb(folder.parent_id) })),
+          ...medias.medias.map((media) => ({ ...formatMedia(media), breadcrumb: buildBreadcrumb(media.folder_id) })),
+        ],
         total,
         per_page: perPage,
         last_page: lastPage,

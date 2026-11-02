@@ -142,6 +142,7 @@ export const enTranslations: EasyMediaTranslations = {
   search_results_other: '%count% results',
   search_min_length: 'Type at least 2 characters to search the whole library.',
   search_open_folder: 'Open the folder %folder%',
+  search_close: 'Close search',
   sidebar_no_file_title: 'No file',
   sidebar_no_file_description: 'Select a file to display its metadata.',
   select_main: 'Select',

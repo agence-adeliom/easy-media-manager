@@ -79,6 +79,54 @@ test('search: finds a file below the current folder, with its path', async ({ pa
   expect(errors).toEqual([]);
 });
 
+test('search: finds the folders too, and opening one ends the search', async ({ page }) => {
+  const errors = collectErrors(page);
+  const scope = page.getByRole('radiogroup', { name: 'Rechercher dans' });
+  const search = page.getByPlaceholder('Rechercher dans la médiathèque...');
+
+  await page.goto('http://localhost:5174/');
+  await expect(card(page, 'Documents')).toBeVisible();
+
+  await search.fill('docu');
+  await expect(card(page, 'Documents').getByRole('button', { name: 'Ouvrir le dossier Racine' })).toBeVisible();
+
+  // A folder below the current one, opened from the results.
+  await search.fill('vaca');
+  const vacations = card(page, 'Vacations');
+  await expect(vacations.getByRole('button', { name: 'Ouvrir le dossier Photos' })).toBeVisible();
+  await vacations.dblclick();
+  await expect(scope).toHaveCount(0);
+  await expect(search).toHaveValue('');
+  await expect(page.locator('nav').getByRole('button')).toHaveText(['Racine', 'Photos', 'Vacations']);
+  await expect(card(page, 'cliff.jpg')).toBeVisible();
+
+  // The same in the current folder scope.
+  await page.locator('nav').getByRole('button', { name: 'Racine' }).click();
+  await search.fill('pho');
+  await scope.getByRole('radio', { name: 'Racine' }).click();
+  await card(page, 'Photos').dblclick();
+  await expect(scope).toHaveCount(0);
+  await expect(search).toHaveValue('');
+  await expect(page.locator('nav').getByRole('button')).toHaveText(['Racine', 'Photos']);
+  await expect(card(page, 'dive.jpg')).toBeVisible();
+
+  expect(errors).toEqual([]);
+});
+
+test('search: the scope bar has a button to end the search', async ({ page }) => {
+  const scope = page.getByRole('radiogroup', { name: 'Rechercher dans' });
+  const search = page.getByPlaceholder('Rechercher dans la médiathèque...');
+
+  await page.goto('http://localhost:5174/');
+  await search.fill('sample');
+  await expect(card(page, 'sample-pdf-1.pdf')).toBeVisible();
+
+  await page.getByRole('button', { name: 'Fermer la recherche' }).click();
+  await expect(scope).toHaveCount(0);
+  await expect(search).toHaveValue('');
+  await expect(card(page, 'Documents')).toBeVisible();
+});
+
 test('search: the whole library search starts at 2 characters', async ({ page }) => {
   await page.goto('http://localhost:5174/');
   await expect(card(page, 'Documents')).toBeVisible();

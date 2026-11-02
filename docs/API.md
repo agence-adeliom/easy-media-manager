@@ -310,17 +310,27 @@ Route `globalSearch`, read by the search bar when its scope is the whole library
 **Query params:**
 | Param | Type | Required | Description |
 |-------|------|----------|-------------|
-| `q` | string | yes | Term searched in the file names (min. 2 characters) |
+| `q` | string | yes | Term searched in the folder and file names (min. 2 characters) |
 | `page` | integer | no | Page number (default: 1) |
 | `path` | string | no | Only this folder and its subfolders (`/images/products`), sent by `pick()` with `restrictions.path` |
 
-**Response:** one page of files, like the `items` of `get-files`. Each file is in the format of the `get-files` items, with `breadcrumb`: the folders it is in, from the library root (excluded), empty for a file at the root.
+**Response:** one page of folders then files, like the `items` of `get-files`: the matching folders come first, the files follow on the same or the next pages. Each item is in the format of the `get-files` items, with `breadcrumb`: the folders it is in, from the library root (excluded), empty for an item at the root.
 
 ```json
 {
   "items": {
     "current_page": 1,
     "data": [
+      {
+        "id": 4,
+        "name": "products",
+        "type": "folder",
+        "path": "/images/products",
+        "storage_path": "folders/4",
+        "breadcrumb": [
+          { "id": 1, "name": "images" }
+        ]
+      },
       {
         "id": 2,
         "name": "photo.jpg",
@@ -338,7 +348,7 @@ Route `globalSearch`, read by the search bar when its scope is the whole library
         ]
       }
     ],
-    "total": 1,
+    "total": 2,
     "per_page": 50,
     "last_page": 1,
     "next_page_url": null,
@@ -347,7 +357,7 @@ Route `globalSearch`, read by the search bar when its scope is the whole library
 }
 ```
 
-Folders are not returned. With fewer than 2 characters in `q`, the page is empty. An unknown `path`: `{ "error": "…" }`.
+`total` counts the folders and the files. With fewer than 2 characters in `q`, the page is empty. With `path`, that folder itself is not returned. An unknown `path`: `{ "error": "…" }`.
 
 -------|------|----------|-------------|
 | `q` | string | yes | Search term (min. 2 characters) |
