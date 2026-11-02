@@ -72,7 +72,7 @@ export const easyMediaClient = {
   },
 
   globalSearch(route: string, body: GlobalSearchRequest): Promise<GlobalSearchResponse> {
-    return getJson<GlobalSearchResponse>(route, { q: body.q, path: body.path });
+    return getJson<GlobalSearchResponse>(route, { q: body.q, folder: body.folder, "types[]": body.types });
   },
 };
 

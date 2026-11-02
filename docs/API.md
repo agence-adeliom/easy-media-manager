@@ -312,7 +312,9 @@ Route `globalSearch`, read by the search bar when its scope is the whole library
 |-------|------|----------|-------------|
 | `q` | string | yes | Term searched in the folder and file names (min. 2 characters) |
 | `page` | integer | no | Page number (default: 1) |
-| `path` | string | no | Only this folder and its subfolders (`/images/products`), sent by `pick()` with `restrictions.path` |
+| `folder` | integer | no | Id of a folder: only what is below it, the folder itself excluded. Sent by `pick()` with `restrictions.path` |
+| `types[]` | string (repeated) | no | `restrictions.types` of `pick()` (`types[]=images&types[]=application/pdf`): filters the files, so that `total` stays exact; `types[]=folders` alone keeps the folders only |
+| `type` | string | no | `all` (default), `folder` or `media`: only folders or only files. Not sent by the library |
 
 **Response:** one page of folders then files, like the `items` of `get-files`: the matching folders come first, the files follow on the same or the next pages. Each item is in the format of the `get-files` items, with `breadcrumb`: the folders it is in, from the library root (excluded), empty for an item at the root.
 
@@ -357,7 +359,7 @@ Route `globalSearch`, read by the search bar when its scope is the whole library
 }
 ```
 
-`total` counts the folders and the files. With fewer than 2 characters in `q`, the page is empty. With `path`, that folder itself is not returned. An unknown `path`: `{ "error": "…" }`.
+`total` counts the folders and the files. With fewer than 2 characters in `q`, the page is empty. The page URLs keep the search parameters. An unknown `folder`: a `404` with `{ "error": "…" }`; an invalid `folder` or `type`: a `400`.
 
 -------|------|----------|-------------|
 | `q` | string | yes | Search term (min. 2 characters) |

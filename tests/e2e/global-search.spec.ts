@@ -152,6 +152,11 @@ test('pick(): the library search stays inside restrictions.path and restrictions
   await expect(cards).toHaveCount(6);
   await search.fill('sample');
   await expect(cards).toHaveCount(0);
+  // The restricted folder itself is not a result, its subfolders are.
+  await search.fill('photos');
+  await expect(cards).toHaveCount(0);
+  await search.fill('vaca');
+  await expect(cards.filter({ hasText: 'Vacations' })).toBeVisible();
 
   // A result can be chosen like any file.
   await search.fill('cliff');
@@ -160,11 +165,16 @@ test('pick(): the library search stays inside restrictions.path and restrictions
   await expect(overlay).toBeHidden();
   expect(JSON.parse((await page.locator('#result-1').textContent()) ?? '{}')).toMatchObject({ name: 'cliff.jpg' });
 
-  // Images only: the PDF found by name is not offered.
+  // Images only: the PDF found by name is not offered, and the count is the server one, filtered by type.
   await page.getByRole('button', { name: 'Browse images only…' }).click();
-  await overlay.getByPlaceholder('Search in the library...').fill('sample');
+  const librarySearch = overlay.getByPlaceholder('Search in the library...');
+  await librarySearch.fill('sample');
   await expect(overlay.getByText('No results', { exact: true })).toBeVisible();
   await expect(cards).toHaveCount(0);
+  await expect(overlay.locator('nav')).toContainText('0 results');
+  await librarySearch.fill('.jpg');
+  await expect(cards).toHaveCount(6);
+  await expect(overlay.locator('nav')).toContainText('6 results');
 
   expect(errors).toEqual([]);
 });

@@ -67,14 +67,19 @@ export async function postVoid<TResponse>(route: string): Promise<TResponse> {
   return parseJson<TResponse>(response);
 }
 
-type SearchParams = Record<string, string | number | boolean | null | undefined>;
+type SearchParamValue = string | number | boolean | null | undefined;
+type SearchParams = Record<string, SearchParamValue | SearchParamValue[]>;
 
 function buildUrl(route: string, params?: SearchParams): string {
   if (!params) return route;
   const [base, existing] = route.split("?");
   const sp = new URLSearchParams(existing);
   for (const [key, value] of Object.entries(params)) {
-    if (value !== null && value !== undefined) {
+    // A list is sent as repeated keys (`types[]=image&types[]=pdf`).
+    if (Array.isArray(value)) {
+      sp.delete(key);
+      value.filter((entry) => entry !== null && entry !== undefined).forEach((entry) => sp.append(key, String(entry)));
+    } else if (value !== null && value !== undefined) {
       sp.set(key, String(value));
     }
   }

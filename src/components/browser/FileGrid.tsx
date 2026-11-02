@@ -42,6 +42,7 @@ export function FileGrid({ onItemsChange }: FileGridProps) {
   const features = useMediaStore((state) => state.features);
   const mode = useMediaStore((state) => state.mode);
   const restrictions = useMediaStore((state) => state.restrictions);
+  const pathRootDepth = useMediaStore((state) => state.pathRootDepth);
   const pushFolder = useMediaStore((state) => state.pushFolder);
   const selectFile = useMediaStore((state) => state.selectFile);
   const toggleBulkItem = useMediaStore((state) => state.toggleBulkItem);
@@ -69,6 +70,10 @@ export function FileGrid({ onItemsChange }: FileGridProps) {
   // The whole library: the `globalSearch` route, from 2 characters (one would match most of the library).
   const isLibrarySearch = Boolean(routes?.globalSearch) && searchScope === "library" && searchTerm !== "";
   const isSearchTooShort = isLibrarySearch && searchTerm.length < 2;
+  // `restrictions.path`: the library search needs the id of that folder, known once the first listing resolved it.
+  const pathRootId = pathRootDepth === null ? null : folderStack[pathRootDepth - 1]?.id ?? null;
+  const isPathRootPending = Boolean(restrictions.path) && pathRootId === null;
+  const pickTypes = restrictions.types === null || restrictions.types === undefined ? [] : ([] as string[]).concat(restrictions.types);
 
   const folderQuery = useInfiniteQuery({
     queryKey: ["files", currentFolderId, searchQuery, currentPath, restrictions.types ?? "all", restrictions.path ?? "", refreshIndex],
@@ -91,11 +96,12 @@ export function FileGrid({ onItemsChange }: FileGridProps) {
   });
 
   const libraryQuery = useInfiniteQuery({
-    queryKey: ["files", "library-search", searchTerm, restrictions.path ?? "", refreshIndex],
+    queryKey: ["files", "library-search", searchTerm, pathRootId, pickTypes.join(","), refreshIndex],
     queryFn: async ({ pageParam }) => {
       const response = await easyMediaClient.globalSearch(String(pageParam || routes?.globalSearch), {
         q: searchTerm,
-        path: restrictions.path ?? undefined,
+        folder: pathRootId ?? undefined,
+        types: pickTypes.length > 0 && !pickTypes.includes("all") ? pickTypes : undefined,
       });
 
       if (response.error) {
@@ -106,7 +112,7 @@ export function FileGrid({ onItemsChange }: FileGridProps) {
     },
     getNextPageParam: (lastPage) => lastPage.items.next_page_url,
     initialPageParam: null as string | null,
-    enabled: isLibrarySearch && !isSearchTooShort,
+    enabled: isLibrarySearch && !isSearchTooShort && !isPathRootPending,
   });
 
   const query = isLibrarySearch ? libraryQuery : folderQuery;
@@ -193,8 +199,9 @@ export function FileGrid({ onItemsChange }: FileGridProps) {
     onItemsChange(items);
   }, [items, onItemsChange]);
 
-  // The server count, unless the browser hides some of the files (type filter, `restrictions.types`).
-  const isFilteredInBrowser = Boolean(filterName) || (restrictions.types ?? "all") !== "all";
+  // The server count, unless the browser hides some of the files: the type filter, and `restrictions.types` outside the
+  // library search (whose route filters them).
+  const isFilteredInBrowser = Boolean(filterName) || (!isLibrarySearch && (restrictions.types ?? "all") !== "all");
   const resultCount = searchTerm === "" || isSearchTooShort || total === undefined ? null : isFilteredInBrowser ? (query.hasNextPage ? null : items.length) : total;
 
   useEffect(() => {

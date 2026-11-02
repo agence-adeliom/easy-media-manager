@@ -202,8 +202,9 @@ ending the search (Escape, the *Close search* button of the scope bar, the clear
 opening a folder) goes back to it. Without
 the `globalSearch` route, the search only looks in the current folder and no scope is shown.
 
-In `pick()`, `restrictions.path` limits the library search to that folder and its subfolders
-(sent as the `path` query string), and `restrictions.types` filters the results.
+In `pick()`, `restrictions.path` limits the library search to what is below that folder (its id is
+sent as the `folder` query string, once the first listing has resolved it), and `restrictions.types`
+is sent as `types[]`, so that the server filters the results and the count stays exact.
 
 ### EasyMediaMimeTypes
 
@@ -257,7 +258,7 @@ interface EasyMediaRoutes {
 | `generateAlt` | `POST` | AI-generate alt text for a single file. |
 | `generateAltGroup` | `POST` | AI-generate alt text for a selection of files. |
 | `generateAllAlt` | `POST` | AI-generate alt text for all files in the current folder. |
-| `globalSearch` | `GET` | Folders and files of the whole library whose name contains a term (query string: `q`, `page`, `path`). Optional: without it, the search only looks in the current folder. See [Search](#search). |
+| `globalSearch` | `GET` | Folders and files of the whole library whose name contains a term (query string: `q`, `page`, `folder`, `types[]`). Optional: without it, the search only looks in the current folder. See [Search](#search). |
 | `folderDownload` | `POST` | Download a folder as a ZIP archive. |
 | `filesDownload` | `POST` | Download a selection of files as a ZIP archive. |
 

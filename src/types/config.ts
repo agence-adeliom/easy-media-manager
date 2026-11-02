@@ -68,7 +68,7 @@ export interface EasyMediaRoutes {
   generateAlt: string;
   generateAltGroup: string;
   generateAllAlt: string;
-  /** Folders and files of the whole library whose name contains `q` (`GET ?q=<term>&page=<n>&path=<folder>`). Without it, the search only looks in the current folder. */
+  /** Folders and files of the whole library whose name contains `q` (`GET ?q=<term>&page=<n>&folder=<id>&types[]=<type>`). Without it, the search only looks in the current folder. */
   globalSearch?: string;
   folderDownload: string;
   filesDownload: string;
