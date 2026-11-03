@@ -43,3 +43,15 @@ export function getLocaleFallbacks(locale?: string): string[] {
 
   return [...new Set(fallbacks)];
 }
+
+/** A number in the locale of the manager (`config.locale`, `fr_FR` or `fr`), the browser locale without one. */
+export function formatNumber(value: number, locale?: string | null): string {
+  const tag = locale ? normalizeLocaleTag(locale).replace(/_/g, "-") : "";
+
+  try {
+    return new Intl.NumberFormat(tag || undefined).format(value);
+  } catch {
+    // An invalid locale tag (RangeError): the browser locale.
+    return new Intl.NumberFormat().format(value);
+  }
+}

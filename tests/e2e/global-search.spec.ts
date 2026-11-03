@@ -178,3 +178,33 @@ test('pick(): the library search stays inside restrictions.path and restrictions
 
   expect(errors).toEqual([]);
 });
+
+test.describe('search count', () => {
+  // A browser in English, a manager in French: the count follows the manager.
+  test.use({ locale: 'en-US' });
+
+  test('search: the result count is formatted in the locale of the manager, not of the browser', async ({ page }) => {
+    await page.route('**/api/global-search?*', (route) =>
+      route.fulfill({
+        json: {
+          items: {
+            current_page: 1,
+            data: [],
+            total: 3404,
+            per_page: 50,
+            last_page: 69,
+            next_page_url: null,
+            prev_page_url: null,
+          },
+        },
+      }),
+    );
+
+    await page.goto('http://localhost:5174/');
+    await expect(card(page, 'Documents')).toBeVisible();
+    await page.getByPlaceholder('Rechercher dans la médiathèque...').fill('porte');
+
+    // fr: a narrow no-break space between the thousands, not the comma of en-US.
+    await expect(page.locator('nav')).toContainText('3 404 résultats');
+  });
+});
