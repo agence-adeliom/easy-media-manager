@@ -53,6 +53,8 @@ export interface MediaStoreState {
   config: ResolvedEasyMediaConfig | null;
   routes: EasyMediaRoutes | null;
   translations: EasyMediaTranslations;
+  /** `locale` of the configuration, for the numbers shown by the manager. */
+  locale: string | null;
   baseFeatures: EasyMediaFeatureFlags;
   features: EasyMediaFeatureFlags;
   folderStack: FolderStackItem[];
@@ -214,6 +216,7 @@ const initialState: MediaStoreState = {
   config: null,
   routes: null,
   translations: {},
+  locale: null,
   baseFeatures: DEFAULT_FEATURES,
   features: DEFAULT_FEATURES,
   folderStack: [],
@@ -247,7 +250,7 @@ const initialState: MediaStoreState = {
 export function createMediaStore() {
   return createStore<MediaStore>()((set, get) => ({
     ...initialState,
-    init({ config = {}, routes, translations, features }) {
+    init({ config = {}, routes, translations, features, locale }) {
       const resolvedFeatures = { ...DEFAULT_FEATURES, ...features };
       const currentFolderId = readFolderIdFromUrl();
       const searchScope = routes.globalSearch ? (config.searchScope ?? "library") : "folder";
@@ -261,6 +264,7 @@ export function createMediaStore() {
         },
         routes: applyBaseUrl(routes, config.baseUrl),
         translations,
+        locale: locale ?? null,
         baseFeatures: resolvedFeatures,
         features: resolvedFeatures,
         currentFolderId,

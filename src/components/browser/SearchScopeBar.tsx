@@ -3,6 +3,7 @@ import { X } from "lucide-react";
 import { useSearchScope } from "@/hooks/use-search-scope";
 import { useTranslations } from "@/hooks/use-translations";
 import { cn } from "@/lib/cn";
+import { formatNumber } from "@/lib/locale";
 import { useMediaStore } from "@/store/media-store";
 import type { EasyMediaSearchScope } from "@/types/config";
 
@@ -12,6 +13,7 @@ export function SearchScopeBar() {
   const setSearchScope = useMediaStore((state) => state.setSearchScope);
   const setSearch = useMediaStore((state) => state.setSearch);
   const resultCount = useMediaStore((state) => state.searchResultCount);
+  const locale = useMediaStore((state) => state.locale);
   const { scope, libraryLabel, folderLabel } = useSearchScope();
   const options: Array<{ value: EasyMediaSearchScope; label: string }> = [
     { value: "library", label: libraryLabel },
@@ -49,7 +51,7 @@ export function SearchScopeBar() {
       <div className="emm:ml-auto emm:flex emm:items-center emm:gap-3">
         {resultCount !== null ? (
           <span aria-live="polite" className="emm:text-xs emm:text-emm-neutral-500">
-            {resultCount === 1 ? t("search_results_one") : t("search_results_other").replace("%count%", resultCount.toLocaleString())}
+            {resultCount === 1 ? t("search_results_one") : t("search_results_other").replace("%count%", formatNumber(resultCount, locale))}
           </span>
         ) : null}
         <button
