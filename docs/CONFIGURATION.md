@@ -127,6 +127,7 @@ interface EasyMediaConfig {
   generatingAlts: boolean;
   headers?: Record<string, string>;
   theme?: EasyMediaTheme;
+  searchScope?: 'library' | 'folder';
 }
 ```
 
@@ -138,6 +139,7 @@ interface EasyMediaConfig {
 | `generatingAlts` | `boolean` | Yes | Enable the AI alt-text generation feature globally. Also requires `features.enableGeneratingAlts`. |
 | `headers` | `Record<string, string>` | No | Headers added to every request of the manager (listing, upload, rename…), after the library ones. Typically a CSRF token or an authorization header. Plugins read them from `context.config.headers`. |
 | `theme` | `EasyMediaTheme` | No | Colors and font of the manager. See [Theme](#theme). |
+| `searchScope` | `'library' \| 'folder'` | No | Where a search looks first: the whole library (`library`, default) or the current folder. Only applies when the `globalSearch` route is set. See [Search](#search). |
 
 ### Theme
 
@@ -183,6 +185,27 @@ EasyMedia.configure({
 });
 ```
 
+### Search
+
+The search bar looks in one of two scopes, shown instead of the breadcrumb while a search is
+typed, with the number of results:
+
+| Scope | Route | Matches |
+|-------|-------|---------|
+| Whole library (`library`) | `globalSearch` | Folders, then files, whose name contains the term, in every folder. Each result shows the folder it is in, and a click on it opens that folder. Starts at 2 characters. |
+| Current folder (`folder`) | `files` (`search` query string) | Files and folders of the current folder whose name contains the term, without its subfolders. |
+
+Opening a folder found by a search (double click), in either scope, ends the search.
+
+`config.searchScope` sets the scope a search starts with; the user can switch at any time, and
+ending the search (Escape, the *Close search* button of the scope bar, the clear button of the field,
+opening a folder) goes back to it. Without
+the `globalSearch` route, the search only looks in the current folder and no scope is shown.
+
+In `pick()`, `restrictions.path` limits the library search to what is below that folder (its id is
+sent as the `folder` query string, once the first listing has resolved it), and `restrictions.types`
+is sent as `types[]`, so that the server filters the results and the count stays exact.
+
 ### EasyMediaMimeTypes
 
 ```typescript
@@ -197,7 +220,7 @@ interface EasyMediaMimeTypes {
 
 ## EasyMediaRoutes
 
-Maps each manager action to a backend endpoint. Every property is required except `fileInfos`. All paths are relative to `config.baseUrl`.
+Maps each manager action to a backend endpoint. Every property is required except `fileInfos` and `globalSearch`. All paths are relative to `config.baseUrl`.
 
 ```typescript
 interface EasyMediaRoutes {
@@ -214,7 +237,7 @@ interface EasyMediaRoutes {
   generateAlt: string;
   generateAltGroup: string;
   generateAllAlt: string;
-  globalSearch: string;
+  globalSearch?: string;
   folderDownload: string;
   filesDownload: string;
 }
@@ -235,7 +258,7 @@ interface EasyMediaRoutes {
 | `generateAlt` | `POST` | AI-generate alt text for a single file. |
 | `generateAltGroup` | `POST` | AI-generate alt text for a selection of files. |
 | `generateAllAlt` | `POST` | AI-generate alt text for all files in the current folder. |
-| `globalSearch` | `GET` | Full-text search across all files. |
+| `globalSearch` | `GET` | Folders and files of the whole library whose name contains a term (query string: `q`, `page`, `folder`, `types[]`). Optional: without it, the search only looks in the current folder. See [Search](#search). |
 | `folderDownload` | `POST` | Download a folder as a ZIP archive. |
 | `filesDownload` | `POST` | Download a selection of files as a ZIP archive. |
 

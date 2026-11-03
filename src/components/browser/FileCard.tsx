@@ -1,6 +1,6 @@
 import { useDraggable, useDroppable } from "@dnd-kit/core";
 import { useEffect, useState, type MouseEvent } from "react";
-import { Check, Copy } from "lucide-react";
+import { Check, Copy, Folder } from "lucide-react";
 
 import { FileIcon } from "@/components/ui/FileIcon";
 import { useFileType } from "@/hooks/use-file-type";
@@ -22,6 +22,9 @@ export interface FileCardProps {
   onSelect: (item: MediaItem, index: number, event: MouseEvent) => void;
   onDoubleClick: (item: MediaItem) => void;
   onCopyLink: (path: string) => void;
+  /** Folders the file is in, shown for a search result of the whole library: a click opens the last one. */
+  location?: Array<{ id: number; name: string }>;
+  onOpenLocation?: (location: Array<{ id: number; name: string }>) => void;
 }
 
 export function FileCard({
@@ -36,6 +39,8 @@ export function FileCard({
   onSelect,
   onDoubleClick,
   onCopyLink,
+  location,
+  onOpenLocation,
 }: FileCardProps) {
   const t = useTranslations();
   const fileType = useFileType();
@@ -62,6 +67,8 @@ export function FileCard({
     setImagePreviewAvailable(true);
   }, [item]);
 
+  const locationLabel = location ? (location.length > 0 ? location.map((folder) => folder.name).join(" › ") : t("library")) : null;
+
   function setNodeRef(node: HTMLElement | null) {
     draggable.setNodeRef(node);
     if (isFolder(item)) {
@@ -82,7 +89,8 @@ export function FileCard({
         isDropTarget && "emm:border-emm-accent-500 emm:ring-2 emm:ring-emm-accent-300 emm:shadow-lg",
       )}
       style={{ transform }}
-      {...draggable.attributes}
+      // Without drag, the dnd-kit attributes would announce the card as a disabled draggable.
+      {...(dragEnabled ? draggable.attributes : {})}
       {...draggable.listeners}
       onMouseDown={(event) => {
         if (event.shiftKey || event.detail > 1) {
@@ -116,6 +124,22 @@ export function FileCard({
       <div className="emm:min-w-0 emm:flex-1">
         <p className="emm:truncate emm:text-sm emm:font-medium emm:text-emm-neutral-900 emm:m-0">{item.name}</p>
         {!isFolder(item) ? <p className="emm:truncate emm:text-xs emm:text-emm-neutral-400">{item.size ? `${(item.size / 1024).toFixed(2)} KB` : item.type}</p> : null}
+        {location && locationLabel !== null ? (
+          <button
+            aria-label={t("search_open_folder").replace("%folder%", locationLabel)}
+            className="emm:mt-0.5 emm:flex emm:max-w-full emm:cursor-pointer emm:items-center emm:gap-1 emm:rounded emm:text-xs emm:text-emm-neutral-500 emm:hover:text-emm-accent-700 emm:hover:underline emm:focus-visible:outline-hidden emm:focus-visible:ring-3 emm:focus-visible:ring-emm-accent-200"
+            onClick={(event) => {
+              event.stopPropagation();
+              onOpenLocation?.(location);
+            }}
+            onDoubleClick={(event) => event.stopPropagation()}
+            title={t("search_open_folder").replace("%folder%", locationLabel)}
+            type="button"
+          >
+            <Folder className="emm:h-3 emm:w-3 emm:shrink-0" />
+            <span className="emm:truncate">{locationLabel}</span>
+          </button>
+        ) : null}
       </div>
       {showBulkCheckbox ? (
         <span

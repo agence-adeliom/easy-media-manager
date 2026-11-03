@@ -7,6 +7,7 @@ import type {
   EasyMediaRoutes,
   EasyMediaTranslations,
   EasyMediaConfig,
+  EasyMediaSearchScope,
   PickRestrictions,
 } from "@/types/config";
 import { getMediaItemKey, type MediaItem } from "@/types/media";
@@ -67,6 +68,12 @@ export interface MediaStoreState {
   activeModal: string | null;
   isLoading: boolean;
   searchQuery: string;
+  /** Where the search looks: the whole library needs the `globalSearch` route. */
+  searchScope: EasyMediaSearchScope;
+  /** The scope a new search starts with (`config.searchScope`): ending a search goes back to it. */
+  defaultSearchScope: EasyMediaSearchScope;
+  /** Number of results of the current search, `null` while unknown (loading, or filtered in the browser). */
+  searchResultCount: number | null;
   filterName: string | null;
   sortField: string | null;
   sortDirection: SortDirection;
@@ -86,6 +93,8 @@ export interface MediaStoreActions {
   popFolder(): void;
   goToFolder(index: number): void;
   restoreFolderState(payload: EasyMediaHistoryPayload, syncHistory?: boolean): void;
+  /** Ends the search and opens a folder known by its id only (a search result): the file list returns its breadcrumb. */
+  openFolder(id: number | null): void;
   selectFile(file: MediaItem, index: number): void;
   clearSelection(): void;
   toggleBulkMode(): void;
@@ -100,6 +109,8 @@ export interface MediaStoreActions {
   closeModal(): void;
   toggleUploadPanel(): void;
   setSearch(query: string): void;
+  setSearchScope(scope: EasyMediaSearchScope): void;
+  setSearchResultCount(count: number | null): void;
   setFilter(name: string | null): void;
   setSort(field: string | null): void;
   setMovableList(items: MediaItem[]): void;
@@ -218,6 +229,9 @@ const initialState: MediaStoreState = {
   activeModal: null,
   isLoading: false,
   searchQuery: "",
+  searchScope: "folder",
+  defaultSearchScope: "folder",
+  searchResultCount: null,
   filterName: null,
   sortField: null,
   sortDirection: 1,
@@ -236,6 +250,7 @@ export function createMediaStore() {
     init({ config = {}, routes, translations, features }) {
       const resolvedFeatures = { ...DEFAULT_FEATURES, ...features };
       const currentFolderId = readFolderIdFromUrl();
+      const searchScope = routes.globalSearch ? (config.searchScope ?? "library") : "folder";
 
       set({
         config: {
@@ -249,6 +264,8 @@ export function createMediaStore() {
         baseFeatures: resolvedFeatures,
         features: resolvedFeatures,
         currentFolderId,
+        searchScope,
+        defaultSearchScope: searchScope,
       });
 
       syncUrl(currentFolderId, { folderId: currentFolderId, folderStack: [], currentPath: "" }, "replace");
@@ -349,6 +366,19 @@ export function createMediaStore() {
         selectedIndex: null,
       });
     },
+    openFolder(id) {
+      syncUrl(id, { folderId: id, folderStack: [], currentPath: "" });
+
+      set((state) => ({
+        searchQuery: "",
+        searchScope: state.defaultSearchScope,
+        folderStack: [],
+        currentFolderId: id,
+        currentPath: "",
+        selectedFile: null,
+        selectedIndex: null,
+      }));
+    },
     selectFile(file, index) {
       set({ selectedFile: file, selectedIndex: index });
     },
@@ -429,7 +459,13 @@ export function createMediaStore() {
       set((state) => ({ uploadPanelOpen: !state.uploadPanelOpen }));
     },
     setSearch(query) {
-      set({ searchQuery: query });
+      set((state) => ({ searchQuery: query, searchScope: query === "" ? state.defaultSearchScope : state.searchScope }));
+    },
+    setSearchScope(scope) {
+      set((state) => ({ searchScope: state.routes?.globalSearch ? scope : "folder", selectedFile: null, selectedIndex: null }));
+    },
+    setSearchResultCount(count) {
+      set({ searchResultCount: count });
     },
     setFilter(name) {
       set({ filterName: name });

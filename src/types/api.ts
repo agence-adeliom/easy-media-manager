@@ -25,6 +25,19 @@ export interface FolderBreadcrumbItem {
   name: string;
 }
 
+export interface GlobalSearchRequest {
+  q: string;
+  /** Id of the `restrictions.path` folder: what is below it, the folder itself excluded. */
+  folder?: number;
+  /** `restrictions.types`, filtered by the server so that the total stays exact. */
+  types?: string[];
+}
+
+export interface GlobalSearchResponse {
+  items: PaginatedItems<GlobalSearchItem>;
+  error?: string;
+}
+
 export interface GetFilesResponse {
   files: {
     path: string;
@@ -146,6 +159,5 @@ export interface EditMetasResponse {
   metas: MediaMetas;
 }
 
-export type GlobalSearchResponse = GlobalSearchItem[];
 
 export type MediaListResponse = MediaItem[];

@@ -219,11 +219,50 @@ export function updateFolder(id: number, updates: Partial<Folder>): Folder {
   return updated;
 }
 
-export function searchMedias(query: string): Media[] {
-  const stmt = getDb().prepare(
-    'SELECT * FROM medias WHERE name LIKE ? ORDER BY name LIMIT 100'
-  );
-  return stmt.all(`%${query}%`) as Media[];
+/**
+ * Medias whose name contains `query`, in the whole library or in `rootFolderId` and its subfolders, one page at a
+ * time (the `globalSearch` route).
+ */
+export function searchMedias(
+  query: string,
+  { rootFolderId = null, limit, offset }: { rootFolderId?: number | null; limit: number; offset: number },
+): { medias: Media[]; total: number } {
+  const subtree = rootFolderId === null
+    ? ''
+    : `WITH RECURSIVE subtree(id) AS (SELECT ? UNION ALL SELECT folders.id FROM folders JOIN subtree ON folders.parent_id = subtree.id) `;
+  const where = `name LIKE ?${rootFolderId === null ? '' : ' AND folder_id IN (SELECT id FROM subtree)'}`;
+  const params = rootFolderId === null ? [`%${query}%`] : [rootFolderId, `%${query}%`];
+  const medias = getDb()
+    .prepare(`${subtree}SELECT * FROM medias WHERE ${where} ORDER BY name, id LIMIT ? OFFSET ?`)
+    .all(...params, limit, offset) as Media[];
+  const { count } = getDb()
+    .prepare(`${subtree}SELECT COUNT(*) as count FROM medias WHERE ${where}`)
+    .get(...params) as { count: number };
+
+  return { medias, total: count };
+}
+
+/**
+ * Folders whose name contains `query`, in the whole library or below `rootFolderId` (the folder itself excluded), one
+ * page at a time (the `globalSearch` route lists them before the medias).
+ */
+export function searchFolders(
+  query: string,
+  { rootFolderId = null, limit, offset }: { rootFolderId?: number | null; limit: number; offset: number },
+): { folders: Folder[]; total: number } {
+  const subtree = rootFolderId === null
+    ? ''
+    : `WITH RECURSIVE subtree(id) AS (SELECT ? UNION ALL SELECT folders.id FROM folders JOIN subtree ON folders.parent_id = subtree.id) `;
+  const where = `name LIKE ?${rootFolderId === null ? '' : ' AND id IN (SELECT id FROM subtree) AND id <> ?'}`;
+  const params = rootFolderId === null ? [`%${query}%`] : [rootFolderId, `%${query}%`, rootFolderId];
+  const folders = getDb()
+    .prepare(`${subtree}SELECT * FROM folders WHERE ${where} ORDER BY name, id LIMIT ? OFFSET ?`)
+    .all(...params, limit, offset) as Folder[];
+  const { count } = getDb()
+    .prepare(`${subtree}SELECT COUNT(*) as count FROM folders WHERE ${where}`)
+    .get(...params) as { count: number };
+
+  return { folders, total: count };
 }
 
 export function getDataDir(): string {

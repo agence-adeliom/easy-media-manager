@@ -21,7 +21,7 @@ test('focus: the search bar shows the accent color while its field is focused', 
   await page.goto(THEMED);
   await expect(page.locator('article').first()).toBeVisible();
 
-  const field = page.getByPlaceholder('Rechercher...');
+  const field = page.getByPlaceholder('Rechercher dans la médiathèque...');
   const bar = field.locator('xpath=ancestor::label');
   await field.focus();
 

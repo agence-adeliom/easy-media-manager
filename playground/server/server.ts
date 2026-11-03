@@ -17,12 +17,15 @@ import {
   updateFolder,
   buildBreadcrumb,
   buildFolderPath,
+  searchFolders,
   searchMedias,
   getChunksDir,
   getDataDir,
   Media,
 } from './db';
 import { seed } from './seed';
+import { filterByPickTypes } from '../../src/lib/file-utils';
+import type { PickFileType } from '../../src/types/config';
 import {
   buildStoredMediaPath,
   ensureMediaBucket,
@@ -33,6 +36,12 @@ import {
   storeMediaFromBuffer,
   storeMediaFromPath,
 } from './storage';
+
+// The default MIME categories of the library, for the `types[]` of the global search.
+const SEARCH_MIME_TYPES = {
+  image: ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'],
+  archive: ['application/zip', 'application/x-rar-compressed', 'application/x-7z-compressed'],
+};
 
 const app = express();
 const PORT = 3001;
@@ -671,30 +680,74 @@ app.post('/api/generate-all-alt', async (_req: Request, res: Response) => {
   }
 });
 
+// Same contract as happy-cms: one page at a time, folders first; each item carries the folders it is in (`breadcrumb`).
 app.get('/api/global-search', (req: Request, res: Response) => {
   try {
-    const { q = '' } = req.query;
-    const query = String(q);
+    const query = typeof req.query.q === 'string' ? req.query.q.trim() : '';
+    const type = typeof req.query.type === 'string' ? req.query.type : 'all';
+    const page = Math.max(parseNullableInt(req.query.page) ?? 1, 1);
+    const perPage = 50;
 
-    if (query.length < 2) {
-      return res.json([]);
+    if (!['all', 'media', 'folder'].includes(type)) {
+      return res.status(400).json({ error: 'Unknown type: expected "all", "media" or "folder".' });
     }
 
-    const results = searchMedias(query).map((media) => ({
-      name: media.name,
-      type: getFileType(media.mime, media.name),
-      path: '/' + media.name,
-      dir_path: '/',
-      storage_path: buildMediaStoragePath(media),
-      size: media.size,
-      last_modified: media.last_modified,
-      last_modified_formated: formatDate(media.last_modified),
-    }));
+    // `pick()` with `restrictions.path`: what is below that folder, the folder itself excluded.
+    const rootFolderId = parseNullableInt(req.query.folder);
+    if (rootFolderId !== null && !getFolderById(rootFolderId)) {
+      return res.status(404).json({ error: `The folder ${rootFolderId} does not exist` });
+    }
 
-    return res.json(results);
+    // `restrictions.types`: the media only, with the rules of the library (`types[]=folder` alone keeps the folders).
+    // `types[]=image`: Express 5 keeps the brackets in the key, PHP reads it as `types`.
+    const rawTypes = req.query['types[]'] ?? req.query.types;
+    const types = (Array.isArray(rawTypes) ? rawTypes : typeof rawTypes === 'string' ? [rawTypes] : []).filter(
+      (value): value is string => typeof value === 'string' && value !== '',
+    ) as PickFileType[];
+    const foldersOnly = types.length > 0 && types.every((value) => value === 'folder' || value === 'folders');
+
+    const everything = { limit: -1, offset: 0 };
+    const folders = query.length < 2 || type === 'media'
+      ? []
+      : searchFolders(query, { rootFolderId, ...everything }).folders.map((folder) => ({
+        ...formatFolder(folder, buildFolderPath(folder.parent_id)),
+        breadcrumb: buildBreadcrumb(folder.parent_id),
+      }));
+    const medias = query.length < 2 || type === 'folder' || foldersOnly
+      ? []
+      : filterByPickTypes(
+        searchMedias(query, { rootFolderId, ...everything }).medias.map((media) => ({
+          ...formatMedia(media),
+          breadcrumb: buildBreadcrumb(media.folder_id),
+        })),
+        types.length > 0 ? types : null,
+        SEARCH_MIME_TYPES,
+      );
+    const items = [...folders, ...medias];
+    const lastPage = Math.ceil(items.length / perPage) || 1;
+    const pageUrl = (target: number) => {
+      const params = new URLSearchParams({ q: query, page: String(target) });
+      if (type !== 'all') params.set('type', type);
+      if (rootFolderId !== null) params.set('folder', String(rootFolderId));
+      types.forEach((value) => params.append('types[]', value));
+
+      return `/api/global-search?${params.toString()}`;
+    };
+
+    res.json({
+      items: {
+        current_page: page,
+        data: items.slice((page - 1) * perPage, page * perPage),
+        total: items.length,
+        per_page: perPage,
+        last_page: lastPage,
+        next_page_url: page < lastPage ? pageUrl(page + 1) : null,
+        prev_page_url: page > 1 ? pageUrl(page - 1) : null,
+      },
+    });
   } catch (error) {
     console.error('Error in global-search:', error);
-    return res.json([]);
+    res.status(500).json({ error: 'Failed to search' });
   }
 });
 

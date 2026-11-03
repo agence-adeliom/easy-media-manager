@@ -7,6 +7,8 @@ import type {
   EditMetasResponse,
   GetFilesRequest,
   GetFilesResponse,
+  GlobalSearchRequest,
+  GlobalSearchResponse,
   MoveFileRequest,
   MoveFileResponseItem,
   RenameFileRequest,
@@ -18,7 +20,7 @@ import type {
   UploadResponseItem,
 } from "@/types/api";
 import { EasyMediaApiError, getJson, parseJson, postJson, requestHeaders } from "@/api/http";
-import type { GlobalSearchItem, MediaFileItem } from "@/types/media";
+import type { MediaFileItem } from "@/types/media";
 
 export const easyMediaClient = {
   getFiles(route: string, body: GetFilesRequest): Promise<GetFilesResponse> {
@@ -69,8 +71,8 @@ export const easyMediaClient = {
     return postJson<EditMetasResponse, EditMetasRequest>(route, body);
   },
 
-  globalSearch(route: string): Promise<GlobalSearchItem[]> {
-    return getJson<GlobalSearchItem[]>(route);
+  globalSearch(route: string, body: GlobalSearchRequest): Promise<GlobalSearchResponse> {
+    return getJson<GlobalSearchResponse>(route, { q: body.q, folder: body.folder, "types[]": body.types });
   },
 };
 

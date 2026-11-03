@@ -305,9 +305,63 @@ New metadata is **shallow-merged** with existing metadata.
 
 ## GET /api/global-search
 
+Route `globalSearch`, read by the search bar when its scope is the whole library.
+
 **Query params:**
 | Param | Type | Required | Description |
 |-------|------|----------|-------------|
+| `q` | string | yes | Term searched in the folder and file names (min. 2 characters) |
+| `page` | integer | no | Page number (default: 1) |
+| `folder` | integer | no | Id of a folder: only what is below it, the folder itself excluded. Sent by `pick()` with `restrictions.path` |
+| `types[]` | string (repeated) | no | `restrictions.types` of `pick()` (`types[]=images&types[]=application/pdf`): filters the files, so that `total` stays exact; `types[]=folders` alone keeps the folders only |
+| `type` | string | no | `all` (default), `folder` or `media`: only folders or only files. Not sent by the library |
+
+**Response:** one page of folders then files, like the `items` of `get-files`: the matching folders come first, the files follow on the same or the next pages. Each item is in the format of the `get-files` items, with `breadcrumb`: the folders it is in, from the library root (excluded), empty for an item at the root.
+
+```json
+{
+  "items": {
+    "current_page": 1,
+    "data": [
+      {
+        "id": 4,
+        "name": "products",
+        "type": "folder",
+        "path": "/images/products",
+        "storage_path": "folders/4",
+        "breadcrumb": [
+          { "id": 1, "name": "images" }
+        ]
+      },
+      {
+        "id": 2,
+        "name": "photo.jpg",
+        "type": "image/jpeg",
+        "size": 102400,
+        "path": "/api/uploads/photo-slug-2.jpg",
+        "download_url": "/api/uploads/photo-slug-2.jpg",
+        "storage_path": "uploads/photo-slug-2.jpg",
+        "last_modified": 1700000000,
+        "last_modified_formated": "14/11/2023",
+        "metas": { "alt": "", "title": "" },
+        "breadcrumb": [
+          { "id": 1, "name": "images" },
+          { "id": 4, "name": "products" }
+        ]
+      }
+    ],
+    "total": 2,
+    "per_page": 50,
+    "last_page": 1,
+    "next_page_url": null,
+    "prev_page_url": null
+  }
+}
+```
+
+`total` counts the folders and the files. With fewer than 2 characters in `q`, the page is empty. The page URLs keep the search parameters. An unknown `folder`: a `404` with `{ "error": "…" }`; an invalid `folder` or `type`: a `400`.
+
+-------|------|----------|-------------|
 | `q` | string | yes | Search term (min. 2 characters) |
 
 **Response:**
