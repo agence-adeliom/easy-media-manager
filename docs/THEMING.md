@@ -10,6 +10,7 @@ when none is set, it looks exactly like the default theme (Tailwind `slate`, `sk
 - [Setting a theme](#setting-a-theme)
 - [Setting a theme from the configuration](#setting-a-theme-from-the-configuration)
 - [Dark mode](#dark-mode)
+  - [Following the theme of the host page](#following-the-theme-of-the-host-page)
 - [Tokens](#tokens)
 - [Deriving a scale from one color](#deriving-a-scale-from-one-color)
 - [Using the tokens in a plugin](#using-the-tokens-in-a-plugin)
@@ -63,7 +64,8 @@ EasyMedia.configure({
 
 The library sets these values as inline custom properties on its root elements. They win over
 the same tokens set in a stylesheet, and the tokens the configuration leaves out still follow the
-stylesheet. The theme is read once, by the first `init()`, `mount()` or `pick()`.
+stylesheet. The theme is read by the first `init()`, `mount()` or `pick()`; `EasyMedia.setTheme()` changes it
+afterwards, see [Following the theme of the host page](#following-the-theme-of-the-host-page).
 
 ---
 
@@ -115,6 +117,23 @@ both modes, and win over the stylesheet as in light mode.
 
 A few backgrounds stay dark in both modes: the overlays behind the modals and the picker, the image
 editor and the video player. The drop zone, dark in light mode, stays dark too.
+
+### Following the theme of the host page
+
+A host page with its own light/dark switch (a back-office theme toggle) passes its mode to
+`EasyMedia.setTheme()`. It merges the given options into the configured theme, and the manager
+renders them at once, even when it is already open:
+
+```typescript
+// Sylius admin: the toggle sets data-bs-theme on <html>.
+const html = document.documentElement;
+const sync = () => EasyMedia.setTheme({ mode: html.dataset.bsTheme === 'dark' ? 'dark' : 'light' });
+
+sync();
+new MutationObserver(sync).observe(html, { attributes: true, attributeFilter: ['data-bs-theme'] });
+```
+
+Call it after `configure()`: before, there is no theme to merge into.
 
 ---
 

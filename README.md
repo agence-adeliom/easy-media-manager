@@ -355,6 +355,7 @@ npm publish        # runs prod automatically via prepublishOnly
 | `use` | `(plugin: EasyMediaPlugin) => void` | Register a plugin |
 | `useMany` | `(plugins: EasyMediaPlugin[]) => void` | Register multiple plugins |
 | `isReady` | `() => boolean` | Returns true after `init` |
+| `setTheme` | `(theme: EasyMediaTheme) => void` | Merges options into the theme (`mode`, `accent`…) and renders them at once, see [THEMING.md](https://github.com/agence-adeliom/easy-media-manager/blob/main/docs/THEMING.md#following-the-theme-of-the-host-page) |
 | `translations` | `{ en, fr }` | Built-in translation objects |
 
 See [CONFIGURATION.md](https://github.com/agence-adeliom/easy-media-manager/blob/main/docs/CONFIGURATION.md) for the full configuration reference, [PLUGINS.md](https://github.com/agence-adeliom/easy-media-manager/blob/main/docs/PLUGINS.md) for the plugin guide and [THEMING.md](https://github.com/agence-adeliom/easy-media-manager/blob/main/docs/THEMING.md) for theming.

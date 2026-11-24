@@ -10,7 +10,14 @@ import { getPluginTranslations, lockPluginRegistry, registerPlugin, registerPlug
 import type { EasyMediaPlugin } from "@/plugins/types";
 import { mediaStore } from "@/store/media-store";
 import { pickStore } from "@/store/pick-store";
-import type { EasyMediaConfigOverride, EasyMediaInitConfig, EasyMediaMountOptions, EasyMediaTranslations, PickOptions } from "@/types/config";
+import type {
+  EasyMediaConfigOverride,
+  EasyMediaInitConfig,
+  EasyMediaMountOptions,
+  EasyMediaTheme,
+  EasyMediaTranslations,
+  PickOptions,
+} from "@/types/config";
 import type { MediaFileItem, MediaItem } from "@/types/media";
 import { enTranslations } from "@/translations/en";
 import { frTranslations } from "@/translations/fr";
@@ -47,6 +54,7 @@ interface EasyMediaWindowApi {
   pick: (options?: PickOptions) => Promise<MediaItem | null>;
   getFile: (id: number | string) => Promise<MediaFileItem | null>;
   isReady: () => boolean;
+  setTheme: (theme: EasyMediaTheme) => void;
   __mountFullPage: (target: string | HTMLElement) => void;
   mount?: (options: EasyMediaMountOptions) => void;
   translations?: Partial<Record<'en' | 'fr', EasyMediaTranslations>>;
@@ -156,6 +164,19 @@ async function getFile(id: number | string): Promise<MediaFileItem | null> {
   }
 }
 
+/**
+ * Merges options into the theme (`mode`, `accent`…), before or after the first render: a host page
+ * whose own theme switches without a reload passes its new mode here.
+ */
+function setTheme(theme: EasyMediaTheme): void {
+  if (globalConfig !== null) {
+    const config = globalConfig.config ?? { generatingAlts: false };
+    globalConfig = { ...globalConfig, config: { ...config, theme: { ...config.theme, ...theme } } };
+  }
+
+  mediaStore.getState().setTheme(theme);
+}
+
 function mountFullPage(element: string | HTMLElement) {
   if (!initialized) {
     throw new Error("EasyMedia not initialized.");
@@ -183,6 +204,7 @@ const api: EasyMediaWindowApi = {
   pick,
   getFile,
   isReady: () => initialized,
+  setTheme,
   __mountFullPage: mountFullPage,
   translations: { en: enTranslations, fr: frTranslations },
   mount(options) {
