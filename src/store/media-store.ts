@@ -8,6 +8,7 @@ import type {
   EasyMediaTranslations,
   EasyMediaConfig,
   EasyMediaSearchScope,
+  EasyMediaTheme,
   PickRestrictions,
 } from "@/types/config";
 import { getMediaItemKey, type MediaItem } from "@/types/media";
@@ -105,6 +106,8 @@ export interface MediaStoreActions {
   selectAll(files: MediaItem[]): void;
   deselectAll(): void;
   setMode(mode: MediaMode): void;
+  /** Merges options into the theme of the configuration: the manager renders them at once. */
+  setTheme(theme: EasyMediaTheme): void;
   openManager(): void;
   closeManager(): void;
   openModal(name: string): void;
@@ -439,6 +442,9 @@ export function createMediaStore() {
         selectedFile: null,
         selectedIndex: null,
       });
+    },
+    setTheme(theme) {
+      set((state) => (state.config === null ? {} : { config: { ...state.config, theme: { ...state.config.theme, ...theme } } }));
     },
     setMode(mode) {
       set({ mode });

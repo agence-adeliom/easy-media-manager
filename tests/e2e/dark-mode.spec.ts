@@ -70,3 +70,16 @@ test('mode light (default): no dark palette, even with a dark system setting', a
   await expect(page.locator('#easy-media-react-root')).toHaveAttribute('data-emm-mode', 'light');
   await expect(shell(page)).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
 });
+
+test('setTheme(): switches the mode after the first render', async ({ page }) => {
+  await page.goto('http://localhost:5174/');
+  await expect(page.locator('article').first()).toBeVisible();
+  await expect(page.locator('#easy-media-react-root')).toHaveAttribute('data-emm-mode', 'light');
+
+  await page.evaluate(() => (window as unknown as { EasyMedia: { setTheme: (theme: object) => void } }).EasyMedia.setTheme({ mode: 'dark' }));
+  await expect(page.locator('#easy-media-react-root')).toHaveAttribute('data-emm-mode', 'dark');
+  await expect(shell(page)).toHaveCSS('background-color', SLATE_950);
+
+  await page.evaluate(() => (window as unknown as { EasyMedia: { setTheme: (theme: object) => void } }).EasyMedia.setTheme({ mode: 'light' }));
+  await expect(shell(page)).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+});

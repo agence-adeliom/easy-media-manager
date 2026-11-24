@@ -13,6 +13,10 @@ const options: PickOptions = { restrictions: { types: "images" } };
 const picked: Promise<MediaItem | null> = EasyMedia.pick(options);
 const sameApi: typeof EasyMedia = EasyMediaDefault;
 
+EasyMedia.setTheme({ mode: "dark" });
+// @ts-expect-error unknown mode
+EasyMedia.setTheme({ mode: "sepia" });
+
 // @ts-expect-error unknown method
 EasyMedia.doesNotExist();
 
